@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Login">
+  <!-- UI igual que antes -->
+
+  <script type="module">
+    import { login } from '/src/services/auth.service.ts';
+
+    const form = document.getElementById('loginForm');
+    const errorEl = document.getElementById('error');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      try {
+        const email = form.email.value;
+        const password = form.password.value;
+
+        const data = await login(email, password);
+
+        localStorage.setItem('auth_token', data.token);
+        location.href = '/';
+      } catch (e) {
+        errorEl.textContent = e.message;
+        errorEl.classList.remove('hidden');
+      }
+    });
+  </script>
+</BaseLayout>

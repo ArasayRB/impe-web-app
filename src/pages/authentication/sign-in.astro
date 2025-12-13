@@ -1,0 +1,39 @@
+---
+import LayoutStacked from '../../app/LayoutStacked.astro';
+import FormSignIn from '../../modules/FormSignIn.astro';
+---
+
+<LayoutStacked>
+	<div class="min-h-screen align-middle flex pb-[12vh]">
+		<p id="loginError" class="hidden text-sm text-red-500"></p>
+		<FormSignIn />
+	</div>
+	
+	<script type="module">
+		import { login } from '/src/services/auth.service.ts';
+
+		const form = document.getElementById('loginForm');
+		const errorEl = document.getElementById('loginError');
+
+		if (form) {
+			form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+
+			try {
+				const email = form.email.value;
+				const password = form.password.value;
+
+				const data = await login(email, password);
+
+				localStorage.setItem('auth_token', data.token);
+				location.href = '/';
+			} catch (e) {
+				if (errorEl) {
+				errorEl.textContent = e.message;
+				errorEl.classList.remove('hidden');
+				}
+			}
+			});
+		}
+	</script>
+</LayoutStacked>

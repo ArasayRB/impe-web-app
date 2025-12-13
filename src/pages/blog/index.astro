@@ -1,0 +1,56 @@
+---
+import LayoutPublic from '../../app/LayoutPublic.astro';
+//import Layout from '../../layouts/BaseLayout.astro';
+
+interface Frontmatter {
+  title: string;
+  description?: string | undefined;
+  pubDate: string | Date;
+  image?: string | undefined;
+}
+
+interface Post {
+  slug: string;
+  title: string;
+  description?: string| undefined;
+  pubDate: Date;
+  image?: string| undefined;
+}
+
+const modules = import.meta.glob<{
+  frontmatter: Frontmatter;
+}>('../../content/blog/*.mdx', { eager: true });
+
+const posts: Post[] = Object.entries(modules)
+  .map(([path, mod]: [string, any]) => {
+    const slug = path.split('/').pop()?.replace(/\.mdx$/, '') ?? '';
+    const fm = mod.frontmatter as Frontmatter;
+    return {
+      slug,
+      title: fm.title,
+      description: fm.description,
+      pubDate: new Date(fm.pubDate),
+      image: fm.image,
+    };
+  })
+  .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
+---
+<LayoutPublic title="Blog" description="Últimos artículos del blog">
+  <section class="max-w-4xl mx-auto py-12">
+    <h1 class="text-3xl font-bold mb-6">Blog</h1>
+
+    <div class="grid gap-6">
+      {posts.map((post) => (
+        <article class="p-6 border rounded-lg bg-white dark:bg-gray-800 shadow-sm">
+          <a href={`/blog/${post.slug}`} class="no-underline">
+            <h2 class="text-xl font-semibold">{post.title}</h2>
+            <p class="text-sm text-gray-500 dark:text-gray-400">{post.description}</p>
+            <div class="mt-3 text-xs text-gray-400">
+              {post.pubDate.toLocaleDateString('es-ES')}
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+</LayoutPublic>

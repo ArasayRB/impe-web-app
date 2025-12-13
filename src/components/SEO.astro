@@ -1,0 +1,20 @@
+---
+const { title, description, image, url, published } = Astro.props;
+const site = 'https://tudominio.com';
+const canonical = url ?? site;
+---
+<head>
+  <title>{title ? `${title} | Mi Blog` : 'Mi Blog'}</title>
+  <meta name="description" content={description || 'Blog personal en Astro'} />
+  <link rel="canonical" href={canonical} />
+
+  <!-- OpenGraph -->
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  {image && <meta property="og:image" content={image} />}
+  <meta property="og:url" content={canonical} />
+  {published && <meta property="article:published_time" content={published} />}
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+</head>

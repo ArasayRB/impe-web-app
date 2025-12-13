@@ -1,0 +1,43 @@
+---
+import FooterSidebar from './FooterSidebar.astro';
+import LayoutCommon from './LayoutCommon.astro';
+import NavBarSidebar from './NavBarSidebar.astro';
+import SideBar from './SideBar.astro';
+---
+
+<LayoutCommon>
+	<NavBarSidebar />
+
+	<SideBar />
+
+	<div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
+		<div
+			id="main-content"
+			class="relative w-full h-full overflow-y-auto bg-gray-50 lg:ml-64 dark:bg-gray-900 min-h-screen"
+		>
+			<slot />
+
+			<FooterSidebar />
+		</div>
+	</div>
+	<!-- Guard de autenticación -->
+    <script type="module">
+      import { requireAuth } from '/src/auth/guard.ts';
+      console.log('AUTH GUARD EJECUTADO EN:', location.pathname);
+      const publicRoutes = [
+        '/authentication',
+        '/blog',
+        '/login',
+      ];
+
+      const isPublic = publicRoutes.some((route) =>
+        location.pathname.startsWith(route)
+      );
+
+      if (!isPublic) {
+        requireAuth();
+      }
+    </script>
+	<!-- Logout -->
+	<script type="module" src="../../src/auth/logout.client.ts"></script>
+</LayoutCommon>

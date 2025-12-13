@@ -1,0 +1,24 @@
+---
+import LayoutCommon from './LayoutCommon.astro';
+import FooterStacked from './FooterStacked.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import NavBarBlog from './NavBarBlog.astro';
+---
+
+<LayoutCommon>
+	<NavBarBlog />
+  <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
+		<div
+			id="main-content"
+			class="relative w-full max-w-screen-2xl mx-auto h-full overflow-y-auto bg-gray-50 dark:bg-gray-900 min-h-screen"
+		>
+			<div class="px-4 pt-6 2xl:px-0">				
+            <BaseLayout {...Astro.props}>
+                <slot />
+            </BaseLayout>
+			</div>
+
+			<FooterStacked />
+		</div>
+	</div>
+</LayoutCommon>
