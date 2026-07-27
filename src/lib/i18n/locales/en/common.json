@@ -1,0 +1,70 @@
+{
+	"no_data_available":"No data available",
+  "errors": {
+    "TIMEOUT": "Request timeout. Try again.",
+    "UNKNOWN": "Unexpected error"
+  },
+  "btn":{
+    "confirm":"Confirm"
+  },
+  "validation":{
+    "required":"Required field",
+    "email":"Invalid email"
+  },
+  "analytics":{
+    "summary":"Summary",
+		"view_details": "Click to check details",
+    "filter_date_start":"Start date",
+    "filter_date_end":"End date",
+    "filter_group_by":"Group by",
+    "filter_case_type":"Case type",
+    "filter_btn":"Apply",
+		"group_auto": "Automatic",
+    "group_day":"Daily",
+    "group_week":"Weekly",
+    "group_month":"Monthly",
+    "group_year":"Yearly",
+    "case_type_all":"All case types",
+    "trend_up":"Increase vs previous period",
+    "trend_down":"Decrease vs previous period",
+    "trend_nc":"No change",		
+		"week": "Week",
+		"month": "Month",
+		"year": "Year",
+		"day": "Day"
+  },
+  "crud":{
+    "list":"List",
+    "search":"Search",
+    "export":"Export",
+    "export_all":"Export all",
+    "export_selected":"Export selected",
+    "import":"Import",
+    "add":"Add",
+    "add_new":"Add new",
+    "edit":"Update"
+  },
+	"messages":{
+		"shure_remove":"Are you sure you want to delete this register?",
+		"remove":"Remove",
+		"deleted":"Deleted successfully!",
+		"created":"Added successfully!",
+		"updated":"Updated successfully!",
+		"delete_error":"Error trying remove register.",
+		"error":"Error processing register.",
+    "exported":"Exported successfully!",
+    "imported":"Imported successfully!",
+    "selected":" selected"
+	},
+	"colors":{
+		"gray":"Gray",
+		"green":"Green",
+		"red":"Red",
+		"yellow":"Yellow",
+		"blue":"Blue"
+	},
+  "definition":{
+    "click_to_copy":"Click to copy",
+    "copied":"Copied"
+  }
+}

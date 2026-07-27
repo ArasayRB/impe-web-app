@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "name": "Nombre",
+    "email": "Correo",
+		"address": "Dirección",
+		"phone":	"Teléfono",
+		"notes":	"Nota",
+		"with_account": "Crear cuenta de Usuario"
+  },
+	"buttons":{
+		"add": "Agregar",
+		"edit": "Editar"
+	},
+	"title":{
+		"add": "Agregar nuevo cliente",
+		"edit": "Editar cliente"
+	},
+	"columns":{
+		"name": "Nombre",
+    "email": "Correo",
+		"address": "Dirección",
+		"phone":	"Teléfono",
+		"notes":	"Nota",
+		"actions": "Acciones"
+	},
+	"analytics":{
+		"total":"Total de clientes",
+		"new":"Clientes nuevos",
+		"with_cases":"Clientes con casos",
+		"without_cases":"Clientes sin casos",
+		"total_cases":"Total de casos",
+		"avge_cases":"Average de Casos",
+		"customers_growth":"Crecimiento de Clientes",
+		"customers_by_period":"Clientes por Período",
+		"customers_distribution":"Distribución de Clientes",
+		"customers_top":"Clientes Principales"
+	}
+}

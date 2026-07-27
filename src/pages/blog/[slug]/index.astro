@@ -1,0 +1,45 @@
+---
+export const prerender = false;
+
+import LayoutPublic from '@/app/LayoutPublic.astro';
+import { getBySlug } from '@/modules/blog/posts.service';
+import { mapApiPost } from '@/lib/mappers/post.mapper';
+import { formatDate } from '@/lib/formatters/date';
+import { resolveSite } from '@/lib/resolveSite';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  throw new Error('Missing slug');
+}
+const site = resolveSite(Astro);
+const post = mapApiPost(await getBySlug(slug,site));
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+const canonicalUrl = `${import.meta.env.PUBLIC_SITE_URL}/blog/${post.slug}`;
+---
+
+<LayoutPublic
+  title={post.title}
+  description={post.summary}
+  image={post.image}
+  url={canonicalUrl}
+  published={post.createdAt}
+  type="article"
+  siteName={site?.name}
+>
+  <article class="max-w-3xl mx-auto px-4 py-12 prose prose-lg dark:prose-invert">
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold">{post.title}</h1>
+
+      <time class="block mt-2 text-sm text-gray-500">
+        {new Date(post.createdAt).toLocaleDateString('es-ES')}
+      </time>
+    </header>
+
+    <section innerHTML={post.content}></section>
+  </article>
+</LayoutPublic>

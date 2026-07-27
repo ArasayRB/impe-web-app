@@ -1,10 +1,42 @@
 ---
 import LayoutStacked from '../../app/LayoutStacked.astro';
 import FormSignUp from '../../modules/FormSignUp.astro';
+import { isBrowser } from '@/lib/env';
 ---
 
 <LayoutStacked>
 	<div class="min-h-screen align-middle flex pb-[12vh]">
+		<p id="signUpError" class="hidden text-sm text-red-500"></p>
 		<FormSignUp />
 	</div>
+	<script type="module">
+		import { signup } from '/src/modules/auth/auth.service.ts';
+
+		const form = document.getElementById('registerForm');
+		const errorEl = document.getElementById('signUpError');
+
+		if (form) {
+			form.addEventListener('submit', async (e) => {
+			e.preventDefault();
+
+			try {
+				const registerForm = {
+					name:form.name.value,
+					email:form.email.value,
+					password:form.password.value,
+					password_confirmation:form.password_confirmation.value
+				};
+
+				const data = await signup(registerForm);
+				localStorage.setItem('auth_token', data.token);
+				location.href = '/';
+			} catch (e) {
+				if (errorEl) {
+				errorEl.textContent = e.message;
+				errorEl.classList.remove('hidden');
+				}
+			}
+			});
+		}
+	</script>
 </LayoutStacked>

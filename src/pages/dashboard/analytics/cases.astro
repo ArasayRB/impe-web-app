@@ -1,0 +1,44 @@
+---
+import LayoutSidebar from '@/app/LayoutSidebar.astro';
+import CaseAnalytics from
+'@/modules/cases/CaseAnalytics.astro';
+
+import {
+  getCasesAnalytics
+} from '@/modules/cases/cases.service';
+
+import { resolveSite } from '@/lib/resolveSite';
+
+const site = resolveSite(Astro);
+var response={data:{}};
+
+try {
+  response =
+    await getCasesAnalytics({},Astro.request, site);
+
+} catch (e:any) {
+
+  if (
+    e.code === 'UNAUTHENTICATED'
+  ) {
+
+    return Astro.redirect(
+      '/authentication/sign-in'
+    );
+  }
+
+  response.error = {
+    code: e.code,
+    message: e.message
+  };
+}
+
+---
+
+<LayoutSidebar>
+
+  <CaseAnalytics
+    initialData={response.data}
+  />
+
+</LayoutSidebar>

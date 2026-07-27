@@ -20,24 +20,15 @@ import SideBar from './SideBar.astro';
 			<FooterSidebar />
 		</div>
 	</div>
-	<!-- Guard de autenticación -->
-    <script type="module">
-      import { requireAuth } from '/src/auth/guard.ts';
-      console.log('AUTH GUARD EJECUTADO EN:', location.pathname);
-      const publicRoutes = [
-        '/authentication',
-        '/blog',
-        '/login',
-      ];
+  <script type="module">
+    import { useAuth } from '/src/hooks/useAuth.ts';
 
-      const isPublic = publicRoutes.some((route) =>
-        location.pathname.startsWith(route)
-      );
+    const { isAuthenticated } = useAuth();
 
-      if (!isPublic) {
-        requireAuth();
-      }
-    </script>
+    if (!isAuthenticated()) {
+      window.location.href = '/authentication/sign-in';
+    }
+  </script>
 	<!-- Logout -->
-	<script type="module" src="../../src/auth/logout.client.ts"></script>
+	<script type="module" src="../../src/modules/auth/logout.client.ts"></script>
 </LayoutCommon>

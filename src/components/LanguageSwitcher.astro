@@ -1,0 +1,104 @@
+---
+import { SUPPORTED_LOCALES } from '@/lib/i18n/config';
+
+const currentLocale =
+  Astro.cookies.get('locale')?.value ||
+  Astro.locals.site?.locale ||
+  'en';
+
+const activeLang =
+  SUPPORTED_LOCALES.find(l => l.code === currentLocale);
+---
+
+<button
+  type="button"
+  data-dropdown-toggle="language-dropdown"
+  class="inline-flex justify-center p-2 text-gray-500 rounded hover:text-gray-900 hover:bg-gray-100"
+>
+  <span id="current-language-icon">
+    <Fragment set:html={activeLang?.svg || '🌐'} />
+  </span>
+</button>
+
+<div
+  id="language-dropdown"
+  class="hidden z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow"
+>
+  <ul class="py-1">
+    {SUPPORTED_LOCALES.map((lang) => (
+      <li>
+        <a
+          href="#"
+          data-lang={lang.code}
+          class="block px-4 py-2 text-sm hover:bg-gray-100"
+        >
+          <div class="inline-flex items-center">
+          <Fragment set:html={lang.svg} />
+          {lang.label}
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<script type="module">
+  import {
+    changeLanguage,
+    SUPPORTED_LOCALES
+  } from '/src/client/i18n.ts';
+
+  const dropdown =
+    document.getElementById(
+      'language-dropdown'
+    );
+
+  function updateLanguageIcon(locale) {
+    const lang =
+      SUPPORTED_LOCALES.find(
+        l => l.code === locale
+      );
+
+    const icon =
+      document.getElementById(
+        'current-language-icon'
+      );
+
+    if (icon && lang) {
+      icon.innerHTML = lang.svg;
+    }
+  }
+
+  document
+    .querySelectorAll('[data-lang]')
+    .forEach(el => {
+      el.addEventListener(
+        'click',
+        async (e) => {
+          e.preventDefault();
+
+          const locale =
+            el.getAttribute(
+              'data-lang'
+            );
+
+          if (!locale) return;
+
+          // persist
+          document.cookie =
+            `locale=${locale}; path=/`;
+
+          // i18n
+          await changeLanguage(locale);
+
+          // icon
+          updateLanguageIcon(locale);
+
+          // close dropdown
+          dropdown?.classList.add(
+            'hidden'
+          );
+        }
+      );
+    });
+</script>

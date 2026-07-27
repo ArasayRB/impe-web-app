@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "description": "Description",
+    "title": "Title",
+	"status": "Status",
+	"category": "Category",
+	"customer": "Customer",
+	"case": "Case"
+  },
+  "status": {
+    "open": "Open",
+    "pending": "Pending",
+    "closed": "Closed"
+  },
+	"buttons":{
+		"add": "Add",
+		"edit": "Update",
+		"create_customer": "Create customer"
+	},
+	"title":{
+		"add": "Add new case",
+		"edit": "Edit case"
+	},
+	"columns":{
+		"no_case": "No.Case",
+    "case": "Case",
+		"customer": "Customer",
+		"category": "Category",
+		"email": "Email",
+		"case_email": "Email(Case)",
+		"status": "Status",
+		"actions": "Actions"
+	},
+	"analytics":{
+		"new":"New Case",
+		"total_cases":"Total Cases",
+		"active_cases":"Workflow Active Cases",
+		"overdue_cases":"Overdue Cases",
+		"workflow_progress":"Workflow progress",
+		"workflow_active":"Workflow actives",
+		"workflow_paused":"Workflow paused",
+		"workflow_completed":"Workflow completed",
+		"workflow_duration":{
+			"title":"Average process duration (days)"
+		},
+		"average_process_duration":"Average process duration",
+		"progress":"Progresss",
+		"workflow":"Workflow",
+		"deadline":"Deadline",
+		"create_child_case":"Child cases",
+		"continue":"Continue",
+		"remaining_days":"Remaining days",
+		"health":{
+			"title":"Health",
+			"create_child_case":"Child cases",
+			"continue":"Continue"
+		},
+		"active":"active",
+		"completed":"Completed",
+		"paused":"Paused",
+		"ok":"Ok",
+		"warning":"Warning",
+		"overdue":"Overdue",
+		"duration":"Duration"
+	}
+}

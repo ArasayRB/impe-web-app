@@ -1,0 +1,79 @@
+---
+import LayoutStacked from '../../app/LayoutStacked.astro';
+import FormSignIn from '../../modules/Form2FA.astro';
+import { isBrowser } from '@/lib/env';
+
+import {resolveSite} from '@/lib/resolveSite';
+import { getServerTranslator } from '@/lib/i18n/server';
+import { lang } from '@/lib/i18n/config';
+import { resolveLocale } from '@/lib/i18n/resolveLocale';
+
+const site = resolveSite(Astro);
+const locale = resolveLocale(Astro);
+
+const t = await getServerTranslator(locale, lang);
+---
+
+<LayoutStacked>
+	<div class="min-h-screen align-middle flex pb-[12vh]">
+		<FormSignIn />
+	</div>
+	
+	<script type="module">
+		import { verifyTwoFactor, get2FAMethod } from '/src/modules/auth/auth.client.ts';
+		import { initDevice } from '/src/lib/device.store.ts';
+		import { handleError } from '/src/lib/error.handle.client.ts';
+
+
+		const form = document.getElementById('2faForm');
+		const errorEl = document.getElementById('2faError');
+		let isSubmitting = false;
+
+		const method = get2FAMethod();
+
+		// 🔵 UX dinámico
+		const title = document.querySelector('h2');
+
+		/*if (method === 'email') {
+			title.textContent = t('auth.title.enter_code_by_mail');
+			//await triggerEmail2FA();
+		}
+
+		if (method === 'totp') {
+			title.textContent = t('auth.title.enter_code_by_totp');
+		}*/
+
+		if (form) {
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault();
+
+				if (isSubmitting) return;
+					isSubmitting = true;
+
+				const btn = form.querySelector('button[type="submit"]');
+				btn.disabled = true;
+
+				errorEl.classList.add('hidden');
+
+				try {
+					const code = form.code.value;
+
+					initDevice();
+
+					const data = await verifyTwoFactor(code);
+					// REAL VALIDATION
+					if (!data?.accessToken) {
+						throw new Error('Invalid authentication response');
+					}
+
+					window.location.href = '/';
+				} catch (err) {
+					handleError(err, errorEl);
+				} finally {
+					btn.disabled = false;
+					isSubmitting = false;
+				}
+			});
+		}
+	</script>
+</LayoutStacked>

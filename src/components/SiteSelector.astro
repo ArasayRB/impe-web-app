@@ -1,0 +1,42 @@
+---
+import { LOCAL_SITES } from '@/lib/site';
+
+const isDev = import.meta.env.DEV;
+if (!isDev) return null;
+---
+
+{isDev && (
+  <div
+    class="fixed bottom-4 right-4 z-50 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg p-3"
+  >
+    <label class="block text-xs font-semibold mb-1">
+      Site (local)
+    </label>
+
+    <select
+      id="site-selector"
+      class="text-sm px-2 py-1 rounded border w-full dark:bg-gray-900"
+    >
+      {LOCAL_SITES.map(site => (
+        <option value={site.slug}>{site.title}</option>
+      ))}
+    </select>
+  </div>
+)}
+
+<script is:inline>
+  const isProd = location.hostname !== 'localhost';
+  if (!isProd) {
+    const select = document.getElementById('site-selector');
+
+    const current = localStorage.getItem('local-site');
+    if (current) {
+      select.value = current;
+    }
+
+    select.addEventListener('change', () => {
+      localStorage.setItem('local-site', select.value);
+      location.reload();
+    });
+  }
+</script>

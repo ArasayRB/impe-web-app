@@ -1,0 +1,155 @@
+{
+  "fields": {
+    "name": "Name",
+		"active":"Active"
+  },
+	"buttons":{
+		"add": "Add",
+		"edit": "Update",
+		"create_customer": "Create case type"
+	},
+	"title":{
+		"add": "Add new case type",
+		"edit": "Edit case type"
+	},
+	"columns":{
+		"name": "Name",
+    "slug": "Slug",
+		"active": "Active",
+		"actions": "Actions"
+	},
+	"definition":{
+
+		"analytics":{
+
+			"enabled":{
+				"label":"Enable analytics",
+				"help":"Enable analytics for this type of case"
+
+			},
+
+			"config":{	
+
+				"title":"Analíticas",
+
+				"expected_duration_days":{
+
+					"label":"Maximum duration",
+
+					"help":"Expected duration for this type of case."
+
+				},
+
+				"alert_after_days":{
+
+					"label":"Alert after (days)",
+
+					"help":"Alert for days without signatures after x days"
+
+				},
+
+				"track_signatures":{
+
+					"label":"Track signatures",
+
+					"help":"Tracking of signature records"
+
+				},
+
+				"signature_interval_days":{
+
+					"label":"Signature interval",
+
+					"help":"Days between required client signatures."
+
+				}
+			}
+
+		},
+		"statuses": {
+			"title": "Statuses",
+
+			"enabled": {
+				"label": "Enable custom statuses",
+				"help":"Enable custom statuses for this type of case"
+			},
+
+			"config": {
+
+				"title":"Statuses",
+
+				"items": {
+
+					"label": "Available statuses",
+
+					"empty": "No statuses configured.",
+
+					"add": "Add status",
+
+					"delete": "Delete",
+
+					"item": {
+						"title": "Status",						
+
+						"key": {
+						"label": "ID"
+						},
+
+						"label": {
+						"label": "Name"
+						},
+
+						"color": {
+						"label": "Color"
+						},
+
+						"client_visible": {
+						"label": "Client visibility"
+						},
+
+						"final": {
+						"label": "End"
+						}
+					}
+
+				}
+
+			}
+		},
+		"workflow": {
+			"title": "Workflow",
+			"enabled": {
+				"label": "Enable custom statuses",
+				"help":"Enable custom statuses for this type of case"
+			},
+			"config": {
+				"title":"Workflow",
+				"steps": {
+					"label":"Available steps",
+					"add": "Add step",
+					"delete": "Delete",
+					"empty": "No workflow steps defined.",
+					"item": {
+						"title": "Step",
+						"key": {
+							"label": "Key"
+						},
+						"label": {
+							"label": "Name"
+						},
+						"starts_on": {
+							"label": "Starts on status"
+						},
+						"ends_on": {
+							"label": "Ends on status"
+						},
+						"expected_duration_days": {
+							"label": "Expected duration (days)"
+						}
+					}
+				}
+			}
+		}
+
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"menu":{
+		"team":"Equipo",
+		"pricing":"Precios",
+		"contact":"Contacto"
+	},
+	"buttons":{
+		"login":"Entrar",
+		"register":"Registrar"
+	}
+}

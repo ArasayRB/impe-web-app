@@ -1,0 +1,11 @@
+{
+	"menu":{
+		"team":"Team",
+		"pricing":"Pricing",
+		"contact":"Contact"
+	},
+	"buttons":{
+		"login":"Login",
+		"register":"Register"
+	}
+}

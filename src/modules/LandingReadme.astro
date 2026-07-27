@@ -8,6 +8,7 @@ import FlowbiteLogo from '../assets/flowbite-logo.svg?raw';
 
 import * as readMe from '../../README.md';
 import { SITE_TITLE } from '../app/constants.js';
+import Logo from '@/components/Logo.astro';
 ---
 
 <div
@@ -17,10 +18,7 @@ import { SITE_TITLE } from '../app/constants.js';
 		class="p-8 flex justify-center items-center flex-wrap flex-col w-full mt-16"
 	>
 		<div class="flex justify-center w-full">
-			<div
-				set:html={AstroLogo}
-				class="svg-inline w-16 h-16 text-violet-700 dark:text-violet-100"
-			/>
+			<Logo site={Astro.locals.site}  widthn="250" heightn="100" class="mr-4 h-11" />
 		</div>
 
 		<div class="format dark:format-invert lg:format-lg mt-32">

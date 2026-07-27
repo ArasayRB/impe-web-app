@@ -1,5 +1,8 @@
 ---
 import { asset, url } from '../lib/data.js';
+
+import ColorModeSwitcher from '../components/ColorModeSwitcher.astro';
+import Profile from '../components/Profile.astro';
 ---
 
 <nav
@@ -21,37 +24,41 @@ import { asset, url } from '../lib/data.js';
 				</a>
 				<div class="hidden sm:flex sm:ml-6">
 					<ul class="flex space-x-8">
-						<li>
+						<li class="p-2.5">
 							<a
 								href={url()}
 								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
 								aria-current="page">Home</a
 							>
 						</li>
-						<li>
+						<li class="p-2.5">
 							<a
 								href="#"
 								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
 								aria-current="page">Team</a
 							>
 						</li>
-						<li>
+						<li class="p-2.5">
 							<a
 								href="#"
 								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
 								aria-current="page">Pricing</a
 							>
 						</li>
-						<li>
+						<li class="p-2.5">
 							<a
 								href="#"
-								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
+								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500 p-2.5"
 								aria-current="page">Contact</a
 							>
+						</li>
+						<li>
+							<ColorModeSwitcher />
 						</li>
 					</ul>
 				</div>
 			</div>
+			<div id="auth-slot"></div>
 		</div>
 	</div>
 	<!-- Mobile menu -->
@@ -88,3 +95,12 @@ import { asset, url } from '../lib/data.js';
 		</ul>
 	</div>
 </nav>
+<script type="module">
+  import { mountAuth  } from '/src/components/AuthSwitch.client.ts';
+
+  const el = document.getElementById('auth-slot');
+  if (el) mountAuth (el);
+</script>
+
+
+

@@ -1,0 +1,70 @@
+{
+	"no_data_available":"No hay datos disponibles",
+  "errors": {
+    "TIMEOUT": "Tiempo de espera agotado. Inténtalo de nuevo.",
+    "UNKNOWN": "Error inesperado"
+  },
+  "btn":{
+    "confirm":"Confirmar"
+  },
+  "validation":{
+    "required":"Campo requerido",
+    "email":"Correo inválido"
+  },
+  "analytics":{
+    "summary":"Resumen",
+		"view_details": "Haz clic para ver detalles",
+    "filter_date_start":"Fecha inicio",
+    "filter_date_end":"Fecha fin",
+    "filter_group_by":"Agrupar por",
+    "filter_case_type":"Tipo de Caso",
+    "filter_btn":"Aplicar",
+		"group_auto": "Automático",
+    "group_day":"Diario",
+    "group_week":"Semanal",
+    "group_month":"Mensual",
+    "group_year":"Anual",
+    "case_type_all":"Todos los tipos de caso",
+    "trend_up":"Incremento vs período previo",
+    "trend_down":"Decremento vs período previo",
+    "trend_nc":"Sin Cambios",		
+		"week": "Semana",
+		"month": "Mes",
+		"year": "Año",
+		"day": "Día"
+  },
+  "crud":{
+    "list":"Lista",
+    "search":"Buscar",
+    "export":"Exportar",
+    "export_all":"Exportar todos",
+    "export_selected":"Exportar seleccionados",
+    "import":"Importar",
+    "add":"Agregar",
+    "add_new":"Agregar nuevo",
+    "edit":"Actualizar"
+  },
+	"messages":{
+		"shure_remove":"Seguro que deseas eliminar este registro?",
+		"remove":"Eliminar",
+		"deleted":"Eliminado satisfactoriamente!",
+		"created":"Agregado satisfactoriamente!",
+		"updated":"Actualizado satisfactoriamente!",
+		"delete_error":"Error intentando eliminar el registro.",
+		"error":"Error procesando el registro.",
+    "exported":"Exportado satisfactoriamente!",
+    "imported":"Importado satisfactoriamente!",
+    "selected":" seleccionado(s)"
+	},
+	"colors":{
+		"gray":"Gris",
+		"green":"Verde",
+		"red":"Rojo",
+		"yellow":"Amarillo",
+		"blue":"Azul"
+	},
+  "definition":{
+    "click_to_copy":"Click para copiar",
+    "copied":"Copiado"
+  }
+}

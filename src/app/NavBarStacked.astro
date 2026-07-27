@@ -1,5 +1,17 @@
 ---
-import { asset, url } from '../lib/data.js';
+import { asset, url } from '@/lib/data.js';
+import {resolveSite} from '@/lib/resolveSite';
+import { getServerTranslator } from '@/lib/i18n/server';
+import Logo from '../components/Logo.astro';
+import { SITE_TITLE } from './constants.js';
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
+import { lang } from '@/lib/i18n/config';
+import { resolveLocale } from '@/lib/i18n/resolveLocale';
+
+const site = resolveSite(Astro);
+const locale = resolveLocale(Astro);
+
+const t = await getServerTranslator(locale, lang);
 ---
 
 <nav
@@ -9,44 +21,44 @@ import { asset, url } from '../lib/data.js';
 		<div class="flex items-center justify-between">
 			<div class="flex items-center justify-start">
 				<a href={url()} class="flex mr-4">
-					<img
-						src={asset('images/logo.svg')}
-						class="h-8 mr-3"
-						alt="Flowbite Logo"
-					/>
+					<Logo site={Astro.locals.site} widthn="150" heightn="100" />
 					<span
 						class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-						>Flowbite</span
+						>{site?.title ?? SITE_TITLE}</span
 					>
-				</a>
+				</a>				
+				<LanguageSwitcher />
 				<div class="hidden sm:flex sm:ml-6">
 					<ul class="flex space-x-8">
-						<li>
+						{/*<li>
 							<a
 								href={url()}
 								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
 								aria-current="page">Home</a
 							>
-						</li>
+						</li>*/}
 						<li>
 							<a
 								href="#"
 								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
-								aria-current="page">Team</a
+								data-i18n="navbar.menu.team"
+								aria-current="page">{t('navbar.menu.team')}</a
 							>
 						</li>
 						<li>
 							<a
 								href="#"
 								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
-								aria-current="page">Pricing</a
+								data-i18n="navbar.menu.pricing"
+								aria-current="page">{t('navbar.menu.pricing')}</a
 							>
 						</li>
 						<li>
 							<a
 								href="#"
 								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
-								aria-current="page">Contact</a
+								data-i18n="navbar.menu.contact"
+								aria-current="page">{t('navbar.menu.contact')}</a
 							>
 						</li>
 					</ul>
@@ -55,7 +67,7 @@ import { asset, url } from '../lib/data.js';
 
 			<div>
 				<a
-					href="#"
+					href="/authentication/sign-in"
 					class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
 				>
 					<svg
@@ -72,7 +84,7 @@ import { asset, url } from '../lib/data.js';
 							d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
 						></path>
 					</svg>
-					Login/Register
+					<span data-i18n="navbar.buttons.login">{t('navbar.buttons.login')}</span>
 				</a>
 				<button
 					data-collapse-toggle="mobile-menu"
@@ -113,55 +125,40 @@ import { asset, url } from '../lib/data.js';
 	<!-- Mobile menu -->
 	<div class="hidden sm:hidden" id="mobile-menu">
 		<ul class="pt-2">
-			<li>
+			{/*<li>
 				<a
 					href="#"
 					class="block py-2 pl-3 pr-4 text-base font-normal text-gray-900 bg-gray-100 dark:bg-gray-700 dark:text-white"
 					>Dashboard</a
 				>
-			</li>
+			</li>*/}
 			<li>
 				<a
 					href="#"
 					class="block px-3 py-2 text-base font-normal text-gray-600 border-b border-gray-100 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white"
-					>Team</a
+					data-i18n="navbar.menu.team"
+					>{t('navbar.menu.team')}</a
 				>
 			</li>
 			<li>
 				<a
 					href="#"
 					class="block px-3 py-2 text-base font-normal text-gray-600 border-b border-gray-100 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white"
-					>Projects</a
+					data-i18n="navbar.menu.pricing"
+					>{t('navbar.menu.pricing')}</a
 				>
 			</li>
 			<li>
 				<a
 					href="#"
 					class="block px-3 py-2 text-base font-normal text-gray-600 border-b border-gray-100 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white"
-					>Calendar
+					data-i18n="navbar.menu.contact"
+					>{t('navbar.menu.contact')}
 				</a>
 			</li>
 			<li class="block">
-				<a
-					href="#"
-					class="inline-flex items-center w-full px-3 py-2 text-base font-normal text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white"
-				>
-					<svg
-						class="w-5 h-5 mr-2"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-						></path>
-					</svg>
-					Login/Register
-				</a>
+				<!-- Auth slot (login / profile) -->
+				<div id="auth-slot" class="ml-3"></div>
 			</li>
 		</ul>
 	</div>

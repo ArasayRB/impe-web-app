@@ -1,0 +1,154 @@
+{
+  "fields": {
+    "name": "Nombre",
+		"active":"Activo"
+  },
+	"buttons":{
+		"add": "Agregar",
+		"edit": "Editar"
+	},
+	"title":{
+		"add": "Agregar nuevo tipo",
+		"edit": "Editar tipo"
+	},
+	"columns":{
+		"name": "Nombre",
+    "slug": "Slug",
+		"active": "Activo",
+		"actions": "Acciones"
+	},
+	"definition":{
+
+		"analytics":{
+
+			"enabled":{
+				"label":"Habilitar analíticas",
+				"help":"Habilitar analíticas para este tipo de caso"
+
+			},
+
+
+			"config":{
+
+				"title":"Analíticas",
+				"expected_duration_days":{
+
+					"label":"Duración máxima",
+
+					"help":"Duración prevista para este tipo de caso."
+
+				},
+
+				"alert_after_days":{
+
+					"label":"Alerta luego de (días)",
+
+					"help":"Alerta de dias sin firmas después de x días"
+
+				},
+
+				"track_signatures":{
+
+					"label":"Seguimiento de firmas",
+
+					"help":"Seguimiento de registros de firmas"
+
+				},
+
+				"signature_interval_days":{
+
+					"label":"Intervalo de firmas",
+
+					"help":"Cada cuántos días debe firmar el cliente."
+
+				}
+			}
+
+		},		
+		"statuses": {
+			"title": "Estatus",
+
+			"enabled": {
+				"label": "Habilitar status customizados",
+				"help":"Habilitar status customizados para este tipo de caso"
+			},
+
+			"config": {
+
+				"title":"Estados",
+
+				"items": {
+
+					"label": "Estados disponilbes",
+
+					"empty": "No hay estado configurado.",
+
+					"add": "Agregar estado",
+
+					"delete": "Eliminar",
+					
+					"item": {
+						"title": "Estado",						
+
+						"key": {
+						"label": "ID"
+						},
+
+						"label": {
+						"label": "Nombre"
+						},
+
+						"color": {
+						"label": "Color"
+						},
+
+						"client_visible": {
+						"label": "Visible al cliente"
+						},
+
+						"final": {
+						"label": "Final"
+						}
+					}
+
+				}
+
+			}
+		},
+		"workflow": {
+			"title": "Flujo de trabajo",
+			"enabled": {
+				"label": "Habilitar status customizados",
+				"help":"Habilitar status customizados para este tipo de caso"
+			},
+			"config": {
+				"title":"Flujo de trabajo",
+				"steps": {
+					"label":"Pasos disponilbes",
+					"add": "Agregar paso",
+					"delete": "Eliminar",
+					"empty": "No hay pasos definidos.",
+					"item": {
+						"title": "Paso",
+						"key": {
+							"label": "Clave"
+						},
+						"label": {
+							"label": "Nombre"
+						},
+						"starts_on": {
+							"label": "Comienza cuando el estado sea"
+						},
+						"ends_on": {
+							"label": "Finaliza cuando el estado sea"
+						},
+						"expected_duration_days": {
+							"label": "Duración esperada (días)"
+						}
+					}
+				}
+			}
+		}
+
+	}
+}

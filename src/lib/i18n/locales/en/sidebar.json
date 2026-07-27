@@ -1,0 +1,51 @@
+{
+	"title":{
+		"welcome":"Welcome",
+		"dashboard":"Dashboard",
+		"analytics":"Analytics",
+		"resources":"Resources",
+		"earnings":"Earnings",
+		"logout":"Logout",
+		"layouts":"Layouts",
+		"crud":"CRUD",
+		"settings":"Settings",
+		"pages":"Pages",
+		"authentication":"Authentication",
+		"playground":"Playground",
+		"github":"GitHub Repository",
+		"flowbite":"Flowbite Documents",
+		"support":"Support",
+		"components":"Components"
+	},
+	"dashboard":{
+		"cases":"Cases",
+		"customers":"Customers",
+		"casetypes":"Case Types"
+	},
+	"layouts":{
+		"stacked":"Stacked",
+		"sidebar":"Sidebar"
+	},
+	"crud":{
+		"products":"Products",
+		"users":"Users"
+	},
+	"pages":{
+		"pricing":"Pricing",
+		"maintenance":"Maintenance",
+		"404":"404",
+		"500":"500"
+	},
+	"authentication":{
+		"signin":"Sign in",
+		"signup":"Sign up",
+		"forgot_pass":"Forgot password",
+		"reset_pass":"Reset password",
+		"lock_pass":"Profile lock"
+	},
+	"playground":{
+		"stacked":"Stacked",
+		"sidebar":"Sidebar",
+		"api_data":"API Data"
+	}
+}

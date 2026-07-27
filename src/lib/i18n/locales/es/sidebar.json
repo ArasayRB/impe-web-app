@@ -1,0 +1,51 @@
+{
+	"title":{
+		"welcome":"Bienvenido",
+		"dashboard":"Panel",
+		"analytics":"Analíticas",
+		"resources":"Recursos",
+		"earnings":"Ganancias",
+		"logout":"Salir",
+		"layouts":"Diseños",
+		"crud":"CRUD",
+		"settings":"Configuraciones",
+		"pages":"Páginas",
+		"authentication":"Autenticación",
+		"playground":"Patio de Juegos",
+		"github":"Repositorio GitHub",
+		"flowbite":"Documentos Flowbite",
+		"support":"Soporte",
+		"components":"Componentes"
+	},
+	"dashboard":{
+		"cases":"Casos",
+		"customers":"Clientes",
+		"casetypes":"Tipos de Caso"
+	},
+	"layouts":{
+		"stacked":"Apiladas",
+		"sidebar":"Barra Lateral"
+	},
+	"crud":{
+		"products":"Productos",
+		"users":"Usuarios"
+	},
+	"pages":{
+		"pricing":"Precios",
+		"maintenance":"Mantenimiento",
+		"404":"404",
+		"500":"500"
+	},
+	"authentication":{
+		"signin":"Entrar",
+		"signup":"Salir",
+		"forgot_pass":"Olvidó su contraseña",
+		"reset_pass":"Cambiar contraseña",
+		"lock_pass":"Perfil bloqueado"
+	},
+	"playground":{
+		"stacked":"Apiladas",
+		"sidebar":"Barra Lateral",
+		"api_data":"Datos API"
+	}
+}

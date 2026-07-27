@@ -3,22 +3,35 @@ import LayoutCommon from './LayoutCommon.astro';
 import FooterStacked from './FooterStacked.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import NavBarBlog from './NavBarBlog.astro';
+import SiteSelector from '@/components/SiteSelector.astro';
+
+const { site } = Astro.locals;
 ---
 
 <LayoutCommon>
-	<NavBarBlog />
+	<SiteSelector />
+	<NavBarBlog site={site}/>
   <div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
 		<div
 			id="main-content"
 			class="relative w-full max-w-screen-2xl mx-auto h-full overflow-y-auto bg-gray-50 dark:bg-gray-900 min-h-screen"
 		>
 			<div class="px-4 pt-6 2xl:px-0">				
-            <BaseLayout {...Astro.props}>
+            <BaseLayout site={site} {...Astro.props}>
                 <slot />
             </BaseLayout>
 			</div>
 
-			<FooterStacked />
+			<FooterStacked site={site}/>
 		</div>
 	</div>
+	<script type="module">
+		import { initSite } from '/src/lib/site.store';
+
+		const site = JSON.parse(
+			document.documentElement.dataset.site
+		);
+
+		initSite(site);
+	</script>
 </LayoutCommon>

@@ -1,0 +1,66 @@
+{
+  "fields": {
+    "description": "Descripción",
+    "title": "Título",
+		"status": "Estado",
+		"category": "Categoría",
+		"customer": "Cliente",
+		"case":"Caso"
+  },
+  "status": {
+    "open": "Abierto",
+    "pending": "Pendiente",
+    "closed": "Cerrado"
+  },
+	"buttons":{
+		"add": "Agregar",
+		"edit": "Editar",
+		"create_customer": "Crear cliente"
+	},
+	"title":{
+		"add": "Agregar nuevo caso",
+		"edit": "Editar caso"
+	},
+	"columns":{
+		"no_case": "No.Caso",
+    "case": "Caso",
+		"customer": "Cliente",
+		"category": "Categoría",
+		"email": "Correo",
+		"case_email": "Correo(Caso)",
+		"status": "Estado",
+		"actions": "Acciones"
+	},
+	"analytics":{
+		"new":"Caso Nuevo",
+		"total_cases":"Total de Casos",
+		"active_cases":"Progresos activos de Casos",
+		"overdue_cases":"Casos retrasados",
+		"workflow_progress":"Progreso del flujo de trabajo",
+		"workflow_active":"Progreso del flujo activos",
+		"workflow_paused":"Progreso del flujo pausados",
+		"workflow_completed":"Progreso del flujo completados",
+		"workflow_duration":{
+			"title":"Duración media del proceso (días)"
+		},
+		"average_process_duration":"Duración media del proceso",
+		"workflow":"Progreso del trabajo",
+		"progress":"Progresso",
+		"deadline":"Fechas límite",
+		"create_child_case":"Casos hijos",
+		"continue":"Continuan",
+		"remaining_days":"Días restantes",
+		"health":{
+			"title":"Salud",
+			"create_child_case":"Casos Hijos",
+			"continue":"Continuan"
+		},
+		"active":"Activos",
+		"completed":"Completados",
+		"paused":"Pausados",
+		"ok":"Ok",
+		"warning":"Alerta",
+		"overdue":"Vencidos",
+		"duration":"Duración"
+	}
+}

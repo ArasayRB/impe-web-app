@@ -1,38 +1,81 @@
 ---
 import LayoutStacked from '../../app/LayoutStacked.astro';
 import FormSignIn from '../../modules/FormSignIn.astro';
+import { isBrowser } from '@/lib/env';
 ---
 
 <LayoutStacked>
 	<div class="min-h-screen align-middle flex pb-[12vh]">
-		<p id="loginError" class="hidden text-sm text-red-500"></p>
 		<FormSignIn />
 	</div>
 	
 	<script type="module">
-		import { login } from '/src/services/auth.service.ts';
+		import { getSession, clearSession } from '/src/lib/session';
+		import { initDevice } from '/src/lib/device.store.ts';
+		import { login } from '/src/modules/auth/auth.client.ts';
+		import { handleLoginError } from '/src/lib/error.handle.client.ts';
+		import { initI18n } from '/src/lib/i18n/i18n';
+		import { setLocale } from '/src/lib/i18n/store';
+		import { lang } from '/src/lib/i18n/config';
+		import { loadNamespace } from '/src/lib/i18n/loader';
+
+		const locale =
+		document.cookie.match(/locale=([^;]+)/)?.[1] || 'en';
+
+		if(locale.length){
+			setLocale(locale);
+
+			await Promise.all(lang.map(trans => loadNamespace(locale, trans))); // KEY to translates
+		}
+		//localStorage.clear();
+		//document.cookie.split(";").forEach(c => {
+		//document.cookie = c
+		//	.replace(/^ +/, "")
+		//	.replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+		//});
 
 		const form = document.getElementById('loginForm');
 		const errorEl = document.getElementById('loginError');
+		let isSubmitting = false;
 
 		if (form) {
 			form.addEventListener('submit', async (e) => {
-			e.preventDefault();
+				e.preventDefault();
 
-			try {
-				const email = form.email.value;
-				const password = form.password.value;
+				if (isSubmitting) return;
+					isSubmitting = true;
 
-				const data = await login(email, password);
+				const btn = form.querySelector('button[type="submit"]');
+				btn.disabled = true;
 
-				localStorage.setItem('auth_token', data.token);
-				location.href = '/';
-			} catch (e) {
-				if (errorEl) {
-				errorEl.textContent = e.message;
-				errorEl.classList.remove('hidden');
+				errorEl.classList.add('hidden');
+
+				try {
+					const formData = new FormData(form);
+
+					const email = formData.get('email');
+					const password = formData.get('password');
+					
+					initDevice();
+
+					const data = await login(email, password);
+					
+					if (data.requires_2fa) {
+						location.href = '/authentication/2fa';
+						return;
+					}
+					// REAL VALIDATION
+					if (!data?.accessToken) {
+						throw new Error('Invalid authentication response');
+					}
+
+					location.href = '/';
+				} catch (e) {
+					handleLoginError(e,errorEl);
+				} finally {
+					btn.disabled = false;
+					isSubmitting = false;
 				}
-			}
 			});
 		}
 	</script>

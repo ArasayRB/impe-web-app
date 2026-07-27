@@ -1,0 +1,51 @@
+---
+import ijobaRaw from '@/assets/ijoba.svg?raw';
+interface Props {
+  site?: any;
+  widthn?: string;
+  heightn?: string;
+  class?: string;
+}
+
+const { 
+  site, 
+  widthn = "100", // valores por defecto
+  heightn = "40", 
+  class: className 
+} = Astro.props;
+---
+
+<div class:list={["logo-container group", className]}>
+  {site?.logo ? (
+    <img src={site.logo} alt="Logo" style={`width: ${widthn}px; height: ${heightn}px;`}
+      class="object-contain dark:invert"  />
+  ) : (
+    <div class="svg-wrapper" 
+      style={`width: ${widthn}px; height: ${heightn}px;`}
+      set:html={ijobaRaw}  />
+  )}
+</div>
+
+<style define:vars={{ widthn: `${widthn}px`, heightn: `${heightn}px` }}>
+  .svg-wrapper :global(svg) {
+    /* Usamos las variables pasadas por props para el tamaño */
+    width: var(--widthn);
+    height: var(--heightn);
+  }
+
+  /* Color base: Negro en light, Blanco en dark */
+  .svg-wrapper :global(svg path) {
+    fill: theme('colors.gray.700') !important;
+    transition: fill 0.2s ease;
+  }
+  :global(.dark) .svg-wrapper :global(svg path) {
+    fill: theme('colors.gray.100') !important;
+  }
+
+  /* EFECTO HOVER: Si el padre (o el grupo) tiene hover, cambia el color */
+  /* Aquí puedes poner el color que quieras para el efecto hover */
+  .logo-container:hover .svg-wrapper :global(svg path),
+  :global(.group:hover) .svg-wrapper :global(svg path) {
+    fill: #3b82f6 !important; /* Ejemplo: un azul de Tailwind */
+  }
+</style>

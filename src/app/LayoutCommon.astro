@@ -4,11 +4,34 @@ import { url } from '../lib/data.js';
 
 import { SITE_TITLE } from './constants.js';
 
+import Loader from '../components/Loader.astro';
+import {logError} from '@/lib/logger.ts';
+
+// i18n
+import { resolveLocale } from '@/lib/i18n/resolveLocale';
+import { setLocale,localeStore } from '@/lib/i18n/store';
+import { loadNamespace } from '@/lib/i18n/loader';
+import { lang } from '@/lib/i18n/config';
+
 const { class: clazz } = Astro.props;
+const site = Astro.locals.site ?? null;
+const locale = resolveLocale(Astro);logError('Site in LayoutCommon',{Astro, site, locale});
+const tenant = site ? JSON.stringify(site) : '{}';
+
+if(locale.length){
+	setLocale(locale);
+	let locl=localeStore.get();
+	logError('Site in LayoutCommon set locale',{locale,localeStore,locl});
+
+	// preload namespaces críticos
+
+	await Promise.all(lang.map(trans => loadNamespace(locale, trans)));
+}
+console.log('Astro',Astro.props, Astro.locals)
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang={locale} data-site={tenant}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,9 +49,11 @@ const { class: clazz } = Astro.props;
 
 		<meta
 			name="author"
-			content="Julian Cataldo, Zoltán Szőgyényi, Robert Tanislav"
+			content="IJOBA"
 		/>
 		<meta name="copyright" content="MIT" />
+		
+		<script type="module" src="/src/main.client.ts"></script>
 
 		<script is:inline>
 			if (
@@ -52,6 +77,7 @@ const { class: clazz } = Astro.props;
 			'dark:scrollbar-track-gray-900 dark:scrollbar-thumb-gray-700',
 		]}
 	>
+			<Loader />
 		<slot />
 	</body>
 </html>

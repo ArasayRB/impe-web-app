@@ -2,31 +2,39 @@ import { defineConfig } from 'astro/config';
 
 import sitemap from '@astrojs/sitemap';
 import tailwind from '@astrojs/tailwind';
-import mdx from "@astrojs/mdx";
+import mdx from '@astrojs/mdx';
+import node from '@astrojs/node';
 
 const DEV_PORT = 2121;
 
-// https://astro.build/config
 export default defineConfig({
-	site: process.env.CI
-		? 'https://themesberg.github.io'
-		: `http://localhost:${DEV_PORT}`,
-	base: process.env.CI ? '/flowbite-astro-admin-dashboard' : undefined,
+  site: process.env.CI
+    ? 'https://themesberg.github.io'
+    : `http://localhost:${DEV_PORT}`,
 
-	// output: 'server',
+  base: process.env.CI ? '/flowbite-astro-admin-dashboard' : undefined,
 
-	/* Like Vercel, Netlify,… Mimicking for dev. server */
-	// trailingSlash: 'always',
+  output: 'server',
 
-	server: {
-		/* Dev. server only */
-		port: DEV_PORT,
-	},
+  adapter: node({
+    mode: 'standalone',
+  }),
 
-	integrations: [
-		//
-		sitemap(),
-		tailwind(),
-		mdx()
-	],
+  server: {
+    port: DEV_PORT,
+  },
+
+  integrations: [
+    sitemap(),
+    tailwind(),
+    mdx(),
+  ],
+
+  vite: {
+    resolve: {
+      alias: {
+        '@': '/src',
+      },
+    },
+  },
 });

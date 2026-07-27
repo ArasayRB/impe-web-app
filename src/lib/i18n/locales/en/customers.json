@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "name": "Name",
+    "email": "Email",
+		"address": "Address",
+		"phone":	"Phone",
+		"notes":	"Note",
+		"with_account": "Create user account"
+  },
+	"buttons":{
+		"add": "Add",
+		"edit": "Update",
+		"create_customer": "Create customer"
+	},
+	"title":{
+		"add": "Add new case",
+		"edit": "Edit case"
+	},
+	"columns":{
+		"name": "Name",
+    "email": "Email",
+		"address": "Address",
+		"phone":	"Phone",
+		"notes":	"Note",
+		"actions": "Acciones"
+	},
+	"analytics":{
+		"total":"Total Customers",
+		"new":"New Customers",
+		"with_cases":"Customers With Cases",
+		"without_cases":"Customers Without Cases",
+		"total_cases":"Total Cases",
+		"avge_cases":"Average Cases",
+		"customers_growth":"Customer Growth",
+		"customers_by_period":"Customers by Period",
+		"customers_distribution":"Customer Distribution",
+		"customers_top":"Top Customers"
+	}
+}

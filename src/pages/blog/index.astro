@@ -1,54 +1,104 @@
 ---
-import LayoutPublic from '../../app/LayoutPublic.astro';
-//import Layout from '../../layouts/BaseLayout.astro';
+export const prerender = false;
+import LayoutPublic from '@/app/LayoutPublic.astro';
+import { list } from '@/modules/blog/posts.service';
+import { mapApiPost } from '@/lib/mappers/post.mapper';
+import { formatDate } from '@/lib/formatters/date';
 
 interface Frontmatter {
   title: string;
-  description?: string | undefined;
+  description?: string;
   pubDate: string | Date;
-  image?: string | undefined;
+  image?: string;
 }
 
 interface Post {
   slug: string;
   title: string;
-  description?: string| undefined;
+  description?: string;
   pubDate: Date;
-  image?: string| undefined;
+  image?: string;
 }
 
-const modules = import.meta.glob<{
-  frontmatter: Frontmatter;
-}>('../../content/blog/*.mdx', { eager: true });
+let posts: Post[] = [];
 
-const posts: Post[] = Object.entries(modules)
-  .map(([path, mod]: [string, any]) => {
+  const apiPosts = await list(Astro.request);
+console.log('api posts',apiPosts);
+  posts = apiPosts.map(mapApiPost);
+try {
+  // 1️⃣ Intentar API
+} catch (e) {console.log('error',e)
+  // 2️⃣ Fallback MDX
+  const modules = import.meta.glob<{
+    frontmatter: Frontmatter;
+  }>('../../content/blog/*.mdx', { eager: true });
+
+  posts = Object.entries(modules)
+  .map(([path, mod]) => {
     const slug = path.split('/').pop()?.replace(/\.mdx$/, '') ?? '';
-    const fm = mod.frontmatter as Frontmatter;
+    const fm = mod.frontmatter;
+
     return {
       slug,
       title: fm.title,
       description: fm.description,
-      pubDate: new Date(fm.pubDate),
+      createdAt: new Date(fm.createdAt),
       image: fm.image,
     };
   })
-  .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
+  .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+}
 ---
-<LayoutPublic title="Blog" description="Últimos artículos del blog">
+<LayoutPublic title="Blog" description="Últimos artículos">
   <section class="max-w-4xl mx-auto py-12">
-    <h1 class="text-3xl font-bold mb-6">Blog</h1>
+    <header class="mb-12 text-center">
+      <h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+        Blog
+      </h1>
+      <p class="mt-4 text-lg text-gray-600 dark:text-gray-400">
+        Ideas, noticias y contenido relevante
+      </p>
+    </header>
 
-    <div class="grid gap-6">
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
       {posts.map((post) => (
-        <article class="p-6 border rounded-lg bg-white dark:bg-gray-800 shadow-sm">
-          <a href={`/blog/${post.slug}`} class="no-underline">
-            <h2 class="text-xl font-semibold">{post.title}</h2>
-            <p class="text-sm text-gray-500 dark:text-gray-400">{post.description}</p>
-            <div class="mt-3 text-xs text-gray-400">
-              {post.pubDate.toLocaleDateString('es-ES')}
+        <article class="group bg-white dark:bg-gray-800 rounded-xl shadow hover:shadow-lg transition overflow-hidden">
+          {post.image && (
+            <a href={`/blog/${post.slug}`}>
+              <img
+                src={post.image}
+                alt={post.title}
+                class="h-48 w-full object-cover"
+                loading="lazy"
+              />
+            </a>
+          )}
+          <div class="p-6">
+            <time class="text-sm text-gray-500 dark:text-gray-400">
+              {post.createdAt.toLocaleDateString('es-ES')}
+            </time>
+
+            <h2 class="mt-2 text-xl font-semibold text-gray-900 dark:text-white group-hover:underline">
+              <a href={`/blog/${post.slug}`}>
+                {post.title}
+              </a>
+            </h2>
+
+            {post.summary && (
+              <p class="mt-3 text-gray-600 dark:text-gray-300 line-clamp-3">
+                {post.summary}
+              </p>
+            )}
+
+            <div class="mt-4">
+              <a
+                href={`/blog/${post.slug}`}
+                class="inline-flex items-center text-primary-600 dark:text-primary-400 font-medium"
+              >
+                Leer más →
+              </a>
             </div>
-          </a>
+          </div>
         </article>
       ))}
     </div>

@@ -1,0 +1,34 @@
+---
+import LayoutSidebar from '@/app/LayoutSidebar.astro';
+import CrudCustomers from '@/modules/customers/Customer.astro';
+import { listCustomers } from '@/modules/customers/customers.service';
+
+
+import { resolveSite } from '@/lib/resolveSite';
+
+let data;
+let error = null;
+const site = resolveSite(Astro);
+
+try {
+  data = await listCustomers(Astro.request, {}, site);
+} catch (e:any) {console.log('Error message',e)
+  error = e;
+  data = {
+    data: [],
+    meta: {},
+    error: {
+      message: e.message || 'Request failed',
+      code: e.code || 'UNKNOWN'
+    }
+  };
+}
+---
+
+<LayoutSidebar>
+	<CrudCustomers initialData={data} />
+  <script type="module">
+    import { initModalEvents } from '/src/lib/modal.events.ts';
+    initModalEvents();
+  </script>
+</LayoutSidebar>

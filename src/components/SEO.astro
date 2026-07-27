@@ -1,19 +1,36 @@
 ---
-const { title, description, image, url, published } = Astro.props;
-const site = 'https://tudominio.com';
-const canonical = url ?? site;
+const { title,
+    description,
+    image,
+    url,
+    published,
+    type = 'website', // website | article
+    site = 'Mi SaaS',
+    author, } = Astro.props;
+const baseUrl = site?.domain
+  ? `https://${site.domain}`
+  : import.meta.env.PUBLIC_SITE_URL;
+const canonical = url ?? baseUrl;
 ---
 <head>
-  <title>{title ? `${title} | Mi Blog` : 'Mi Blog'}</title>
+  <title>{title ? `${title} | ${site?.name}` : site?.name}</title>
   <meta name="description" content={description || 'Blog personal en Astro'} />
   <link rel="canonical" href={canonical} />
 
   <!-- OpenGraph -->
+  <meta property="og:type" content={type} />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   {image && <meta property="og:image" content={image} />}
   <meta property="og:url" content={canonical} />
-  {published && <meta property="article:published_time" content={published} />}
+  <meta property="og:site_name" content={site} />
+  <!-- Article -->
+  {type === 'article' && published && (
+    <meta property="article:published_time" content={published} />
+  )}
+  {type === 'article' && author && (
+    <meta property="article:author" content={author} />
+  )}
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
