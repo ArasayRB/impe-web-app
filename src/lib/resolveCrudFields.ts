@@ -9,7 +9,10 @@ export function resolveCrudFields(
     return fields.map(field => {
 
         if (
-            field.type !== "tag-selector" ||
+            (
+							field.type !== "tag-selector" &&
+            	field.type !== "case-people"
+						) ||
             !field.component
         ) {
             return field;
@@ -22,6 +25,9 @@ export function resolveCrudFields(
             component: {
 
                 ...field.component,
+
+								relationshipOptions:
+                field.component?.relationshipOptions ?? [],
 
                 module:
                     modules[

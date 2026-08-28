@@ -8,10 +8,16 @@ import { ApiError } from '@/lib/api.error';
 import { refreshAuth, getAuthHeaders } from '@/services/auth.client';
 
 export async function apiClientFetch(url: string, options: RequestInit = {}, retry = true,signal?: AbortSignal ) {
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+  const isFormData =
+  	options.body instanceof FormData;
+		
+	const headers: Record<string, string> = {
     'Accept': 'application/json',
   };
+	
+	if (!isFormData) {
+		headers['Content-Type'] = 'application/json';
+	}
 
   const token = getToken(); // ← usa localStorage
   const site = getSite();

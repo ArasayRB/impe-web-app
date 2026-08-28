@@ -138,3 +138,125 @@ export async function deleteCase(
   const { deleteCaseClient } = await import('./cases.client');
   return deleteCaseClient(id);
 }
+
+export async function getCaseDocuments(
+	id: number | string,
+	request?: Request,
+	site?: Site
+) {
+
+	const resolvedSite = import.meta.env.SSR
+		? ensureSite(site)
+		: getSite();
+
+	if (import.meta.env.SSR) {
+
+		const {
+			getCaseDocumentsServer
+		} = await import('./cases.server');
+
+		return getCaseDocumentsServer(
+			id,
+			request!,
+			resolvedSite
+		);
+	}
+
+	const {
+		getCaseDocumentsClient
+	} = await import('./cases.client');
+
+	return getCaseDocumentsClient(id);
+}
+
+export async function uploadCaseDocument(
+	id: number | string,
+	data: FormData,
+	request?: Request,
+	site?: Site
+) {
+
+	const resolvedSite = import.meta.env.SSR
+		? ensureSite(site)
+		: getSite();
+
+	if (import.meta.env.SSR) {
+
+		const {
+			uploadCaseDocumentServer
+		} = await import('./cases.server');
+
+		return uploadCaseDocumentServer(
+			id,
+			data,
+			request!,
+			resolvedSite
+		);
+	}
+
+	const {
+		uploadCaseDocumentClient
+	} = await import('./cases.client');
+
+	return uploadCaseDocumentClient(
+		id,
+		data
+	);
+}
+
+export async function generateCaseDocument(
+	id: number | string,
+	data: {
+		template_id: number;
+		document_key: string;
+	},
+	request?: Request,
+	site?: Site
+) {
+
+	const resolvedSite = import.meta.env.SSR
+		? ensureSite(site)
+		: getSite();
+
+	if (import.meta.env.SSR) {
+
+		const {
+			generateCaseDocumentServer
+		} = await import('./cases.server');
+
+		return generateCaseDocumentServer(
+			id,
+			data,
+			request!,
+			resolvedSite
+		);
+	}
+
+	const {
+		generateCaseDocumentClient
+	} = await import('./cases.client');
+
+	return generateCaseDocumentClient(
+		id,
+		data
+	);
+}
+
+// DELETE
+export async function deleteCaseDocument(
+	id: number | string,
+	request?: Request,
+	site?: Site
+) {
+	const resolvedSite = import.meta.env.SSR
+		? ensureSite(site)
+		: getSite();
+
+	if (import.meta.env.SSR) {
+		const { deleteCaseDocumentServer } = await import('./cases.server');
+		return deleteCaseDocumentServer(id, request!, resolvedSite);
+	}
+
+	const { deleteCaseDocumentClient } = await import('./cases.client');
+	return deleteCaseDocumentClient(id);
+}

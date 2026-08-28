@@ -1,21 +1,33 @@
 import { casesModule } from './cases.store';
+import {showError} from '@/lib/toast';
+import {confirmAction} from '@/lib/confirmAction';
 import { customersModule } from '@/modules/customers/customers.store';
 import { casetypesModule } from '@/modules/case_types/casetypes.store';
 import { resolveCrudFields } from "@/lib/resolveCrudFields";
+import { renderCaseDocuments } from '@/ui/CaseDocuments/CaseDocuments';
+import {fetchDocumentTemplates, documentTemplatesModule} from '@/modules/document_templates/document-templates.store';
 import { mountCrudForm } from '@/lib/createCrudForm';
 import { renderStatusPill } from '@/lib/ui.helpers';
 import { mountCrud } from '@/lib/createCrudUi';
 import { modalController } from '@/lib/modal.controller';
 import type { Field } from '@/lib/createCrudForm';
-import { caseFields } from './cases.form.config';
+import { caseFields, caseFormTabs } from './cases.form.config';
+import {
+    validateCaseWorkflowStatus,
+    type CaseWorkflowValidationResult
+} from './cases.workflow';
 import { initSite } from '@/lib/site.store';
-import { mountAutocomplete } from '@/lib/ui.autocomplete';
 import { registerModal } from '@/lib/modal.registry';
-import { searchCustomers } from '@/modules/customers/customers.service';
 import { openAddCustomerForm } from '@/modules/customers/customers.ui';
 import { on } from '@/lib/event.bus';
 import { debounce } from '@/lib/debounce';
 import { t } from '@/lib/i18n/i18n';
+
+interface CasePersonFormValue {
+    person_id: number;
+    label: string;
+    relationship: string;
+}
 
 const fields: Field[] =  resolveCrudFields(caseFields, {
 
@@ -111,10 +123,123 @@ function transformCasePayload(payload){
 
             payload.customer_id?.[0]?.id
 
-            ?? null
+            ?? null,
+					
+				related_people:
+					payload.related_people ? payload.related_people
+						.map((person: CasePersonFormValue) => ({
+
+								person_id:
+										person.person_id,
+
+								relationship:
+										person.relationship
+
+						})):[]
 
     };
 
+}
+
+async function renderCaseDocumentsTab(
+    container: HTMLElement,
+    context: {
+        mode: 'create' | 'edit';
+        data: any;
+    }
+) {
+
+    if (
+        context.mode === 'create' ||
+        !context.data?.id
+    ) {
+
+        container.innerHTML = `
+            <div class="
+                p-6
+                text-center
+                text-sm
+                text-gray-500
+                dark:text-gray-400
+            ">
+                ${t('cases.documents.save_first')}
+            </div>
+        `;
+
+        return;
+    }
+
+    await fetchDocumentTemplates({
+        active: 1
+    });
+
+    const templates =
+        documentTemplatesModule.getState().data ?? [];
+
+    renderCaseDocuments({
+
+        container,
+
+        caseId:
+            context.data.id,
+
+        caseType:
+            context.data.type,
+
+        documentTemplates:
+            templates
+
+    });
+}
+
+function confirmCaseWorkflowForce(
+    result: CaseWorkflowValidationResult
+): Promise<boolean> {
+
+    return new Promise(resolve => {
+
+        confirmAction({
+
+            modalId: 'delete-cases-modal',
+
+            svg: `
+                <svg
+                    class="w-16 h-16 mx-auto text-yellow-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    ></path>
+                </svg>
+            `,
+
+            title:
+                t('cases.messages.workflow_warning'),
+
+            message:
+                result.message ??
+                t('cases.messages.workflow_requirement'),
+
+            onConfirm: async () => {
+                resolve(true);
+            },
+
+            errorMessage:
+                t('common.errors.UNKNOWN')
+        });
+
+        /*
+        * We need cancellation/close to resolve false.
+        *
+        * This part depends on how your modalController
+        * exposes close events.
+        */
+    });
 }
 
 function openEditForm(row: any) {
@@ -136,6 +261,16 @@ console.log('row',row);
             }
         ]
         : [],
+		
+		related_people:
+			(row.entity_people ?? []).map(person => ({
+					person_id: person.person_id,
+					label: person.person.name,
+					relationship: person.relationship
+			})),
+
+		enable_inbound_email:
+    !!row.email_case,
 
     case_type_id:
 
@@ -169,8 +304,84 @@ console.log('row',row);
     module: casesModule,
     mode: 'edit',
     fields,
+		tabs: caseFormTabs,
+		tabRenderers: {
+				documents: renderCaseDocumentsTab
+		},
     modalId: 'edit-case-modal',
     translations:'cases',
+		beforeSubmit: async ({
+				payload,
+				data
+		}) => {
+
+				/*
+				* Only workflow status changes
+				* require workflow validation.
+				*/
+				if (
+						payload.status === undefined ||
+						payload.status === data?.status
+				) {
+						return {
+								proceed: true,
+								payload
+						};
+				}
+
+				const result =
+						validateCaseWorkflowStatus(
+								data.definition_json,
+								payload.status
+						);
+
+				if (result.valid) {
+
+						return {
+								proceed: true,
+								payload
+						};
+				}
+
+				/*
+				* Invalid transition cannot be forced.
+				*/
+				if (result.invalidTransition) {
+
+						showError(
+								result.message ??
+								t('common.errors.UNKNOWN')
+						);
+
+						return {
+								proceed: false
+						};
+				}
+
+				/*
+				* Requirement is incomplete.
+				* Ask the user whether to force it.
+				*/
+				const confirmed =
+						await confirmCaseWorkflowForce(
+								result
+						);
+
+				if (!confirmed) {
+
+						return {
+								proceed: false
+						};
+				}
+
+				return {
+						proceed: true,
+						payload: {
+								...payload,
+								force: true
+						}
+				};
+		},
     getData: () => formRow,
     transform:transformCasePayload
   });
@@ -236,6 +447,10 @@ export function openAddForm(id:string) {
     module: casesModule,
     mode: 'create',
     fields,
+		tabs: caseFormTabs,
+		tabRenderers: {
+				documents: renderCaseDocumentsTab
+		},
     modalId: id,
     translations:'cases',
     onSuccess: async(res) => {
@@ -259,8 +474,8 @@ export async function mountCases(el: HTMLElement) {
   const columnsData = [
       { key: 'case_number', label: 'cases.columns.no_case' },
       { key: 'title', label: 'cases.columns.case' },
-      { key: 'customers.name', label: 'cases.columns.customer' },
-      { key: 'customers.email', label: 'cases.columns.email' },
+      { key: 'customer.name', label: 'cases.columns.customer' },
+      { key: 'customer.email', label: 'cases.columns.email' },
       { key: 'email_case', label: 'cases.columns.case_email' },
       {
         key: 'status',

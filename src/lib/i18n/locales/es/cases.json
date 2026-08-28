@@ -5,7 +5,12 @@
 		"status": "Estado",
 		"category": "Categoría",
 		"customer": "Cliente",
-		"case":"Caso"
+		"case":"Caso",
+		"external_email_case":"Email externo del caso",
+		"enable_inbound_email":"Habilitar revision automática de dominios en email?",
+		"related_people": "Personas relacionadas",
+		"relationship": "Relación",
+		"person": "Persona"
   },
   "status": {
     "open": "Abierto",
@@ -62,5 +67,48 @@
 		"warning":"Alerta",
 		"overdue":"Vencidos",
 		"duration":"Duración"
+	},
+	"relationships": {
+			"spouse": "Esposo/a",
+			"children": "Hijo/a",
+			"parent": "Padre/Madre",
+			"sibling": "Hermano/a",
+			"other": "Otro"
+	},
+	"related_people": {
+			"add": "Agregar persona",
+			"delete": "Eliminar",
+			"empty": "No se han agregado personas relacionadas."
+	},
+	"tabs": {
+			"general": "General",
+			"people": "Personas",
+			"documents": "Documentos"
+	},
+	"documents": {
+			"description": "Sube los documentos del caso y/o genéralos a partir de una plantilla disponible",
+			"title": "Documentos asociados al caso",
+			"upload_title" : "Subir documento",
+			"type" : "Tipo",
+			"file" : "Archivo",
+			"select_document": "Selecciona tipo de documento",
+			"buttons":{
+					"upload" : "Subir",
+					"generate" : "Generar",
+					"download" : "Descargar",
+					"delete" : "Eliminar"
+			},
+			"template" : "Plantilla",
+			"select_template":"Selecciona una plantilla",
+			"file_not_selected":"No se ha seleccionado ningún archivo aún",
+			"uploaded_documentslist":"Documentos subidos",
+			"generate_from_template":"Generar desde una plantilla",
+			"no_documents_yet":"No hay dcomentos",
+			"save_first":"Crea el caso primero."
+	},
+	"messages":{
+		"workflow_warning":"Alerta de flujo",
+		"invalid_transition":"no es un estado valido de transición para el paso actual.",
+		"requirement_not_complete":"requerimiento  no completado."
 	}
 }

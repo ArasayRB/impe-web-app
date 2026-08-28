@@ -9,7 +9,8 @@ export type DefinitionField = {
         | "switch"
         | "select"
         | "multiselect"
-        | "color";
+        | "color"
+				| "string-list";
 
     hidden?: boolean;
 

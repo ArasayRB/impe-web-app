@@ -2,10 +2,15 @@
   "fields": {
     "description": "Description",
     "title": "Title",
-	"status": "Status",
-	"category": "Category",
-	"customer": "Customer",
-	"case": "Case"
+		"status": "Status",
+		"category": "Category",
+		"customer": "Customer",
+		"case": "Case",
+		"external_email_case":"External email case",
+		"enable_inbound_email":"Enable automatic email review domains?",
+		"related_people": "Related people",
+		"relationship": "Relation",
+		"person": "People"
   },
   "status": {
     "open": "Open",
@@ -62,5 +67,48 @@
 		"warning":"Warning",
 		"overdue":"Overdue",
 		"duration":"Duration"
+	},
+	"relationships": {
+			"spouse": "Spouse",
+			"children": "Child",
+			"parent": "Parent",
+			"sibling": "Sibling",
+			"other": "Other"
+	},
+	"related_people": {
+			"add": "Add person",
+			"delete": "Deete",
+			"empty": "No related people have been added."
+	},
+	"tabs": {
+			"general": "General",
+			"people": "People",
+			"documents": "Documents"
+	},
+	"documents": {
+			"description": "Upload case documents and/or generate it from an available template",
+			"title": "Related case documents",
+			"upload_title" : "Upload document",
+			"type" : "Type",
+			"file" : "File",
+			"select_document": "Select document type",
+			"buttons":{
+					"upload" : "Upload",
+					"generate" : "Generate",
+					"download" : "Download",
+					"delete" : "Delete"
+			},
+			"template" : "Template",
+			"select_template":"Select template",
+			"file_not_selected":"File not selected yet",
+			"uploaded_documentslist":"Uploaded documents",
+			"generate_from_template":"Generate from template",
+			"no_documents_yet":"No dcoments",
+			"save_first":"Save case first."
+	},
+	"messages":{
+		"workflow_warning":"Workflow alert",
+		"invalid_transition":"status is not a valid transition from the current step.",
+		"requirement_not_complete":"requerimiento  no completado."
 	}
 }

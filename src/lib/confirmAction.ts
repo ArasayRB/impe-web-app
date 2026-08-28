@@ -9,6 +9,7 @@ type ConfirmActionOptions = {
   onConfirm: () => void | Promise<void>;
   successMessage?: string;
   errorMessage?: string;
+	onCancel?: () => void;
 };
 
 export function confirmAction({
@@ -68,6 +69,11 @@ export function confirmAction({
 
     confirmBtn.disabled = true;
 
+		confirmBtn.classList.add(
+				'opacity-50',
+				'cursor-not-allowed'
+		);
+
     try {
 
       await onConfirm();
@@ -87,6 +93,11 @@ export function confirmAction({
 		} finally {
 
       confirmBtn.disabled = false;
+
+			confirmBtn.classList.remove(
+					'opacity-50',
+					'cursor-not-allowed'
+			);
 
       confirmBtn.removeEventListener(
         'click',

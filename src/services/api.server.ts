@@ -45,12 +45,39 @@ export async function apiFetchServer(
      'TENANT_NOT_RESOLVED'
     );
   }
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-    'X-Website': site.slug,
-    'Accept' : 'application/json',
-    ...(options.headers || {}),
-  };
+
+	const isFormData =
+  	options.body instanceof FormData;
+
+ const headers: Record<string, string> = {
+			'X-Website': site.slug,
+			'Accept': 'application/json',
+	};
+
+	if (options.headers instanceof Headers) {
+
+			options.headers.forEach((value, key) => {
+					headers[key] = value;
+			});
+
+	} else if (Array.isArray(options.headers)) {
+
+			options.headers.forEach(([key, value]) => {
+					headers[key] = value;
+			});
+
+	} else if (options.headers) {
+
+			Object.assign(
+					headers,
+					options.headers
+			);
+
+	}
+
+	if (!isFormData) {
+		headers['Content-Type'] = 'application/json';
+	}
 
   // 🔥 cookies del request SSR
   const cookieHeader = request?.headers?.get('cookie') || '';

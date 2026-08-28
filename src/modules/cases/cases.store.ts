@@ -1,7 +1,12 @@
 // cases.store.ts
 
 import type { Case, CaseFilters, CaseResponse } from './cases.types';
-import { listCases, createCase, updateCase, deleteCase } from './cases.service';
+import { listCases, createCase, updateCase, deleteCase,
+	getCaseDocuments as getCaseDocumentsService,
+	uploadCaseDocument as uploadCaseDocumentService,
+	generateCaseDocument as generateCaseDocumentService,
+	deleteCaseDocument as deleteCaseDocumentService
+ } from './cases.service';
 import { createCrudModule } from '@/lib/createCrudModule';
 
 
@@ -30,6 +35,18 @@ export const casesModule = createCrudModule({
   remove: deleteCase,
   normalizer: normalizeCasesResponse,
 });
+
+export const getCaseDocuments =
+	getCaseDocumentsService;
+
+export const uploadCaseDocument =
+	uploadCaseDocumentService;
+
+export const generateCaseDocument =
+	generateCaseDocumentService;
+
+export const deleteCaseDocument =
+	deleteCaseDocumentService;
 
 export const fetchCases = casesModule.fetch;
 export const subscribeCases = casesModule.subscribe;

@@ -1,0 +1,32 @@
+{
+  "fields": {
+    "name": "Nombre",
+    "description": "Descripción",
+		"status": "Estado",
+		"template": "Plantilla"
+  },
+	"buttons":{
+		"add": "Agregar",
+		"edit": "Editar",
+		"delete": "Eliminar",
+		"create_document_template": "Crear plantilla"
+	},
+	"title":{
+		"add": "Agregar nuevo plantilla",
+		"edit": "Editar plantilla"
+	},
+	"columns":{
+    "name": "Nombre",
+    "description": "Descripción",
+		"status": "Estado",
+		"created_at":	"Creado",
+		"actions": "Acciones"
+	},
+	"variables":{
+		"title":"Aqui las variables que puedes usar en tu template antes de subirlo!",
+		"search":"Buscar variables...",
+		"empty":"No se encontró variables",
+		"copy":"Copiar",
+		"copied":"Copiado!"
+	}
+}

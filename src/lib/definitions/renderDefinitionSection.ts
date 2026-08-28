@@ -60,7 +60,7 @@ export function renderDefinitionSection({
     const title=document.createElement("h3");
 
     title.className=
-        "font-semibold text-lg mb-4";
+        "font-semibold text-lg mb-4 text-gray-600 dark:text-gray-300";
 
     title.textContent=t(
         `${module}.definition.${section.key}.config.title`
@@ -74,7 +74,7 @@ export function renderDefinitionSection({
 
     const enabledLabel = document.createElement("label");
 
-    enabledLabel.className = "block mb-1 text-sm";
+    enabledLabel.className = "block mb-1 text-sm text-gray-600 dark:text-gray-300";
 
     enabledLabel.textContent = t(
         `${module}.definition.${section.key}.enabled.label`
@@ -127,7 +127,7 @@ export function renderDefinitionSection({
 
                 const label = document.createElement("label");
 
-                label.className = "block mb-2 text-sm";
+                label.className = "block mb-2 text-sm text-gray-600 dark:text-gray-300";
 
                 label.textContent = t(
 
@@ -178,7 +178,7 @@ export function renderDefinitionSection({
 
                             );
                             console.log(
-                                definition.statuses.config.items
+                                definition
                             );
 
                     }
@@ -207,7 +207,7 @@ export function renderDefinitionSection({
 
             const label = document.createElement("label");
 
-            label.className="block mb-1 text-sm";
+            label.className="block mb-1 text-sm text-gray-600 dark:text-gray-300";
 
             label.textContent = t(`${module}.definition.${section.key}.config.${field.key}.label`);
 

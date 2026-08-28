@@ -20,7 +20,8 @@
 	"dashboard":{
 		"cases":"Casos",
 		"customers":"Clientes",
-		"casetypes":"Tipos de Caso"
+		"casetypes":"Tipos de Caso",
+		"document-templates":"Plantillas de documentos"
 	},
 	"layouts":{
 		"stacked":"Apiladas",

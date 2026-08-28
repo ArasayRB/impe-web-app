@@ -90,6 +90,7 @@ src/
 │   │    └── components/
 │   │    │    ├── crateCrudSwitch.ts/
 │   │    └── forms/
+│   │    │    ├── FormTabs.ts/   # has the tabs for createCrudForm
 │   │    │    ├── FormSwitch.ts/
 │   ├── formatters/
 │   │   ├── date.ts #dates formates
@@ -178,15 +179,20 @@ src/
 │   │   │   ├── add.astro # create
 │   │   │   ├── delete.astro # remove 
 │   │   │   ├── edit.astro # edit 
+│   │   ├── CaseAnalytics.astro      # crud 
+│   │   ├── cases.analytics.store.ts        # estado reactivo
+│   │   ├── cases.analytics.ui.ts        # to handle cases analytics ui
 │   │   ├── case-search.astro      # searcher
 │   │   ├── Cases.astro      # crud 
 │   │   ├── cases.form.config.ts      # fields form 
+│   │   ├── cases.relationships.ts      # people options relationed with case 
 │   │   ├── cases.service.ts      # orquestador híbrido
 │   │   ├── cases.server.ts       # SSR only 
 │   │   ├── cases.client.ts       # browser only 
 │   │   ├── cases.store.ts        # estado reactivo
 │   │   ├── cases.types.ts        
 │   │   ├── cases.ui.ts           # to handle cases ui
+│   │   ├── casesAnalyticsMapper.ts        # mapper cases analytics
 │   ├── case_types/
 │   │   ├── forms/
 │   │   │   ├── add.astro # create
@@ -221,7 +227,21 @@ src/
 │   │   ├── customers.store.ts        # estado reactivo
 │   │   ├── customers.types.ts        
 │   │   ├── customers.ui.ts           # to handle customers ui
-│   │   ├── customersAnalyticsMapper.ts           # analytics mapper customers
+│   │   ├── customersAnalyticsMapper.ts         # analytics mapper customers
+│   ├── document_templates/
+│   │   ├── forms/
+│   │   │   ├── add.astro # create
+│   │   │   ├── delete.astro # remove 
+│   │   │   ├── edit.astro # edit 
+│   │   ├── document-templates-search.astro      # searcher
+│   │   ├── DocumentTemplates.astro      # crud 
+│   │   ├── document-templates.form.config.ts      # fields form 
+│   │   ├── document-templates.service.ts      # orquestador híbrido
+│   │   ├── document-templates.server.ts       # SSR only 
+│   │   ├── document-templates.client.ts       # browser only 
+│   │   ├── document-templates.store.ts        # estado reactivo
+│   │   ├── document-templates.types.ts        
+│   │   ├── document-templates.ui.ts        # to handle document-templates ui
 │   ├── auth/
 │   │   ├── auth.service.ts         # orquestador híbrido
 │   │   ├── logout.client.ts     
@@ -256,20 +276,22 @@ src/
 │   └── users.ts      #
 ├── types/
 │   ├── entities.ts      # 
-│   ├── flowbite-typography.d.ts      # fetch ppal
-│   ├── auth.client.ts      #
-│   ├── auth.service.ts      #
-│   ├── ui/
-│   │   ├── Switch/
-│   │   │   ├── index.ts # index
-│   │   │   ├── Switch.ts # switch
-│   │   ├── TagSelector/
-│   │   │   ├── index.ts # index
-│   │   │   ├── TagSelector.styles.ts # styles
-│   │   │   ├── TagSelector.template.ts # template
-│   │   │   ├── TagSelector.ts # tag
-│   │   │   ├── TagSelector.types.ts # tag
-│   │   └── uiComponent.ts      # component
+│   └── flowbite-typography.d.ts      # fetch ppal
+├── ui/
+│   ├── Switch/
+│   │   ├── index.ts # index
+│   │   ├── Switch.ts # switch
+│   ├── CasePeopleSelector/
+│   │   ├── CasePeopleSelector.template.ts # template
+│   │   ├── CasePeopleSelector.ts # selector
+│   │   ├── CasePeopleSelector.types.ts # types
+│   ├── TagSelector/
+│   │   ├── index.ts # index
+│   │   ├── TagSelector.styles.ts # styles
+│   │   ├── TagSelector.template.ts # template
+│   │   ├── TagSelector.ts # tag
+│   │   ├── TagSelector.types.ts # tag
+│   └── uiComponent.ts      # component
 ├── env.ts      #
 ├── middleware.ts      #
 └──       #... others files

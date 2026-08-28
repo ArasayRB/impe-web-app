@@ -6,6 +6,7 @@
 	"buttons":{
 		"add": "Add",
 		"edit": "Update",
+		"delete": "Delete",
 		"create_customer": "Create case type"
 	},
 	"title":{
@@ -147,6 +148,93 @@
 							"label": "Expected duration (days)"
 						}
 					}
+				}
+			}
+		},
+		"documents": {
+			"title": "Documents",
+			"enabled": {
+				"label": "Enable documents",
+				"help":"Enable documents for this type of case"
+			},
+			"config": {
+				"title":"Documents",
+				"required": {
+					"label":"Required documents",
+					"add": "Add document",
+					"delete": "Delete",
+					"empty": "No required document defined.",
+					"item": {
+						"title": "Document",
+						"key": {
+							"label": "Key"
+						},
+						"label": {
+							"label": "Name"
+						},
+						"required": {
+							"label": "Required"
+						},
+						"required_to_finish": {
+							"label": "Required to finish"
+						},
+						"multiple": {
+							"label": "Multiple"
+						},
+						"min_files": {
+							"label": "Minimun files"
+						},
+						"max_files": {
+							"label": "Maximum files"
+						},
+						"accepted_types": {
+							"label": "Accepted types (pdf|jpg|png|jpeg|doc|docx)"
+						}
+					}
+				}
+			}
+		},
+		"data": {
+			"title": "Data",
+			"enabled": {
+				"label": "Enabled data",
+				"help":"Enabled data to this case type"
+			},
+			"config": {
+				"title":"Data",
+				"fields": {
+					"label":"Required data",
+					"add": "Add data",
+					"delete": "Delete",
+					"empty": "Extra data not defined.",
+					"item": {
+						"title": "Data",
+						"key": {
+							"label": "ID"
+						},
+						"label": {
+							"label": "Name"
+						},
+						"type": {
+							"label": "Type"
+						},
+						"required": {
+							"label": "Required"
+						}
+					}
+				}
+			}
+		},
+		"email": {
+			"title": "Email",
+			"enabled": {
+				"label": "Allow domains to be reviewed",
+				"help":"Allow interest domainsto this case type"
+			},
+			"config": {
+				"title":"Domains",
+				"allowed_sender_domains": {
+					"label":"Allowed domains"
 				}
 			}
 		}

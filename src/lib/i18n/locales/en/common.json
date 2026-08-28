@@ -46,6 +46,8 @@
   },
 	"messages":{
 		"shure_remove":"Are you sure you want to delete this register?",
+		"shure":"Shure!",
+		"not_shure":"Not, cancel",
 		"remove":"Remove",
 		"deleted":"Deleted successfully!",
 		"created":"Added successfully!",

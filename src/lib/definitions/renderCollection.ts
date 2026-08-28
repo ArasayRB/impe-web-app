@@ -135,12 +135,12 @@ export function renderCollection(
             const header = document.createElement("div");
 
             header.className =
-                "flex justify-between items-center mb-3";
+                "flex justify-between items-center mb-3 text-gray-600 dark:text-gray-300";
 
             const title = document.createElement("span");
 
             title.className =
-                "font-medium";
+                "font-medium text-gray-600 dark:text-gray-300";
 
             title.textContent =
                  `${t(
@@ -205,7 +205,7 @@ export function renderCollection(
 
                 label.className=
 
-                    "block mb-1 text-sm";
+                    "block mb-1 text-sm text-gray-600 dark:text-gray-300";
 
                 label.textContent=t(
 

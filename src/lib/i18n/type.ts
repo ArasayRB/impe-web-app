@@ -8,3 +8,4 @@ export type Namespace =
   | 'auth'
   | 'navbar'
   | 'sidebar'
+  | 'document-templates'

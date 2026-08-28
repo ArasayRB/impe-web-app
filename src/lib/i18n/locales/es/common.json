@@ -46,6 +46,8 @@
   },
 	"messages":{
 		"shure_remove":"Seguro que deseas eliminar este registro?",
+		"shure":"Seguro!",
+		"not_shure":"No, cancelar",
 		"remove":"Eliminar",
 		"deleted":"Eliminado satisfactoriamente!",
 		"created":"Agregado satisfactoriamente!",

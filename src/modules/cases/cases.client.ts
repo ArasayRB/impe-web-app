@@ -46,3 +46,44 @@ export async function deleteCaseClient(id: number | string) {
     method: 'DELETE',
   });
 }
+
+export async function getCaseDocumentsClient(
+	id: number | string
+) {
+	return apiClientFetch(
+		`/v1/cases/${id}/documents`
+	);
+}
+
+export async function uploadCaseDocumentClient(
+	id: number | string,
+	data: FormData
+) {
+	return apiClientFetch(
+		`/v1/cases/${id}/documents`,
+		{
+			method: 'POST',
+			body: data
+		}
+	);
+}
+
+export async function generateCaseDocumentClient(
+	id: number | string,
+	data: any
+) {
+	return apiClientFetch(
+		`/v1/cases/${id}/documents/generate`,
+		{
+			method: 'POST',
+			body: JSON.stringify(data)
+		}
+	);
+}
+
+// DELETE DOCUMENT
+export async function deleteCaseDocumentClient(id: number | string) {
+  return apiClientFetch(`/v1/cases/documents/${id}`, {
+    method: 'DELETE',
+  });
+}

@@ -4,12 +4,22 @@
     "email": "Correo",
 		"address": "Dirección",
 		"phone":	"Teléfono",
+		"birthdate":"Cumpleaños",
+		"gender":"Género",
+		"gender_options":{
+			"male":"Hombre",
+			"female":"Mujer",
+			"other":"Otro"
+		},
+		"nationality":"Nacionalidad",
+		"passport":"Pasaporte",
 		"notes":	"Nota",
 		"with_account": "Crear cuenta de Usuario"
   },
 	"buttons":{
 		"add": "Agregar",
-		"edit": "Editar"
+		"edit": "Editar",
+		"delete": "Eliminar"
 	},
 	"title":{
 		"add": "Agregar nuevo cliente",

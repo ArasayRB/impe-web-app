@@ -20,7 +20,8 @@
 	"dashboard":{
 		"cases":"Cases",
 		"customers":"Customers",
-		"casetypes":"Case Types"
+		"casetypes":"Case Types",
+		"document-templates":"Document templates"
 	},
 	"layouts":{
 		"stacked":"Stacked",

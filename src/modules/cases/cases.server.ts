@@ -80,3 +80,66 @@ export async function deleteCaseServer(
     site
   );
 }
+
+export async function getCaseDocumentsServer(
+	id: number | string,
+	request: Request,
+	site: Site
+) {
+	return apiFetchServer(
+		`/v1/cases/${id}/documents`,
+		{},
+		request,
+		site
+	);
+}
+
+export async function uploadCaseDocumentServer(
+	id: number | string,
+	data: FormData,
+	request: Request,
+	site: Site
+) {
+	return apiFetchServer(
+		`/v1/cases/${id}/documents`,
+		{
+			method: 'POST',
+			body: data
+		},
+		request,
+		site
+	);
+}
+
+export async function generateCaseDocumentServer(
+	id: number | string,
+	data: any,
+	request: Request,
+	site: Site
+) {
+	return apiFetchServer(
+		`/v1/cases/${id}/documents/generate`,
+		{
+			method: 'POST',
+			body: JSON.stringify(data)
+		},
+		request,
+		site
+	);
+}
+
+// DELETE
+export async function deleteCaseDocumentServer(
+  id: number | string,
+  request: Request,
+  site: Site
+) {
+  return apiFetchServer(
+    `/v1/cases/documents/${id}`,
+    {
+      method: 'DELETE',
+    },
+    request,
+    site
+  );
+}

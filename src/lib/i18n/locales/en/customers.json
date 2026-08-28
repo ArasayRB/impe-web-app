@@ -4,12 +4,22 @@
     "email": "Email",
 		"address": "Address",
 		"phone":	"Phone",
+		"birthdate":"Birthdate",
+		"gender":"Gender",
+		"gender_options":{
+			"male":"Male",
+			"female":"Female",
+			"other":"Other"
+		},
+		"nationality":"Nationality",
+		"passport":"Passport",
 		"notes":	"Note",
 		"with_account": "Create user account"
   },
 	"buttons":{
 		"add": "Add",
 		"edit": "Update",
+		"delete": "Delete",
 		"create_customer": "Create customer"
 	},
 	"title":{

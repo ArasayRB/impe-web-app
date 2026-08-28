@@ -5,7 +5,10 @@ import { t } from '@/lib/i18n/i18n';
 import { i18nVersion } from '@/lib/i18n/store';
 import { mountFormSwitch } from '@/lib/crud/forms/FormSwitch';
 import { renderTagSelector } from '@/ui/TagSelector/TagSelector';
+import { renderCasePeopleSelector } from '@/ui/CasePeopleSelector/CasePeopleSelector';
 import {renderDefinition} from "@/lib/definitions/renderDefinition";
+import {renderFormTabs, type FormTab} from '@/lib/crud/forms/FormTabs';
+import { renderAvailableVariables, type AvailableVariableGroup } from '@/lib/crud/forms/AvailableVariables';
 
 export type SelectOption={
 
@@ -18,25 +21,35 @@ export type SelectOption={
 export type Field = {
   name: string;
   label: string;
-  type: 'text' | 'email' | 'select' | 'date' | 'password' | 'textarea' | 'checkbox' | 'switch' | 'tag-selector' | 'definition';
-  default?: any;
+  type: 'text' | 'email' | 'select' | 'date' | 'password' | 'textarea' | 'checkbox' | 'switch' | 'tag-selector' | 'definition' | 'case-people' | 'file';
+  tab?: string;
+	default?: any;
   required?: boolean;
   validate?: (value: any) => string | null;
   options?: { value: string; label: string }[];
   component?:{
-      module?:any;
 
-      schema?:DefinitionSection[];
+			module?:any;
 
-      search?:(text:string)=>Promise<TagItem[]>;
+			schema?:DefinitionSection[];
 
-      create?:(text:string)=>Promise<TagItem>;
+			search?:(text:string)=>Promise<TagItem[]>;
 
-      onCreateRequested?;
+			create?:(text:string)=>Promise<TagItem>;
 
-      max?:number;
+			onCreateRequested?;
 
-  };
+			max?:number;
+
+			relationshipOptions?: SelectOption[];
+
+			placeholder?:string;
+
+			noResultsText?:string;
+
+			searchingText?:string;
+
+	};
   dependsOn?: string;
 
   resolver?: (
@@ -61,13 +74,30 @@ type CrudFormConfig<T> = {
   mode: 'create' | 'edit';
   modalId: string;
   translations: string;
+	tabs?: FormTab[];
+	tabRenderers?: Record<
+		string,
+		(container: HTMLElement, context: {
+			mode: 'create' | 'edit';
+			data: T;
+		}) => void
+	>;
+	variables?: AvailableVariableGroup[];
+	beforeSubmit?: (context: {
+			payload: Record<string, any>;
+			formData: Record<string, any>;
+			data: any;
+	}) => Promise<{
+			proceed: boolean;
+			payload?: Record<string, any>;
+	}>;
   getData?: () => T;
-  transform?: (payload: any) => any; // 🔥 NEW
+  transform?: (payload: any, formData?: FormData) => any; // 🔥 NEW
   onSuccess?: (response: any) => void;
 };
 
 export function mountCrudForm<T>(config: CrudFormConfig<T>) {
-  const { el, module, fields, mode, modalId, translations, getData } = config;
+  const { el, module, fields, mode, modalId, translations, getData, variables, } = config;
 
   let formData: Record<string, any> = {};
 
@@ -122,28 +152,222 @@ export function mountCrudForm<T>(config: CrudFormConfig<T>) {
   // ---------------------------
 
   function render() {
-    const form = document.createElement('form');
-    form.id = 'crud-form';
-    form.className = 'space-y-4';
 
-    form.innerHTML = `
-      <div class="grid grid-cols-6 gap-6">
-      ${fields.map(renderField).join('')}
-      </div>
-      <div
-        class="items-center p-6 border-t border-gray-200 rounded-b dark:border-gray-700"
-      >
-        <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
-          ${mode === 'create' ? t(translations+'.buttons.add') : t(translations+'.buttons.edit')}
-        </button>
-      </div>
-    `;
+			const form =
+					document.createElement('form');
 
-    el.innerHTML = '';
-    el.appendChild(form);
-    mountComponents(form);
-    updateDependentFields();
-  }
+			form.id = 'crud-form';
+
+			form.className =
+					'space-y-4';
+
+			form.innerHTML = `
+					${
+							config.tabs?.length
+									? `<div data-form-tabs></div>`
+									: `
+											<div class="grid grid-cols-6 gap-6">
+													${fields.map(renderField).join('')}
+											</div>
+									`
+					}
+
+					${
+						variables?.length
+							? `
+								<div
+									class="mt-6"
+									data-available-variables
+								></div>
+							`
+							: ''
+					}
+
+					<div
+							class="items-center
+										p-6
+										border-t
+										border-gray-200
+										rounded-b
+										dark:border-gray-700"
+					>
+							<button
+									type="submit"
+									class="text-white
+												bg-primary-700
+												hover:bg-primary-800
+												focus:ring-4
+												focus:ring-primary-300
+												font-medium
+												rounded-lg
+												text-sm
+												px-5
+												py-2.5
+												text-center"
+							>
+									${
+											mode === 'create'
+													? t(translations+'.buttons.add')
+													: t(translations+'.buttons.edit')
+									}
+							</button>
+					</div>
+			`;
+
+			el.innerHTML = '';
+
+			el.appendChild(form);
+
+			const variablesContainer =
+				form.querySelector(
+					'[data-available-variables]'
+				) as HTMLElement | null;
+
+			if (
+				variablesContainer &&
+				variables?.length
+			) {
+
+				renderAvailableVariables({
+
+					container: variablesContainer,
+
+					groups: variables,
+
+					title: t(
+						'document-templates.variables.title'
+					),
+
+					searchPlaceholder: t(
+						'document-templates.variables.search'
+					),
+
+					emptyText: t(
+						'document-templates.variables.empty'
+					),
+
+				});
+
+			}
+
+			if (config.tabs?.length) {
+
+					mountFormTabs(form);
+
+			} else {
+
+					mountComponents(form);
+
+					updateDependentFields();
+
+			}
+
+	}
+
+	function mountFormTabs(form: HTMLFormElement) {
+
+		const container =
+			form.querySelector(
+				'[data-form-tabs]'
+			) as HTMLElement;
+
+		if (!container) return;
+
+		const submitButton =
+				form.querySelector(
+						'button[type="submit"], input[type="submit"]'
+				) as HTMLButtonElement | HTMLInputElement | null;
+
+		const updateSubmitButton =
+				(tabId: string) => {
+
+						if (!submitButton) return;
+
+						const disabled =
+            		tabId === 'documents';
+						submitButton.disabled =
+								disabled;
+
+						submitButton.classList.toggle(
+								'opacity-50',
+								disabled
+						);
+
+						submitButton.classList.toggle(
+								'cursor-not-allowed',
+								disabled
+						);
+
+						submitButton.classList.toggle(
+								'bg-gray-400',
+								disabled
+						);
+
+				};
+
+		const tabsRenderer =
+				renderFormTabs(
+						container,
+						config.tabs!,
+						config.tabs![0]?.id,
+						{
+								onTabChange: updateSubmitButton
+						}
+				);
+
+		updateSubmitButton(
+				tabsRenderer.getActiveTab()
+		);
+
+		config.tabs!.forEach(tab => {
+
+			const tabContainer =
+				tabsRenderer.getContainer(tab.id);
+
+			if (!tabContainer) return;
+
+			const customRenderer =
+				config.tabRenderers?.[tab.id];
+
+			if (customRenderer) {
+
+				customRenderer(
+					tabContainer,
+					{
+						mode,
+						data: initialData as T
+					}
+				);
+
+				return;
+			}
+
+			tabContainer.innerHTML = `
+				<div class="grid grid-cols-6 gap-6">
+					${renderTabFields(tab.id)}
+				</div>
+			`;
+
+		});
+
+		mountComponents(form);
+
+		updateDependentFields();
+
+	}
+
+	function renderTabFields(
+			tabId: string
+	) {
+
+			return fields
+					.filter(
+							field =>
+									field.tab === tabId
+					)
+					.map(renderField)
+					.join("");
+	}
 
   function mountComponents( form:HTMLFormElement ){
 
@@ -279,6 +503,94 @@ export function mountCrudForm<T>(config: CrudFormConfig<T>) {
       );
 
     });
+
+		fields
+		.filter(f => f.type === "case-people")
+		.forEach(field => {
+
+				const container =
+						form.querySelector(
+								`[data-case-people="${field.name}"]`
+						) as HTMLElement;
+
+				if (!container) return;
+
+				const module = field.component!.module;
+
+				const selector =
+						renderCasePeopleSelector(
+
+								container,
+
+								{
+
+										value:
+												formData[field.name] ?? [],
+												
+										customerId: formData.customer_id?.[0]?.id,
+
+										search:
+												module.tagSelector.search,
+
+										create:
+												module.tagSelector.create,
+
+										onCreateRequested:
+												field.component?.onCreateRequested,
+
+										relationshipOptions:
+												field.component!
+														.relationshipOptions
+														?? [],
+
+										max:
+												field.component?.max,
+
+										placeholder:
+												field.component?.placeholder,
+
+										noResultsText:
+												field.component?.noResultsText,
+
+										searchingText:
+												field.component?.searchingText,
+
+										onChange(people) {
+
+												console.log(
+														"Case people changed",
+														field.name,
+														people
+												);
+
+												formData[field.name] =
+														people;
+
+												updateDependentFields();
+
+										}
+
+								}
+
+						);
+
+				componentRegistry.set(
+
+						field.name,
+
+						{
+
+								type: "case-people",
+
+								field,
+
+								component: selector
+
+						}
+
+				);
+
+		});
 
     fields
     .filter(f=>f.type==="select")
@@ -521,6 +833,35 @@ export function mountCrudForm<T>(config: CrudFormConfig<T>) {
 
     }
 
+		if(field.type === "case-people"){
+
+				return `
+
+						<div class="col-span-12">
+
+								<label
+										class="
+												block
+												mb-2
+												text-sm
+												font-medium
+												text-gray-900
+												dark:text-white
+										"
+								>
+										${t(field.label)}
+								</label>
+
+								<div
+										data-case-people="${field.name}">
+								</div>
+
+						</div>
+
+				`;
+
+		}
+
     if (field.type === "definition") {
 
         return `
@@ -549,6 +890,23 @@ export function mountCrudForm<T>(config: CrudFormConfig<T>) {
       `;
     }
 
+		if (field.type === 'file') {
+				return `
+						<div class="col-span-12 sm:col-span-6">
+								<label
+										class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+								>
+										${t(field.label)}
+								</label>
+
+								<input
+										type="file"
+										name="${field.name}"
+										class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+								/>
+						</div>
+				`;
+		}
     return `
       <div class="col-span-6 sm:col-span-3">
         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">${t(field.label)}</label>
@@ -656,6 +1014,12 @@ export function mountCrudForm<T>(config: CrudFormConfig<T>) {
 
       }
 
+			if (f.type === "case-people") {
+
+					value = formData[f.name] ?? [];
+
+			}
+
       if (f.type === "definition") {
 
           value = formData[f.name];
@@ -682,8 +1046,27 @@ export function mountCrudForm<T>(config: CrudFormConfig<T>) {
 		if (config.transform) {
       console.log("FORM DATA", formData);
       console.log("PAYLOAD", payload);
-			finalPayload = config.transform(payload);
+			finalPayload = config.transform(payload, fd);
 		}
+
+		if (config.beforeSubmit) {
+
+			const result =
+					await config.beforeSubmit({
+							payload: finalPayload,
+							formData,
+							data: getData?.()
+					});
+
+			if (!result.proceed) {
+					unlockElement(submitBtn);
+					return;
+			}
+
+			if (result.payload) {
+					finalPayload = result.payload;
+			}
+	}
     console.log("FINAL PAYLOAD", finalPayload);
     try {
       if (mode === 'create') {

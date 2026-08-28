@@ -75,6 +75,17 @@ function mountCustomerSearch() {
 	});
 }
 
+function formatDateInput(
+    value: string | null | undefined
+): string {
+
+    if (!value) {
+        return "";
+    }
+
+    return value.slice(0, 10);
+}
+
 function openEditForm(row: any) {
 	const modal = document.getElementById('edit-customer-modal');
 	if (!modal) return;
@@ -82,6 +93,13 @@ function openEditForm(row: any) {
 	const container = modal.querySelector('[data-form-container]');
 	if (!container) return;console.log('Row to edit',row);
 
+	const formRow = {
+
+    ...row,
+    birthdate:
+        formatDateInput(row.birthdate),
+
+  };
 	mountCrudForm({
 		el: container,
 		module: customersModule,
@@ -89,7 +107,7 @@ function openEditForm(row: any) {
 		fields,
 		modalId: 'edit-customer-modal',
 		translations:'customers',
-		getData: () => row,
+		getData: () => formRow,
 	});
 	modalController.setHtmlText('edit-customer-modal','data-modal-title', t('customers.buttons.edit'));
 	modalController.open('edit-customer-modal');

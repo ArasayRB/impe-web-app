@@ -5,7 +5,8 @@
   },
 	"buttons":{
 		"add": "Agregar",
-		"edit": "Editar"
+		"edit": "Editar",
+		"delete": "Eliminar"
 	},
 	"title":{
 		"add": "Agregar nuevo tipo",
@@ -131,7 +132,7 @@
 					"item": {
 						"title": "Paso",
 						"key": {
-							"label": "Clave"
+							"label": "ID"
 						},
 						"label": {
 							"label": "Nombre"
@@ -146,6 +147,97 @@
 							"label": "Duración esperada (días)"
 						}
 					}
+				}
+			}
+		},
+		"documents": {
+			"title": "Documentos",
+			"enabled": {
+				"label": "Habilitar documentos",
+				"help":"Habilitar documentos para este tipo de caso"
+			},
+			"config": {
+				"title":"Documentos",
+				"required": {
+					"label":"Documentos requeridos",
+					"add": "Agregar documento",
+					"delete": "Eliminar",
+					"empty": "No se ha definido un documento requerido.",
+					"item": {
+						"title": "Documento",
+						"key": {
+							"label": "ID"
+						},
+						"label": {
+							"label": "Nombre"
+						},
+						"required": {
+							"label": "Requerido"
+						},
+						"required_to_finish": {
+							"label": "Requerido para finalizar"
+						},
+						"multiple": {
+							"label": "Múltiple"
+						},
+						"min_files": {
+							"label": "Archivos mínimos"
+						},
+						"max_files": {
+							"label": "Archivos máximos"
+						},
+						"accepted_types": {
+							"label": "Tipos aceptados (pdf|jpg|png|jpeg|doc|docx)"
+						}
+					}
+				}
+			}
+		},
+		"data": {
+			"title": "Data",
+			"enabled": {
+				"label": "Habilitar datos",
+				"help":"Habilitar datos extra para este tipo de caso"
+			},
+			"config": {
+				"title":"Datos",
+				"enabled": {
+					"label": "Habilitar datos",
+					"help":"Habilitar datos extra para este tipo de caso"
+				},
+				"fields": {
+					"label":"Datos requeridos",
+					"add": "Agregar dato",
+					"delete": "Eliminar",
+					"empty": "No se ha definido dato extra.",
+					"item": {
+						"title": "Dato",
+						"key": {
+							"label": "ID"
+						},
+						"label": {
+							"label": "Nombre"
+						},
+						"type": {
+							"label": "Tipo"
+						},
+						"required": {
+							"label": "Requerido"
+						}
+					}
+				}
+			}
+		},
+		"email": {
+			"title": "Email",
+			"enabled": {
+				"label": "Habilitar dominios a revisar",
+				"help":"Habilitar dominios de interés para este tipo de caso"
+			},
+			"config": {
+				"title":"Dominios",
+				"allowed_sender_domains": {
+					"label": "Dominios permitidos"
 				}
 			}
 		}

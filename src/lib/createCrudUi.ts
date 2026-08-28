@@ -152,7 +152,7 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
   // THEAD
   // ---------------------------
 
-  function renderHead() {console.log('translations',t('cases.columns.case'));
+  function renderHead() {
     const theadRow = qs<HTMLTableRowElement>('thead tr');
     if (!theadRow) return;
 
@@ -203,7 +203,7 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
         </tr>
       `;
       return;
-    }
+    }console.log('data documents templates', state.data)
 
     if (!state.data?.length) {
       tbody.innerHTML = `<tr><td colspan="${
@@ -284,7 +284,7 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 									clip-rule="evenodd"
 								/>
 							</svg>
-							Delete
+							${t(translations+'.buttons.delete')}
 							</button>`:''}
             </td>
           </tr>
