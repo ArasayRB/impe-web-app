@@ -169,6 +169,36 @@ export async function getCaseDocuments(
 	return getCaseDocumentsClient(id);
 }
 
+export async function getWorkflow(
+	id: number | string,
+	request?: Request,
+	site?: Site
+) {
+
+	const resolvedSite = import.meta.env.SSR
+		? ensureSite(site)
+		: getSite();
+
+	if (import.meta.env.SSR) {
+
+		const {
+			getCaseWorkflowServer
+		} = await import('./cases.server');
+
+		return getCaseWorkflowServer(
+			id,
+			request!,
+			resolvedSite
+		);
+	}
+
+	const {
+		getCaseWorkflowClient
+	} = await import('./cases.client');
+
+	return getCaseWorkflowClient(id);
+}
+
 export async function uploadCaseDocument(
 	id: number | string,
 	data: FormData,

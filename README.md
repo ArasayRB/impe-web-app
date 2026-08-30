@@ -90,8 +90,9 @@ src/
 │   │    └── components/
 │   │    │    ├── crateCrudSwitch.ts/
 │   │    └── forms/
-│   │    │    ├── FormTabs.ts/   # has the tabs for createCrudForm
-│   │    │    ├── FormSwitch.ts/
+│   │    │    ├── AvailableVariables.ts 
+│   │    │    ├── FormTabs.ts   # has the tabs for createCrudForm
+│   │    │    ├── FormSwitch.ts
 │   ├── formatters/
 │   │   ├── date.ts #dates formates
 │   ├── definitions/
@@ -124,19 +125,21 @@ src/
 │   │    └── locales/
 │   │    │    ├── en/
 │   │    │    │   ├── common.json
-│   │    │    │   ├── customer.json
+│   │    │    │   ├── customers.json
 │   │    │    │   ├── cases.json
 │   │    │    │   ├── auth.json
 │   │    │    │   ├── casetypes.json
 │   │    │    │   ├── navbar.json
+│   │    │    │   ├── document-templates.json
 │   │    │    │   └── sidebar.json
 │   │    │    ├── es/
 │   │    │    │   ├── common.json
-│   │    │    │   ├── customer.json
+│   │    │    │   ├── customers.json
 │   │    │    │   ├── cases.json 
 │   │    │    │   ├── auth.json
 │   │    │    │   ├── casetypes.json
 │   │    │    │   ├── navbar.json
+│   │    │    │   ├── document-templates.json
 │   │    │    │   └── sidebar.json
 │   ├── api.error.ts      # errors api handle
 │   ├── auth.ts      # ensure valid session
@@ -179,10 +182,11 @@ src/
 │   │   │   ├── add.astro # create
 │   │   │   ├── delete.astro # remove 
 │   │   │   ├── edit.astro # edit 
+│   │   ├── case-documents.types.ts     
+│   │   ├── case-search.astro      # searcher
 │   │   ├── CaseAnalytics.astro      # crud 
 │   │   ├── cases.analytics.store.ts        # estado reactivo
 │   │   ├── cases.analytics.ui.ts        # to handle cases analytics ui
-│   │   ├── case-search.astro      # searcher
 │   │   ├── Cases.astro      # crud 
 │   │   ├── cases.form.config.ts      # fields form 
 │   │   ├── cases.relationships.ts      # people options relationed with case 
@@ -192,6 +196,7 @@ src/
 │   │   ├── cases.store.ts        # estado reactivo
 │   │   ├── cases.types.ts        
 │   │   ├── cases.ui.ts           # to handle cases ui
+│   │   ├── cases.workflow.ts           # to handle cases workflow
 │   │   ├── casesAnalyticsMapper.ts        # mapper cases analytics
 │   ├── case_types/
 │   │   ├── forms/
@@ -278,6 +283,9 @@ src/
 │   ├── entities.ts      # 
 │   └── flowbite-typography.d.ts      # fetch ppal
 ├── ui/
+│   ├── CaseDocuments/
+│   │   ├── CaseDocuments.ts 
+│   │   ├── CaseDocuments.types.ts 
 │   ├── Switch/
 │   │   ├── index.ts # index
 │   │   ├── Switch.ts # switch
