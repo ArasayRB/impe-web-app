@@ -1,7 +1,7 @@
 // cases.client.ts
 
 import { apiClientFetch } from '@/services/api.client';
-import type { CaseResponse, CaseFilters } from './cases.types';
+import type { CaseResponse, CaseFilters, CaseWorkflowResponse } from './cases.types';
 
 export async function listCasesClient(
   filters: CaseFilters = {}
@@ -45,6 +45,14 @@ export async function deleteCaseClient(id: number | string) {
   return apiClientFetch(`/v1/cases/${id}`, {
     method: 'DELETE',
   });
+}
+
+export async function getCaseWorkflowClient(
+	id: number | string
+): Promise<CaseWorkflowResponse> {
+	return apiClientFetch(
+		`/v1/cases/${id}/workflow`
+	);
 }
 
 export async function getCaseDocumentsClient(

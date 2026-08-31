@@ -1,7 +1,7 @@
 // cases.server.ts
 
 import { apiFetchServer } from '@/services/api.server';
-import type { CaseResponse, CaseFilters } from './cases.types';
+import type { CaseResponse, CaseFilters, CaseWorkflowResponse } from './cases.types';
 import type { Site } from '@/lib/site';
 
 export async function listCasesServer(
@@ -79,6 +79,19 @@ export async function deleteCaseServer(
     request,
     site
   );
+}
+
+export async function getCaseWorkflowServer(
+	id: number | string,
+	request: Request,
+	site: Site
+): Promise<CaseWorkflowResponse> {
+	return apiFetchServer(
+		`/v1/cases/${id}/workflow`,
+		{},
+		request,
+		site
+	);
 }
 
 export async function getCaseDocumentsServer(
