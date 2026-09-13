@@ -1,0 +1,158 @@
+---
+interface Social {
+  platform: string;
+  url: string;
+  icon?: string | null;
+  label?: string;
+  sort_order?: number;
+}
+
+interface LegalDocument {
+  version?: string;
+  title?: string;
+  content?: string;
+  published_at?: string | null;
+}
+
+interface Legal {
+  acceptable_use_policy?: LegalDocument;
+  cookie_policy?: LegalDocument;
+  data_processing_agreement?: LegalDocument;
+  license?: LegalDocument;
+  privacy_policy?: LegalDocument;
+  terms_of_service?: LegalDocument;
+}
+
+interface Props {
+  socials?: Social[];
+  legal?: Legal;
+  locale?: string;
+}
+
+const {
+  socials = [],
+  legal,
+  locale = 'es',
+} = Astro.props;
+
+const sortedSocials =
+  [...socials]
+    .filter((social) => social.url)
+    .sort(
+      (a, b) =>
+        (a.sort_order ?? 0) -
+        (b.sort_order ?? 0)
+    );
+
+const legalLinks = [
+  {
+    key: 'privacy_policy',
+    label: legal?.privacy_policy?.title ?? 'Privacy Policy',
+    url: `/${locale}/legal/privacy-policy`,
+    document: legal?.privacy_policy,
+  },
+  {
+    key: 'terms_of_service',
+    label: legal?.terms_of_service?.title ?? 'Terms of Service',
+    url: `/${locale}/legal/terms-of-service`,
+    document: legal?.terms_of_service,
+  },
+  {
+    key: 'cookie_policy',
+    label: legal?.cookie_policy?.title ?? 'Cookie Policy',
+    url: `/${locale}/legal/cookie-policy`,
+    document: legal?.cookie_policy,
+  },
+  {
+    key: 'acceptable_use_policy',
+    label: legal?.acceptable_use_policy?.title ?? 'Acceptable Use Policy',
+    url: `/${locale}/legal/acceptable-use-policy`,
+    document: legal?.acceptable_use_policy,
+  },
+  {
+    key: 'data_processing_agreement',
+    label: legal?.data_processing_agreement?.title ?? 'Data Processing Agreement',
+    url: `/${locale}/legal/data-processing-agreement`,
+    document: legal?.data_processing_agreement,
+  },
+  {
+    key: 'license',
+    label: legal?.license?.title ?? 'License',
+    url: `/${locale}/legal/license`,
+    document: legal?.license,
+  },
+];
+---
+
+<footer
+  class="border-t border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950"
+>
+  <div
+    class="mx-auto flex max-w-7xl flex-col items-center justify-center gap-6 px-4 py-8 text-center sm:px-6 lg:px-8"
+  >
+
+    <!-- Social -->
+
+    {
+      sortedSocials.length > 0 && (
+        <nav
+          aria-label="Redes sociales"
+          class="flex items-center justify-center gap-4"
+        >
+          {
+            sortedSocials.map((social) => (
+              <a
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={social.label ?? social.platform}
+                title={social.label ?? social.platform}
+                class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+              >
+                {
+                  social.icon && (
+                    <span
+                      class="h-5 w-5"
+                      set:html={social.icon}
+                    />
+                  )
+                }
+              </a>
+            ))
+          }
+        </nav>
+      )
+    }
+
+    <!-- Legal -->
+
+    {
+      legalLinks.length > 0 && (
+        <nav
+          aria-label="Legal"
+          class="flex flex-wrap items-center justify-center gap-x-5 gap-y-2"
+        >
+          {
+            legalLinks.map((item) => (
+              <a
+                href={item.url}
+                class="text-sm text-gray-500 transition hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </nav>
+      )
+    }
+
+    <!-- Copyright -->
+
+    <div>
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        © {new Date().getFullYear()} Ijoba. Todos los derechos reservados.
+      </p>
+    </div>
+
+  </div>
+</footer>

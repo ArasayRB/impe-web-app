@@ -51,6 +51,24 @@ export async function bulkDeleteCustomersServer(
 	);
 }
 
+// Toggle Customer Portal Access
+export async function toggleCustomerPortalServer(
+	id: number | string,
+	enable: boolean,
+	request: Request,
+	site: Site
+) {
+  return apiFetchServer(
+    `/v1/customer/${id}/access/toggle`,
+    {
+      method: 'POST',
+			body: JSON.stringify({ enable }),
+		},
+    request,
+    site
+  );
+}
+
 export async function getCustomersAnalyticsServer(
   filters: Record<string, any>,
   request: Request,

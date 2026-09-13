@@ -1,0 +1,34 @@
+---
+---
+
+<div id="customer-cases-root">
+	<div class="grid gap-6 md:grid-cols-2">
+		<div
+			class="animate-pulse rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+		>
+			<div class="mb-4 h-4 w-24 rounded bg-gray-200 dark:bg-gray-700"></div>
+			<div class="mb-2 h-6 w-3/4 rounded bg-gray-200 dark:bg-gray-700"></div>
+			<div class="h-4 w-1/3 rounded bg-gray-200 dark:bg-gray-700"></div>
+		</div>
+
+		<div
+			class="animate-pulse rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+		>
+			<div class="mb-4 h-4 w-24 rounded bg-gray-200 dark:bg-gray-700"></div>
+			<div class="mb-2 h-6 w-3/4 rounded bg-gray-200 dark:bg-gray-700"></div>
+			<div class="h-4 w-1/3 rounded bg-gray-200 dark:bg-gray-700"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+	import { mountCustomerCases } from '@/modules/customer-portal/customerCases.ui';
+
+	const root = document.getElementById(
+		'customer-cases-root'
+	);
+
+	if (root) {
+		mountCustomerCases(root);
+	}
+</script>

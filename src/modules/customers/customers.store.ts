@@ -1,7 +1,9 @@
 // customers.store.ts
 
 import type { Customer, CustomerFilters, CustomerResponse } from './customers.types';
-import { listCustomers, createCustomer, updateCustomer, deleteCustomer, bulkCustomers, bulkDeleteCustomers } from './customers.service';
+import { listCustomers, createCustomer, updateCustomer, deleteCustomer, bulkCustomers, bulkDeleteCustomers,
+	toggleCustomerPortal as toggleCustomerPortalService
+ } from './customers.service';
 import { createCrudModule } from '@/lib/createCrudModule';
 import { openAddCustomerForm } from '@/modules/customers/customers.ui';
 
@@ -93,6 +95,9 @@ export const customersModule = createCrudModule({
   },
   normalizer: normalizeCustomersResponse,
 });
+
+export const toggleCustomerPortal =
+	toggleCustomerPortalService;
 
 export const fetchCustomers = customersModule.fetch;
 export const subscribeCustomers = customersModule.subscribe;

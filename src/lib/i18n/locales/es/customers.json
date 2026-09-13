@@ -31,6 +31,7 @@
 		"address": "Dirección",
 		"phone":	"Teléfono",
 		"notes":	"Nota",
+		"portal_access": "Portal",
 		"actions": "Acciones"
 	},
 	"analytics":{

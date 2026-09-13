@@ -20,13 +20,19 @@ const t = await getServerTranslator(locale, lang);
 	<div class="container py-3 mx-auto">
 		<div class="flex items-center justify-between">
 			<div class="flex items-center justify-start">
-				<a href={url()} class="flex mr-4">
-					<Logo site={Astro.locals.site} widthn="150" heightn="100" />
+				<a href="/" class="flex ml-2 md:mr-24 items-center">
+					<Logo
+						site={Astro.locals.site}
+						widthn="150"
+						heightn="40"
+					/>
+
 					<span
-						class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-						>{site?.title ?? SITE_TITLE}</span
+						class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white"
 					>
-				</a>				
+						{site?.title ?? SITE_TITLE}
+					</span>
+				</a>			
 				<LanguageSwitcher />
 				<div class="hidden sm:flex sm:ml-6">
 					<ul class="flex space-x-8">

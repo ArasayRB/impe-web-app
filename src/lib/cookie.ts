@@ -1,3 +1,4 @@
+//src/lib/cookie.ts
 export function getSessionFromCookie(context) {
   const raw = context.cookies.get('auth')?.value;
 

@@ -6,6 +6,7 @@ import AddCustomerForm from '@/modules/customers/forms/add.astro';
 import AddCaseForm from '@/modules/cases/forms/add.astro';
 import DeleteCaseForm from '@/modules/cases/forms/delete.astro';
 import EditCaseForm from '@/modules/cases/forms/edit.astro';
+import Workflow from '@/modules/cases/partials/workflow.astro';
 import SearchCaseInput from '@/modules/cases/case-search.astro';
 import { getServerTranslator } from '@/lib/i18n/server';
 import { lang } from '@/lib/i18n/config';
@@ -362,6 +363,9 @@ const t = await getServerTranslator(locale, lang);
 
 	<!-- Edit Case Modal -->
 	<EditCaseForm />
+
+	<!-- Workflow Modal -->
+	<Workflow />
 
 	<!-- Add Case Modal -->
 	<AddCaseForm />

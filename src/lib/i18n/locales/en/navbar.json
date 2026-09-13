@@ -2,7 +2,8 @@
 	"menu":{
 		"team":"Team",
 		"pricing":"Pricing",
-		"contact":"Contact"
+		"contact":"Contact",
+		"home":"Home"
 	},
 	"buttons":{
 		"login":"Login",

@@ -1,0 +1,25 @@
+---
+import LayoutCustomerPortal from '@/app/LayoutCustomerPortal.astro';
+import CustomerCases from '@/modules/customer-portal/CustomerCases.astro';
+import { resolveLocale } from '@/lib/i18n/resolveLocale';
+import { getServerTranslator } from '@/lib/i18n/server';
+import { lang } from '@/lib/i18n/config';
+
+const locale = resolveLocale(Astro);
+const t = await getServerTranslator(locale, lang);
+---
+
+<LayoutCustomerPortal>
+	<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+		<div class="mb-8">
+			<h1
+				class="text-2xl font-semibold text-gray-900 dark:text-white"
+				data-i18n="sidebar.dashboard.cases"
+			>
+				{t('sidebar.dashboard.cases')}
+			</h1>
+		</div>
+
+		<CustomerCases />
+	</div>
+</LayoutCustomerPortal>

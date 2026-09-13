@@ -1,0 +1,242 @@
+---
+interface TeamMember {
+  name?: string;
+  role?: string;
+  description?: string;
+  image?: string | null;
+  email?: string | null;
+  linkedin?: string | null;
+  sort_order?: number;
+}
+
+interface Props {
+  members?: TeamMember[];
+  title?: string;
+  description?: string;
+}
+
+const {
+  members = [],
+  title = '',
+  description = '',
+} = Astro.props;
+
+const sortedMembers =
+  [...members].sort(
+    (a, b) =>
+      (a.sort_order ?? 0) -
+      (b.sort_order ?? 0)
+  );
+
+const memberCount =
+  sortedMembers.length;
+---
+
+<section
+  id="team"
+  class="relative overflow-hidden bg-gray-50 dark:bg-gray-900"
+>
+  <div
+    class="absolute left-1/2 top-0 -z-0 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-br from-indigo-500/10 to-cyan-400/10 blur-3xl"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8"
+  >
+
+    <!-- Header -->
+
+    <div class="mx-auto max-w-2xl text-center">
+
+      <div
+        class="mb-6 flex items-center justify-center gap-3"
+        aria-hidden="true"
+      >
+        <span class="h-px w-10 bg-gray-950 dark:bg-white"></span>
+
+        <span class="h-1.5 w-1.5 rounded-full bg-gray-950 dark:bg-white"></span>
+
+        <span class="h-px w-10 bg-gray-950 dark:bg-white"></span>
+      </div>
+
+      {
+        title && (
+          <h2
+            class="text-4xl font-bold tracking-tight text-gray-950 sm:text-5xl dark:text-white"
+          >
+            {title}
+          </h2>
+        )
+      }
+
+      {
+        description && (
+          <p
+            class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300"
+          >
+            {description}
+          </p>
+        )
+      }
+
+    </div>
+
+    <!-- Members -->
+
+    {
+      memberCount > 0 && (
+        <div
+          class:list={[
+            'mx-auto mt-16 grid max-w-6xl justify-items-center gap-8',
+            memberCount === 1
+              ? 'grid-cols-1'
+              : memberCount === 2
+                ? 'grid-cols-1 sm:grid-cols-2'
+                : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+          ]}
+        >
+          {
+            sortedMembers.map((member) => (
+              <article
+                class="group w-full max-w-sm overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-xl shadow-gray-900/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-gray-900/10 dark:border-gray-800 dark:bg-gray-950"
+              >
+
+                <!-- Image -->
+
+                <div class="relative overflow-hidden bg-gray-100 dark:bg-gray-900">
+
+                  {
+                    member.image ? (
+                      <img
+                        src={member.image}
+                        alt={member.name || ''}
+                        class="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div
+                        class="flex aspect-[4/3] items-center justify-center"
+                        aria-hidden="true"
+                      >
+                        <span
+                          class="flex h-24 w-24 items-center justify-center rounded-full bg-gray-950 text-3xl font-bold text-white shadow-xl dark:bg-white dark:text-gray-950"
+                        >
+                          {member.name?.charAt(0).toUpperCase() || '?'}
+                        </span>
+                      </div>
+                    )
+                  }
+
+                  <div
+                    class="absolute inset-0 bg-gradient-to-t from-gray-950/20 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    aria-hidden="true"
+                  ></div>
+
+                </div>
+
+                <!-- Content -->
+
+                <div class="p-6">
+
+                  {
+                    member.name && (
+                      <h3
+                        class="text-xl font-bold tracking-tight text-gray-950 dark:text-white"
+                      >
+                        {member.name}
+                      </h3>
+                    )
+                  }
+
+                  {
+                    member.role && (
+                      <p
+                        class="mt-1 text-sm font-semibold text-gray-500 dark:text-gray-400"
+                      >
+                        {member.role}
+                      </p>
+                    )
+                  }
+
+                  {
+                    member.description && (
+                      <p
+                        class="mt-4 text-sm leading-6 text-gray-600 dark:text-gray-300"
+                      >
+                        {member.description}
+                      </p>
+                    )
+                  }
+
+                  {
+                    (member.email || member.linkedin) && (
+                      <div
+                        class="mt-6 flex items-center gap-3 border-t border-gray-200 pt-5 dark:border-gray-800"
+                      >
+
+                        {
+                          member.email && (
+                            <a
+                              href={`mailto:${member.email}`}
+                              aria-label={`Email ${member.name || ''}`}
+                              class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 text-gray-600 transition-colors hover:border-gray-950 hover:bg-gray-950 hover:text-white dark:border-gray-800 dark:text-gray-300 dark:hover:border-white dark:hover:bg-white dark:hover:text-gray-950"
+                            >
+                              <svg
+                                class="h-4 w-4"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M3 7.5A2.5 2.5 0 015.5 5h13A2.5 2.5 0 0121 7.5v9a2.5 2.5 0 01-2.5 2.5h-13A2.5 2.5 0 013 16.5v-9z"
+                                />
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="m3.5 7 8.5 6 8.5-6"
+                                />
+                              </svg>
+                            </a>
+                          )
+                        }
+
+                        {
+                          member.linkedin && (
+                            <a
+                              href={member.linkedin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`LinkedIn ${member.name || ''}`}
+                              class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 text-gray-600 transition-colors hover:border-gray-950 hover:bg-gray-950 hover:text-white dark:border-gray-800 dark:text-gray-300 dark:hover:border-white dark:hover:bg-white dark:hover:text-gray-950"
+                            >
+                              <svg
+                                class="h-4 w-4"
+                                fill="currentColor"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                              >
+                                <path d="M6.5 8.5H3V21h3.5V8.5ZM4.75 3A2.05 2.05 0 1 0 4.75 7.1 2.05 2.05 0 0 0 4.75 3ZM21 13.9c0-3.75-1.99-5.5-4.65-5.5-2.15 0-3.11 1.18-3.65 2.01V8.5H9.2V21h3.5v-7.1c0-1.63.31-3.2 2.32-3.2 1.98 0 2 1.85 2 3.31V21H21v-7.1Z" />
+                              </svg>
+                            </a>
+                          )
+                        }
+
+                      </div>
+                    )
+                  }
+
+                </div>
+
+              </article>
+            ))
+          }
+        </div>
+      )
+    }
+
+  </div>
+</section>

@@ -1,0 +1,106 @@
+---
+import { getServerTranslator } from '@/lib/i18n/server';
+import { lang } from '@/lib/i18n/config';
+import { resolveLocale } from '@/lib/i18n/resolveLocale';
+
+const locale = resolveLocale(Astro);
+const t = await getServerTranslator(locale, lang);
+---
+
+<div
+	id="case-workflow-modal"
+	class="fixed inset-0 z-50 hidden items-center justify-center overflow-y-auto bg-black/50 p-4"
+>
+	<div
+		class="
+			relative
+			w-full
+			max-w-4xl
+			max-h-[90vh]
+			overflow-hidden
+			rounded-lg
+			bg-white
+			shadow-xl
+			dark:bg-gray-800
+		"
+	>
+
+		<!-- Header -->
+
+		<div
+			class="
+				flex
+				items-center
+				justify-between
+				border-b
+				border-gray-200
+				p-5
+				dark:border-gray-700
+			"
+		>
+
+			<div>
+				<h2
+					class="
+						text-xl
+						font-semibold
+						text-gray-900
+						dark:text-white
+					"
+				>
+					{t('cases.workflow.title')}
+				</h2>
+			</div>
+
+			<button
+				type="button"
+				data-close-modal="case-workflow-modal"
+				class="
+					rounded-lg
+					p-2
+					text-gray-400
+					hover:bg-gray-100
+					hover:text-gray-900
+					dark:hover:bg-gray-700
+					dark:hover:text-white
+				"
+				aria-label={t('common.buttons.close')}
+			>
+				<svg
+					class="h-5 w-5"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M6 18L18 6M6 6l12 12"
+					/>
+				</svg>
+			</button>
+
+		</div>
+
+		<!-- Body -->
+
+		<div
+			class="max-h-[calc(90vh-80px)] overflow-y-auto"
+			data-workflow-container
+		>
+			<div
+				class="
+					p-8
+					text-center
+					text-sm
+					text-gray-500
+					dark:text-gray-400
+				"
+			>
+				{t('common.messages.loading')}
+			</div>
+		</div>
+
+	</div>
+</div>

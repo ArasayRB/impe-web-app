@@ -7,6 +7,7 @@ import { modalController } from '@/lib/modal.controller';
 import { registerModal } from '@/lib/modal.registry';
 import type { Field } from '@/lib/createCrudForm';
 import { customerFields } from './customers.form.config';
+import { customerColumns } from './customers.columns.config';
 import { emit } from '@/lib/event.bus';
 import { t } from '@/lib/i18n/i18n';
 import { resolveTranslation } from '@/lib/i18n/resolveTranslations';
@@ -232,17 +233,10 @@ export async function mountCustomers(el: HTMLElement) {
 		initSite(JSON.parse(root.dataset.site));
 	}
 
-	const columnsData = [
-			{ key: 'name', label: 'customers.columns.name' },
-			{ key: 'email', label: 'customers.columns.email' },
-			{ key: 'address', label: 'customers.columns.address' },
-			{ key: 'phone', label: 'customers.columns.phone' },
-			{ key: 'notes', label: 'customers.columns.notes' },
-		];
 	await mountCrud({
 		el,
 		module: customersModule,
-		columns: columnsData,
+		columns: customerColumns,
 		translations:'customers',
 
 		actions: {
@@ -255,7 +249,7 @@ export async function mountCustomers(el: HTMLElement) {
 		export: {
 			filename: 'customers',
 
-			columns: columnsData
+			columns: customerColumns
 		},
 
   		getFilters: () => currentFilters,

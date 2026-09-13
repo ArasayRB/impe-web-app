@@ -1,8 +1,65 @@
 ---
 import LayoutSidebar from '../app/LayoutSidebar.astro';
 import LandingReadme from '../modules/LandingReadme.astro';
+import PublicWebsite from '../modules/public-website/PublicWebsite.astro';
+import LayoutWebsite from '@/app/LayoutWebsite.astro';
+import {
+  getPublicWebsiteSnapshot
+} from '@/services/public.website.service';
+
+const isPublicWebsite =
+  Astro.locals.isPublicWebsite === true;
+
+	if (isPublicWebsite) {
+  return Astro.redirect(
+    '/es',
+    302
+  );
+}
+
+const snapshot =
+  isPublicWebsite
+    ? await getPublicWebsiteSnapshot(Astro.request)
+    : null;
+console.log(
+  '[PUBLIC WEBSITE ENCODING TEST]',
+  {
+    title:
+      snapshot?.sections?.es?.[0]?.content?.title,
+
+    description:
+      snapshot?.sections?.es?.[0]?.content?.description,
+
+    contactLabel:
+      snapshot?.contact?.es?.[1]?.label,
+
+    privacyLabel:
+      snapshot?.contact?.es?.[6]?.label,
+  }
+);
+if (isPublicWebsite && !snapshot) {
+  Astro.response.status = 404;
+}
 ---
 
-<LayoutSidebar>
-	<LandingReadme />
-</LayoutSidebar>
+{
+  isPublicWebsite && snapshot ? (
+    <LayoutWebsite snapshot={snapshot}>
+      <main>
+        <PublicWebsite snapshot={snapshot} />
+
+        {
+          snapshot.site?.tagline && (
+            <p>
+              {snapshot.site.tagline}
+            </p>
+          )
+        }
+      </main>
+    </LayoutWebsite>
+  ) : (
+    <LayoutSidebar>
+      <LandingReadme />
+    </LayoutSidebar>
+  )
+}

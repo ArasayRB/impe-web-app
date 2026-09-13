@@ -1,0 +1,178 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import type {
+  PublicWebsiteSnapshot
+} from '../services/public.website.service';
+
+interface Props {
+  snapshot: PublicWebsiteSnapshot;
+  locale: string;
+}
+
+const {
+  snapshot,
+  locale,
+} = Astro.props;
+
+const site =
+  snapshot.site ?? {};
+
+const company =
+  snapshot.company ?? {};
+	
+
+const branding =
+  snapshot.branding ?? {};
+
+const seo =
+  snapshot.seo?.[locale] ?? {};
+
+const title =
+  seo.title ||
+  branding.title ||
+  '';
+
+const description =
+  seo.description ||
+  branding.tagline ||
+  '';
+
+const image =
+  seo.og?.image ||
+  branding.logo ||
+  null;
+
+const currentPath =
+  Astro.url.pathname;
+
+const url =
+  currentPath === `/${locale}` &&
+  seo.canonical
+    ? seo.canonical
+    : `${Astro.url.origin}${currentPath}`;
+
+const robots =
+  seo.robots ||
+  'index, follow';
+
+const ogTitle =
+  seo.og?.title ||
+  title;
+
+const ogDescription =
+  seo.og?.description ||
+  description;
+
+const ogType =
+  seo.og?.type ||
+  'website';
+
+const ogImage =
+  seo.og?.image ||
+  image;
+
+const twitterCard =
+  seo.twitter?.card ||
+  'summary_large_image';
+
+const twitterTitle =
+  seo.twitter?.title ||
+  title;
+
+const twitterDescription =
+  seo.twitter?.description ||
+  description;
+
+const twitterImage =
+  seo.twitter?.image ||
+  image;
+
+const companyname =
+  company.name || '';
+
+const alternatePath =
+  currentPath.startsWith(`/${locale}`)
+    ? currentPath.slice(
+        `/${locale}`.length
+      )
+    : currentPath;
+
+const alternates = [
+  {
+    locale: 'es',
+    url: `${Astro.url.origin}/es${alternatePath}`,
+  },
+  {
+    locale: 'en',
+    url: `${Astro.url.origin}/en${alternatePath}`,
+  },
+  {
+    locale: 'x-default',
+    url: `${Astro.url.origin}/es${alternatePath}`,
+  },
+];
+
+const structuredData = {
+  organization: {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name:
+      company.name ||
+      branding.title ||
+      'Ijoba',
+    url:
+      `${Astro.url.origin}/${locale}`,
+    logo:
+      branding.logo ||
+      null,
+    sameAs:
+      snapshot.social
+        ?.map((social) => social.url)
+        .filter(Boolean) || [],
+  },
+
+  website: {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name:
+      branding.title ||
+      company.name ||
+      'Ijoba',
+    url:
+      `${Astro.url.origin}/${locale}`,
+    inLanguage:
+      locale,
+  },
+
+  webpage: {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url,
+    inLanguage: locale,
+  },
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  url={url}
+  robots={robots}
+  ogTitle={ogTitle}
+  ogDescription={ogDescription}
+  ogType={ogType}
+  ogImage={ogImage}
+  twitterCard={twitterCard}
+  twitterTitle={twitterTitle}
+  twitterDescription={twitterDescription}
+  twitterImage={twitterImage}
+  company={companyname}
+  siteName={branding.title || companyname}
+	alternates={alternates}
+	structuredData={structuredData}
+>
+  <slot />
+</BaseLayout>

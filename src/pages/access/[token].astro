@@ -1,0 +1,71 @@
+---
+// src/pages/access/[token].astro
+
+---
+
+<div class="flex min-h-screen items-center justify-center">
+    <div class="text-center">
+        <div
+            class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-gray-600"
+        ></div>
+
+        <p class="text-sm text-gray-500">
+            Loading...
+        </p>
+    </div>
+</div>
+
+<script>
+    import { setCustomerPortalSession } from '@/lib/session';
+
+    const apiUrl = import.meta.env.PUBLIC_API_URL;
+
+    
+		const pathParts = window.location.pathname
+				.split('/')
+				.filter(Boolean);
+
+		const accessToken =
+				pathParts[pathParts.length - 1];
+
+    if (!accessToken) {
+        window.location.replace('/access/error');
+    } else {
+			console.log(
+					'[CUSTOMER PORTAL ACCESS TOKEN]',
+					accessToken
+			);
+        fetch(
+            `${apiUrl}/v1/customer/access/${encodeURIComponent(accessToken)}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            }
+        )
+            .then(async (response) => {
+                const data = await response.json();
+
+                
+                if (!response.ok || !data?.success) {
+                    throw new Error(
+                        data?.message || 'Customer access denied.'
+                    );
+                }
+
+                setCustomerPortalSession(data.data);
+
+
+                window.location.replace('/cases');
+            })
+            .catch((error) => {
+                console.error(
+                    '[CUSTOMER PORTAL ACCESS ERROR]',
+                    error
+                );
+                window.location.replace('/access/error');
+            });
+    }
+</script>

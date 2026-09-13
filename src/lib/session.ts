@@ -1,3 +1,4 @@
+//src/lib/session.ts
 const TOKEN_KEY = 'access_token';
 const REFRESH_KEY = 'refresh_token';
 const USER_KEY = 'user';
@@ -8,6 +9,9 @@ const LOGO_KEY  = 'logo';
 
 const ACCESS_EXP_KEY = 'access_expires_at';
 const REFRESH_EXP_KEY = 'refresh_expires_at';
+
+const CUSTOMER_PORTAL_TOKEN_KEY = 'customer_portal_token';
+const CUSTOMER_PORTAL_CUSTOMER_KEY = 'customer_portal_customer';
 
 
 const listeners = new Set<Function>();
@@ -99,4 +103,45 @@ export function hasValidSession(session) {
 export function subscribeAuth(fn: Function) {
   listeners.add(fn);
   return () => listeners.delete(fn);
+}
+
+//CUSTOMER PORTAL FUNCTIONS
+export function setCustomerPortalSession(data: any) {
+  if (!data?.token) return;
+
+  localStorage.setItem(
+    CUSTOMER_PORTAL_TOKEN_KEY,
+    data.token
+  );
+
+  if (data.customer) {
+    localStorage.setItem(
+      CUSTOMER_PORTAL_CUSTOMER_KEY,
+      JSON.stringify(data.customer)
+    );
+  }
+}
+
+export function getCustomerPortalToken(): string | null {
+  return localStorage.getItem(
+    CUSTOMER_PORTAL_TOKEN_KEY
+  );
+}
+
+export function getCustomerPortalCustomer() {
+  const raw = localStorage.getItem(
+    CUSTOMER_PORTAL_CUSTOMER_KEY
+  );
+
+  return raw ? JSON.parse(raw) : null;
+}
+
+export function clearCustomerPortalSession() {
+  localStorage.removeItem(
+    CUSTOMER_PORTAL_TOKEN_KEY
+  );
+
+  localStorage.removeItem(
+    CUSTOMER_PORTAL_CUSTOMER_KEY
+  );
 }

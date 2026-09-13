@@ -32,6 +32,7 @@
 		"address": "Address",
 		"phone":	"Phone",
 		"notes":	"Note",
+		"portal_access": "Portal",
 		"actions": "Acciones"
 	},
 	"analytics":{

@@ -15,6 +15,10 @@ export const caseFormTabs = [
     {
         id: "documents",
         label: "cases.tabs.documents"
+    },
+    {
+        id: "data",
+        label: "cases.tabs.data"
     }
 ];
 

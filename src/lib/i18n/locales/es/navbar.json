@@ -2,7 +2,8 @@
 	"menu":{
 		"team":"Equipo",
 		"pricing":"Precios",
-		"contact":"Contacto"
+		"contact":"Contacto",
+		"home":"Inicio"
 	},
 	"buttons":{
 		"login":"Entrar",

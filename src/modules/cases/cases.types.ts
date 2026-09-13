@@ -36,7 +36,7 @@ export interface CaseWorkflowForceMetadata {
     from_step_label: string | null;
     to_step: string | null;
     to_step_label: string | null;
-    requirements: CaseWorkflowRequirement[];
+    requirements: string[];
 }
 
 export interface CaseWorkflowForceDetail {
@@ -47,9 +47,9 @@ export interface CaseWorkflowForceDetail {
 }
 
 export type CaseWorkflowStepStatus =
-    'pending' |
-    'active' |
-    'completed';
+    | 'pending'
+    | 'active'
+    | 'completed';
 
 export interface CaseWorkflowStep {
     key: string;

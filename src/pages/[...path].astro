@@ -1,0 +1,59 @@
+---
+import LayoutWebsite from '@/app/LayoutWebsite.astro';
+import {
+  getPublicWebsiteSnapshot
+} from '@/services/public.website.service';
+
+console.log(
+  '[PUBLIC WEBSITE PAGE]',
+  {
+    pathname: Astro.url.pathname,
+    isPublicWebsite:
+      Astro.locals.isPublicWebsite,
+    publicHost:
+      Astro.locals.publicHost,
+  }
+);
+if (!Astro.locals.isPublicWebsite) {
+  Astro.response.status = 404;
+}
+
+const snapshot =
+  Astro.locals.isPublicWebsite
+    ? await getPublicWebsiteSnapshot(Astro.request)
+    : null;
+
+if (!snapshot) {
+  Astro.response.status = 404;
+}
+---
+
+{
+  snapshot ? (
+    <LayoutWebsite snapshot={snapshot}>
+      <main>
+        <h1>
+          {snapshot.site?.title || 'Website'}
+        </h1>
+
+        {
+          snapshot.site?.tagline && (
+            <p>
+              {snapshot.site.tagline}
+            </p>
+          )
+        }
+      </main>
+    </LayoutWebsite>
+  ) : (
+    <html lang="en">
+      <head>
+        <title>Not Found</title>
+      </head>
+
+      <body>
+        <h1>Website not found</h1>
+      </body>
+    </html>
+  )
+}

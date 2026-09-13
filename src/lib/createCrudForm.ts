@@ -80,7 +80,9 @@ type CrudFormConfig<T> = {
 		(container: HTMLElement, context: {
 			mode: 'create' | 'edit';
 			data: T;
-		}) => void
+		})  => {
+        getValue?: () => any;
+    } | void
 	>;
 	variables?: AvailableVariableGroup[];
 	beforeSubmit?: (context: {
@@ -103,7 +105,13 @@ export function mountCrudForm<T>(config: CrudFormConfig<T>) {
 
   const definitionRenderers: Record<string, DefinitionRenderer> = {};
 
-  
+  const tabRenderers: Record<
+			string,
+			{
+					getValue?: () => any;
+			}
+	> = {};
+
   const componentRegistry = new Map<
       string,
       {
@@ -331,16 +339,23 @@ export function mountCrudForm<T>(config: CrudFormConfig<T>) {
 
 			if (customRenderer) {
 
-				customRenderer(
-					tabContainer,
-					{
-						mode,
-						data: initialData as T
-					}
-				);
+				const renderer =
+						customRenderer(
+								tabContainer,
+								{
+										mode,
+										data: initialData as T
+								}
+						);
+
+				if (renderer) {
+
+						tabRenderers[tab.id] =
+								renderer;
+				}
 
 				return;
-			}
+		}
 
 			tabContainer.innerHTML = `
 				<div class="grid grid-cols-6 gap-6">
@@ -812,26 +827,67 @@ export function mountCrudForm<T>(config: CrudFormConfig<T>) {
 
     if(field.type==="tag-selector"){
 
-        return`
+			if (
+					mode === 'edit' &&
+					field.name === 'case_type_id'
+			) {
 
-            <div class="col-span-6">
+					const selected =
+							formData[field.name]?.[0];
 
-                <label
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+					return `
+							<div class="col-span-6">
 
-                    ${t(field.label)}
+									<label
+											class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+									>
+											${t(field.label)}
+									</label>
 
-                </label>
+									<div
+											class="
+													shadow-sm
+													bg-gray-100
+													border
+													border-gray-300
+													text-gray-900
+													sm:text-sm
+													rounded-lg
+													block
+													w-full
+													p-2.5
+													dark:bg-gray-700
+													dark:border-gray-600
+													dark:text-white
+											"
+									>
+											${selected?.label ?? ''}
+									</div>
 
-                <div
-                    data-tag-selector="${field.name}">
-                </div>
+							</div>
+					`;
+			}
 
-            </div>
+			return`
 
-        `;
+					<div class="col-span-6">
 
-    }
+							<label
+									class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+
+									${t(field.label)}
+
+							</label>
+
+							<div
+									data-tag-selector="${field.name}">
+							</div>
+
+					</div>
+
+			`;
+
+	}
 
 		if(field.type === "case-people"){
 
@@ -1033,7 +1089,14 @@ export function mountCrudForm<T>(config: CrudFormConfig<T>) {
       }
 
       payload[f.name] = value;
-    });
+    });console.log("TABRENDERS", tabRenderers);
+
+		if (tabRenderers.data?.getValue) {
+
+				payload.data =
+						tabRenderers.data.getValue();
+
+		}
 
     if (Object.keys(errors).length) {
       renderErrors(errors);

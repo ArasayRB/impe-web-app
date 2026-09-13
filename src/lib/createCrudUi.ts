@@ -37,6 +37,7 @@ type CrudUIConfig<T> = {
   ) => Promise<void>;
 	getFilters?: () => Record<string, any>;
   onInfo?: () => void;
+  onWorkflow?: (row: T) => void;
 };
 
 type CrudActions = {
@@ -45,6 +46,7 @@ type CrudActions = {
   import?: boolean;
   bulk_delete?: boolean;
   info?: boolean;
+  workflow?: boolean;
 	settings?:boolean;
 };
 
@@ -63,7 +65,8 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
   onRemoveSuccess,
   onRemoveError, 
 	getFilters,
-  onInfo
+  onInfo,
+	onWorkflow,
 } = config;
 
   await waitForI18n();
@@ -71,7 +74,8 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
   //For module actions allowed
 	const enabledActions = {
 		edit: true,
-		delete: true,
+		delete: true,		
+    workflow: false,
 		...actions,
 	};
 
@@ -80,7 +84,8 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 
   const extraColumns =
     (enabledActions.edit ? 1 : 0) +
-    (enabledActions.delete ? 1 : 0);
+    (enabledActions.delete ? 1 : 0)+
+    (enabledActions.workflow ? 1 : 0);
 
   const bulkColumn =
     hasActionsMenu() ? 1 : 0;
@@ -270,6 +275,28 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 							</svg>
 							${t(translations+'.buttons.edit')}
 							</button>`:''}
+						${enabledActions.workflow ? `
+							<button
+									data-workflow="${(row as any).id}"
+									class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800"
+							>
+									<svg
+											class="w-4 h-4 mr-2"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+									>
+											<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													stroke-width="2"
+													d="M9 5l7 7-7 7"
+											/>
+									</svg>
+
+									${t(translations+'.buttons.workflow')}
+							</button>
+					` : ''}
 							${enabledActions.delete ? `
               <button data-delete="${(row as any).id}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900">
 							<svg
@@ -684,6 +711,27 @@ console.log('target clicked to remove',target);
 			if (!row) return;
 
 			onEdit?.(row);
+		}
+
+		const workflowBtn =
+				(e.target as HTMLElement)
+						.closest('[data-workflow]') as HTMLElement | null;
+
+		if (workflowBtn) {
+
+				const id = workflowBtn.dataset.workflow;
+
+				const state = module.getState();
+
+				const row =
+						state.data.find(
+								(r: any) =>
+										String(r.id) === String(id)
+						);
+
+				if (!row) return;
+
+				onWorkflow?.(row);
 		}
 
 		const deleteBtn = (e.target as HTMLElement).closest('[data-delete]') as HTMLElement | null;

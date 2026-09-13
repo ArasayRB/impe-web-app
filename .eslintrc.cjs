@@ -51,10 +51,7 @@ module.exports = {
 					{ argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' },
 				],
 				'@typescript-eslint/no-non-null-assertion': 'off',
-				'max-lines': [
-					'warn',
-					{ max: 250, skipComments: true, skipBlankLines: true },
-				],
+				'max-lines':"off",
 				'react/jsx-filename-extension': 'off',
 				'import/prefer-default-export': 'off',
 				'import/extensions': 'off',

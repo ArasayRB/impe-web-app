@@ -1,10 +1,48 @@
 ---
 import SEO from "../components/SEO.astro";
 
-const { title, description, image, url, published } = Astro.props;
+const {
+  title,
+  description,
+  image,
+  url,
+  published,
+  company,
+  robots,
+  ogTitle,
+  ogDescription,
+  ogType,
+  ogImage,
+  twitterCard,
+  twitterTitle,
+  twitterDescription,
+  twitterImage,
+  siteName,
+	alternates,
+  structuredData,
+} = Astro.props;
 ---
 
-<SEO {title} {description} {image} {url} {published} />
+<SEO
+  {title}
+  {description}
+  {image}
+  {url}
+  {published}
+  {company}
+  {robots}
+  {ogTitle}
+  {ogDescription}
+  {ogType}
+  {ogImage}
+  {twitterCard}
+  {twitterTitle}
+  {twitterDescription}
+  {twitterImage}
+  {siteName}
+	{alternates}
+	{structuredData}
+/>
 
 <div class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen">
   <slot />

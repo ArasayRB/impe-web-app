@@ -22,6 +22,8 @@ import { openAddCustomerForm } from '@/modules/customers/customers.ui';
 import { on } from '@/lib/event.bus';
 import { debounce } from '@/lib/debounce';
 import { t } from '@/lib/i18n/i18n';
+import { getWorkflow } from './cases.service';
+import { renderCaseData } from './cases.data';
 
 interface CasePersonFormValue {
     person_id: number;
@@ -135,10 +137,80 @@ function transformCasePayload(payload){
 								relationship:
 										person.relationship
 
-						})):[]
+						})):[],
+
+        data:
+            payload.data ?? {}
 
     };
 
+}
+
+function renderCaseDataTab(
+    container: HTMLElement,
+    context: {
+        mode: 'create' | 'edit';
+        data: any;
+    }
+) {
+
+    if (
+        context.mode === 'create' ||
+        !context.data?.id
+    ) {
+
+        container.innerHTML = `
+            <div class="
+                p-6
+                text-center
+                text-sm
+                text-gray-500
+                dark:text-gray-400
+            ">
+                ${t('cases.data.save_first')}
+            </div>
+        `;
+
+        return;
+    }
+
+    const fields =
+        context.data.type
+            ?.definition
+            ?.data
+            ?.config
+            ?.fields
+        ?? [];
+
+    if (!fields.length) {
+
+        container.innerHTML = `
+            <div class="
+                p-6
+                text-center
+                text-sm
+                text-gray-500
+                dark:text-gray-400
+            ">
+                ${t('cases.data.empty')}
+            </div>
+        `;
+
+        return;
+    }
+
+    const values =
+        context.data.definition_json
+            ?.data
+            ?.values
+        ?? {};
+
+    const renderer = renderCaseData({
+        container,
+        fields,
+        values
+    });
+		return renderer;
 }
 
 async function renderCaseDocumentsTab(
@@ -306,6 +378,7 @@ console.log('row',row);
     fields,
 		tabs: caseFormTabs,
 		tabRenderers: {
+    		data: renderCaseDataTab,
 				documents: renderCaseDocumentsTab
 		},
     modalId: 'edit-case-modal',
@@ -390,6 +463,769 @@ console.log('row',row);
   modalController.open('edit-case-modal');
 }
 
+function formatWorkflowDate(
+	value: string | null
+): string {
+
+	if (!value) {
+		return '';
+	}
+
+	const date = new Date(value);
+
+	if (Number.isNaN(date.getTime())) {
+		return value;
+	}
+
+	return new Intl.DateTimeFormat(undefined, {
+		dateStyle: 'medium',
+		timeStyle: 'short'
+	}).format(date);
+}
+
+
+function renderCaseWorkflow(
+	container: HTMLElement,
+	response: CaseWorkflowResponse
+): void {
+
+	const caseData = response.data.case;
+	const workflow = response.data.workflow;
+
+	const tWorkflow = (key: string): string => {
+		return t(`cases.workflow.${key}`);
+	};
+
+	const tAnalytics = (key: string): string => {
+		return t(`cases.analytics.${key}`);
+	};
+
+
+	const statusBadge = workflow.paused
+		? `
+			<span
+				class="
+					inline-flex
+					items-center
+					rounded-full
+					bg-yellow-100
+					px-3
+					py-1
+					text-xs
+					font-medium
+					text-yellow-800
+					dark:bg-yellow-900/30
+					dark:text-yellow-400
+				"
+			>
+				${tAnalytics('paused')}
+			</span>
+		`
+		: workflow.current_step
+			? `
+				<span
+					class="
+						inline-flex
+						items-center
+						rounded-full
+						bg-green-100
+						px-3
+						py-1
+						text-xs
+						font-medium
+						text-green-800
+						dark:bg-green-900/30
+						dark:text-green-400
+					"
+				>
+					${tAnalytics('active')}
+				</span>
+			`
+			: '';
+
+
+	const stepsHtml = workflow.steps
+		.map((step: CaseWorkflowStep, index: number) => {
+
+			const connector =
+				index < workflow.steps.length - 1
+					? `
+						<div
+							class="
+								absolute
+								left-[15px]
+								top-8
+								h-full
+								w-px
+								bg-gray-200
+								dark:bg-gray-700
+							"
+						></div>
+					`
+					: '';
+
+
+			let statusHtml = '';
+
+			if (step.status === 'completed') {
+
+				statusHtml = `
+					<div
+						class="
+							flex
+							h-8
+							w-8
+							items-center
+							justify-center
+							rounded-full
+							border-2
+							border-green-500
+							bg-green-50
+							text-green-600
+							dark:border-green-400
+							dark:bg-green-900/30
+							dark:text-green-400
+						"
+					>
+						<svg
+							class="h-4 w-4"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2.5"
+								d="M5 13l4 4L19 7"
+							/>
+						</svg>
+					</div>
+				`;
+
+			} else if (step.status === 'active') {
+
+				statusHtml = `
+					<div
+						class="
+							h-3
+							w-3
+							rounded-full
+							bg-green-500
+							dark:bg-green-400
+						"
+					></div>
+				`;
+
+			} else {
+
+				statusHtml = `
+					<div
+						class="
+							h-2
+							w-2
+							rounded-full
+							bg-gray-400
+							dark:bg-gray-500
+						"
+					></div>
+				`;
+			}
+
+
+			const activeBadge =
+				step.status === 'active'
+					? `
+						<span
+							class="
+								inline-flex
+								items-center
+								rounded-full
+								bg-green-100
+								px-2.5
+								py-0.5
+								text-xs
+								font-medium
+								text-green-800
+								dark:bg-green-900/30
+								dark:text-green-400
+							"
+						>
+							${tAnalytics('active')}
+						</span>
+					`
+					: '';
+
+
+			const completedBadge =
+				step.status === 'completed'
+					? `
+						<span
+							class="
+								inline-flex
+								items-center
+								rounded-full
+								bg-gray-100
+								px-2.5
+								py-0.5
+								text-xs
+								font-medium
+								text-gray-700
+								dark:bg-gray-700
+								dark:text-gray-300
+							"
+						>
+							${tAnalytics('completed')}
+						</span>
+					`
+					: '';
+
+
+			const forcedBadge =
+				step.forced
+					? `
+						<span
+							class="
+								inline-flex
+								items-center
+								gap-1
+								rounded-full
+								bg-yellow-100
+								px-2.5
+								py-0.5
+								text-xs
+								font-medium
+								text-yellow-800
+								dark:bg-yellow-900/30
+								dark:text-yellow-400
+							"
+						>
+							<svg
+								class="h-3.5 w-3.5"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M12 9v2m0 4h.01M5.07 19h13.86a2 2 0 001.73-3L13.73 4a2 2 0 00-3.46 0L3.34 16a2 2 0 001.73 3z"
+								/>
+							</svg>
+
+							${tWorkflow('forced')}
+						</span>
+					`
+					: '';
+
+
+			const datesHtml =
+				step.started_at || step.finished_at
+					? `
+						<div
+							class="
+								mt-2
+								flex
+								flex-wrap
+								gap-x-6
+								gap-y-1
+								text-xs
+								text-gray-500
+								dark:text-gray-400
+							"
+						>
+
+							${step.started_at
+								? `
+									<span>
+										${tWorkflow('started')}:
+										${formatWorkflowDate(step.started_at)}
+									</span>
+								`
+								: ''
+							}
+
+							${step.finished_at
+								? `
+									<span>
+										${tWorkflow('finished')}:
+										${formatWorkflowDate(step.finished_at)}
+									</span>
+								`
+								: ''
+							}
+
+						</div>
+					`
+					: '';
+
+
+			const forceDetailsHtml =
+				step.force_details.length > 0
+					? `
+						<div
+							class="
+								mt-4
+								rounded-lg
+								border
+								border-yellow-200
+								bg-yellow-50
+								p-4
+								dark:border-yellow-800
+								dark:bg-yellow-900/10
+							"
+						>
+
+							<div
+								class="
+									mb-3
+									text-sm
+									font-medium
+									text-yellow-800
+									dark:text-yellow-400
+								"
+							>
+								${tWorkflow('force_details')}
+							</div>
+
+							<div class="space-y-4">
+
+								${step.force_details
+									.map((detail) => {
+
+										const metadata =
+											detail.metadata;
+
+										const requirements =
+											metadata.requirements
+												.length > 0
+												? `
+													<div class="mt-3">
+
+														<p
+															class="
+																text-xs
+																font-medium
+																text-yellow-800
+																dark:text-yellow-400
+															"
+														>
+															${tWorkflow('requirements')}
+														</p>
+
+														<ul
+															class="
+																mt-1
+																list-disc
+																pl-5
+																text-xs
+																text-gray-700
+																dark:text-gray-300
+															"
+														>
+															${metadata.requirements
+																.map(
+																	(requirement) =>
+																		`<li>${requirement}</li>`
+																)
+																.join('')}
+														</ul>
+
+													</div>
+												`
+												: '';
+
+
+										return `
+											<div
+												class="
+													border-b
+													border-yellow-200
+													pb-3
+													last:border-0
+													last:pb-0
+													dark:border-yellow-800
+												"
+											>
+
+												<p
+													class="
+														text-sm
+														text-gray-700
+														dark:text-gray-300
+													"
+												>
+													${detail.description}
+												</p>
+
+												<div
+													class="
+														mt-2
+														grid
+														gap-1
+														text-xs
+														text-gray-600
+														dark:text-gray-400
+													"
+												>
+
+													${metadata.from_step_label
+														? `
+															<span>
+																<strong>
+																	${tWorkflow('from')}:
+																</strong>
+																${metadata.from_step_label}
+															</span>
+														`
+														: ''
+													}
+
+													${metadata.to_step_label
+														? `
+															<span>
+																<strong>
+																	${tWorkflow('to')}:
+																</strong>
+																${metadata.to_step_label}
+															</span>
+														`
+														: ''
+													}
+
+													${metadata.from_status
+														? `
+															<span>
+																<strong>
+																	${tWorkflow('from_status')}:
+																</strong>
+																${metadata.from_status}
+															</span>
+														`
+														: ''
+													}
+
+													${metadata.to_status
+														? `
+															<span>
+																<strong>
+																	${tWorkflow('to_status')}:
+																</strong>
+																${metadata.to_status}
+															</span>
+														`
+														: ''
+													}
+
+												</div>
+
+												${requirements}
+
+												<div
+													class="
+														mt-3
+														text-xs
+														text-gray-500
+														dark:text-gray-400
+													"
+												>
+													${formatWorkflowDate(
+														detail.created_at
+													)}
+												</div>
+
+											</div>
+										`;
+									})
+									.join('')}
+
+							</div>
+						</div>
+					`
+					: '';
+
+
+			return `
+				<div
+					class="relative flex gap-4 pb-8 last:pb-0"
+					data-workflow-step="${step.key}"
+				>
+
+					${connector}
+
+					<div
+						class="
+							relative
+							z-10
+							flex
+							h-8
+							w-8
+							shrink-0
+							items-center
+							justify-center
+							rounded-full
+							border-2
+						"
+					>
+						${statusHtml}
+					</div>
+
+					<div class="min-w-0 flex-1">
+
+						<div
+							class="
+								flex
+								flex-wrap
+								items-center
+								gap-2
+							"
+						>
+
+							<h3
+								class="
+									font-medium
+									text-gray-900
+									dark:text-white
+								"
+							>
+								${step.label || step.key}
+							</h3>
+
+							${activeBadge}
+
+							${completedBadge}
+
+							${forcedBadge}
+
+						</div>
+
+						${datesHtml}
+
+						${forceDetailsHtml}
+
+					</div>
+
+				</div>
+			`;
+		})
+		.join('');
+
+
+	container.innerHTML = `
+		<div
+			class="p-6"
+			data-case-id="${caseData.id}"
+		>
+
+			<!-- Header -->
+
+			<div
+				class="
+					mb-6
+					flex
+					flex-wrap
+					items-center
+					justify-between
+					gap-3
+				"
+			>
+
+				<div>
+
+					<h1
+						class="
+							text-2xl
+							font-semibold
+							text-gray-900
+							dark:text-white
+						"
+					>
+						${caseData.case_number}
+					</h1>
+
+					<p
+						class="
+							mt-1
+							text-sm
+							text-gray-500
+							dark:text-gray-400
+						"
+					>
+						${tWorkflow('title')}
+					</p>
+
+				</div>
+
+				<span
+					class="
+						inline-flex
+						items-center
+						rounded-full
+						bg-gray-100
+						px-3
+						py-1
+						text-sm
+						font-medium
+						text-gray-700
+						dark:bg-gray-700
+						dark:text-gray-200
+					"
+				>
+					${caseData.status}
+				</span>
+
+			</div>
+
+
+			<!-- Workflow -->
+
+			<div
+				class="
+					rounded-lg
+					border
+					border-gray-200
+					bg-white
+					p-6
+					shadow-sm
+					dark:border-gray-700
+					dark:bg-gray-800
+				"
+			>
+
+				<div
+					class="
+						mb-8
+						flex
+						flex-wrap
+						items-center
+						justify-between
+						gap-3
+					"
+				>
+
+					<div>
+
+						<h2
+							class="
+								text-lg
+								font-semibold
+								text-gray-900
+								dark:text-white
+							"
+						>
+							${tAnalytics('workflow')}
+						</h2>
+
+						<p
+							class="
+								mt-1
+								text-sm
+								text-gray-500
+								dark:text-gray-400
+							"
+						>
+							${tWorkflow('current_process')}
+						</p>
+
+					</div>
+
+					<div class="flex items-center gap-2">
+						${statusBadge}
+					</div>
+
+				</div>
+
+				<div class="relative">
+					${stepsHtml}
+				</div>
+
+			</div>
+
+		</div>
+	`;
+}
+
+async function openWorkflow(row: any): Promise<void> {
+
+	console.log('row', row);
+
+	const modal =
+		document.getElementById(
+			'case-workflow-modal'
+		);
+
+	if (!modal) {
+		console.warn(
+			'[Cases] Workflow modal not found'
+		);
+		return;
+	}
+
+	const container =
+		modal.querySelector(
+			'[data-workflow-container]'
+		) as HTMLElement | null;
+
+	if (!container) {
+		console.warn(
+			'[Cases] Workflow container not found'
+		);
+		return;
+	}
+
+	container.innerHTML = `
+		<div
+			class="
+				p-8
+				text-center
+				text-sm
+				text-gray-500
+				dark:text-gray-400
+			"
+		>
+			${t('common.messages.loading')}
+		</div>
+	`;
+
+	modalController.open(
+		'case-workflow-modal'
+	);
+
+	try {
+
+		const response =
+			await getWorkflow(row.id);
+
+		renderCaseWorkflow(
+			container,
+			response
+		);
+
+	} catch (error: any) {
+
+		console.error(
+			'[Cases] Workflow error',
+			error
+		);
+
+		container.innerHTML = `
+			<div
+				class="
+					p-6
+					text-center
+					text-sm
+					text-red-600
+					dark:text-red-400
+				"
+			>
+				${error?.message ??
+					t('common.errors.UNKNOWN')}
+			</div>
+		`;
+	}
+}
+
 function openRemoveForm(row: any) {
   const container = document.getElementById('delete-case-modal');
   if (!container) return;
@@ -449,6 +1285,7 @@ export function openAddForm(id:string) {
     fields,
 		tabs: caseFormTabs,
 		tabRenderers: {
+    		data: renderCaseDataTab,
 				documents: renderCaseDocumentsTab
 		},
     modalId: id,
@@ -501,21 +1338,22 @@ export async function mountCases(el: HTMLElement) {
 			edit: true,
 			delete: false,
   		info: true,
+			workflow: true,
 		},
 
   	getFilters: () => currentFilters,
 		
-		// 👇 AQUÍ conectamos EDIT
+		// AQUÍ conectamos EDIT
     onEdit: (row) => {
       openEditForm(row);
     },
 
-    // 👇 DELETE modal show
+    // DELETE modal show
     onDelete: async (row) => {
       openRemoveForm(row);
     },
 
-    // 👇 DELETE fetch
+    //  DELETE fetch
     onRemove: async (id) => {
       await casesModule.deleteItem(id);
       
@@ -525,6 +1363,10 @@ export async function mountCases(el: HTMLElement) {
 			window.location.href =
 				'/dashboard/analytics/cases';
 		},
+
+		onWorkflow: (row) => {
+				openWorkflow(row);
+		},
   });
 
   mountCaseSearch();
@@ -532,6 +1374,7 @@ export async function mountCases(el: HTMLElement) {
 registerModal('add-case-modal', openAddForm);
 registerModal('edit-case-modal', openEditForm);
 registerModal('add-customer-modal', openAddCustomerForm);
+registerModal('case-workflow-modal',openWorkflow);
 
 on('case:created', async () => {
   await casesModule.fetch();

@@ -1,72 +1,122 @@
 // src/lib/resolveSite.ts
 import type { Site } from './site';
 import { LOCAL_SITES } from './site';
-import { ApiError } from './api.error';
 
-export function resolveSite(context: any): Site {
+export function resolveSite(context: any): Site | null {
   const request = context.request;
 
-  // 🔑 AQUÍ está la corrección clave
   const url =
     context.url instanceof URL
       ? context.url
       : new URL(request.url);
 
-  /**
-   * PRODUCCIÓN — subdominio o dominio
-   */
-  const host = request.headers.get('host') || '';
+  const host =
+    request.headers.get('host') || '';
 
-  /**
-   * COOKIE (PRIORIDAD ALTA en SSR autenticado)
-   */
-  const cookieHeader = request.headers.get('cookie') || '';
+  const cookieHeader =
+    request.headers.get('cookie') || '';
 
   const cookies = Object.fromEntries(
-    cookieHeader.split('; ').map(c => {
-      const [k, v] = c.split('=');
-      return [k, decodeURIComponent(v || '')];
-    })
+    cookieHeader
+      .split('; ')
+      .filter(Boolean)
+      .map(c => {
+        const [k, ...rest] = c.split('=');
+
+        return [
+          k,
+          decodeURIComponent(rest.join('=') || '')
+        ];
+      })
   );
 
-  const websiteFromCookie = cookies.website;
+  /*
+   * Authenticated/private context.
+   *
+   * The auth cookie contains the complete authentication
+   * response, including user.business.website.
+   */
+  const authCookie = cookies.auth;
 
-  if (websiteFromCookie) {
-    const site = LOCAL_SITES.find(
-      s => s.slug === websiteFromCookie
-    );
+  if (authCookie) {
+    try {
+      const session = JSON.parse(authCookie);
+      const website = session?.user?.business?.website;
 
-    if (site) {
-      console.log('[SITE RESOLVED FROM COOKIE]', site.slug);
-      return site;
+      if (website?.id && website?.slug) {
+        console.log(
+          '[SITE RESOLVED FROM AUTH COOKIE]',
+          website.slug
+        );
+
+        return website as Site;
+      }
+    } catch {
+      // Invalid auth cookie. Continue with normal fallback.
     }
   }
 
-  /**
-   * DOMINIO / SUBDOMINIO (producción)
+  /*
+   * Fallback for local/development/authentication pages
+   * where there is no authenticated session yet.
    */
-  const subdomain = host.split('.')[0];
+  const websiteFromCookie =
+    cookies.website;
 
-  const prodSite = LOCAL_SITES.find(
-    site =>
-      site.slug === subdomain 
-  );
+  if (websiteFromCookie) {
+    const localSite = LOCAL_SITES.find(
+      site => site.slug === websiteFromCookie
+    );
 
-  if (prodSite) return prodSite;
+    if (localSite) {
+      console.log(
+        '[SITE RESOLVED FROM WEBSITE COOKIE]',
+        localSite.slug
+      );
 
-  /**
-   * LOCAL — query ?site=empresa1
+      return localSite;
+    }
+  }
+
+  /*
+   * Resolve local/prod development host.
    */
-  const siteFromQuery = url.searchParams.get('site');
+  const hostname =
+    host.split(':')[0];
+
+  const hostParts =
+    hostname.split('.');
+
+  const subdomain =
+    hostParts.length > 2
+      ? hostParts[0]
+      : null;
+
+  if (subdomain) {
+    const prodSite = LOCAL_SITES.find(
+      site => site.slug === subdomain
+    );
+
+    if (prodSite) {
+      return prodSite;
+    }
+  }
+
+  /*
+   * Local development fallback.
+   */
+  const siteFromQuery =
+    url.searchParams.get('site');
+
   if (siteFromQuery) {
     const localSite = LOCAL_SITES.find(
       site => site.slug === siteFromQuery
     );
-    if (localSite) return localSite;
+
+    if (localSite) {
+      return localSite;
+    }
   }
 
-  /**
-   * Fallback (solo para local/dev)
-   */
-  return LOCAL_SITES[0];
+  return LOCAL_SITES[0] ?? null;
 }

@@ -24,11 +24,18 @@ Dashboard administrativo en desarrollo, basado en **Astro**, **Tailwind CSS** y 
 src/
 ├── app/                      # ppalmente componentes de layouts ppales y layouts
 |   ├── constants.ts          # constants como Api url, remote assets, site title...
+|   ├── FooterSidebar.astro          # Footer side
+|   ├── FooterStacked.astro          # Footer stacked
 │   ├── LayoutSidebar.astro   # Layout principal del dashboard
+│   ├── LayoutStacked.astro   # Layout principal del dashboard
 │   ├── LayoutCommon.astro    # Layout base compartido
+│   ├── LayoutCustomerPortal.astro    # Layout customer
 │   ├── LayoutPublic.astro    # Layout que incluye BaseLayout y Common (blogs, públicos)
-│   └── guards/
-│       └── auth.guard.ts         # Protección de rutas
+│   ├── LayoutWebsite.astro    # Layout para landing
+│   ├── NavBarBlog.astro    # navigation for blogs
+│   ├── NavBarSidebar.astro    # navigation for sidebar
+│   ├── NavBarStacked.astro    # navigation for stacked
+│   └── Sidebar.astro    # Sidebar
 │
 ├── assets/                     # svg(s) images in the future of site
 │
@@ -161,9 +168,10 @@ src/
 │   ├── modal.controller.ts      # 
 │   ├── modal.events.ts      # 
 │   ├── modal.registry.ts      # 
+│   ├── publicWebsiteLocale.ts      # Para landing lan
 │   ├── resolveCrudFields.ts      # 
 │   ├── resolveDevice.ts      #
-│   ├── resolveSite.ts      #
+│   ├── resolveSite.ts      # contexto privado existente cookie / sesión / dashboard
 │   ├── session.ts      #
 │   ├── site.store.ts      #
 │   ├── site.ts      #
@@ -173,31 +181,10 @@ src/
 │   ├── ui.interaction.ts      #
 │
 ├── middlewares/
-│   ├── auth.middleware.ts
-│   └── site.middleware.ts
+│   ├── auth.middleware.ts # bypass para public websites.
+│   └── site.middleware.ts # identify public website by Host. public or private context
 │
 ├── modules/        #forms and partial
-│   ├── cases/
-│   │   ├── forms/
-│   │   │   ├── add.astro # create
-│   │   │   ├── delete.astro # remove 
-│   │   │   ├── edit.astro # edit 
-│   │   ├── case-documents.types.ts     
-│   │   ├── case-search.astro      # searcher
-│   │   ├── CaseAnalytics.astro      # crud 
-│   │   ├── cases.analytics.store.ts        # estado reactivo
-│   │   ├── cases.analytics.ui.ts        # to handle cases analytics ui
-│   │   ├── Cases.astro      # crud 
-│   │   ├── cases.form.config.ts      # fields form 
-│   │   ├── cases.relationships.ts      # people options relationed with case 
-│   │   ├── cases.service.ts      # orquestador híbrido
-│   │   ├── cases.server.ts       # SSR only 
-│   │   ├── cases.client.ts       # browser only 
-│   │   ├── cases.store.ts        # estado reactivo
-│   │   ├── cases.types.ts        
-│   │   ├── cases.ui.ts           # to handle cases ui
-│   │   ├── cases.workflow.ts           # to handle cases workflow
-│   │   ├── casesAnalyticsMapper.ts        # mapper cases analytics
 │   ├── case_types/
 │   │   ├── forms/
 │   │   │   ├── add.astro # create
@@ -215,6 +202,34 @@ src/
 │   │   ├── casetypes.types.ts        
 │   │   ├── casetypes.ui.ts           # to handle case types ui
 │   │   ├── definition.schema.ts      # define default schema
+│   ├── cases/
+│   │   ├── forms/
+│   │   │   ├── add.astro # create
+│   │   │   ├── delete.astro # remove 
+│   │   │   ├── edit.astro # edit 
+│   │   ├── partials/
+│   │   │   ├── workflow.astro # workflow partial view
+│   │   ├── case-documents.types.ts     
+│   │   ├── case-search.astro      # searcher
+│   │   ├── CaseAnalytics.astro      # crud 
+│   │   ├── cases.analytics.store.ts        # estado reactivo
+│   │   ├── cases.analytics.ui.ts        # to handle cases analytics ui
+│   │   ├── Cases.astro      # crud 
+│   │   ├── cases.data.ts      # cases data 
+│   │   ├── cases.form.config.ts      # fields form 
+│   │   ├── cases.relationships.ts      # people options relationed with case 
+│   │   ├── cases.service.ts      # orquestador híbrido
+│   │   ├── cases.server.ts       # SSR only 
+│   │   ├── cases.client.ts       # browser only 
+│   │   ├── cases.data.ts       # for get customer data
+│   │   ├── cases.store.ts        # estado reactivo
+│   │   ├── cases.types.ts        
+│   │   ├── cases.ui.ts           # to handle cases ui
+│   │   ├── cases.workflow.ts           # to handle cases workflow
+│   │   ├── casesAnalyticsMapper.ts        # mapper cases analytics
+│   ├── customer-portal/
+│   │   ├── CustomerCases.astro      # view 
+│   │   ├── customerCases.ui.ts      # ui
 │   ├── customers/
 │   │   ├── forms/
 │   │   │   ├── add.astro # create
@@ -229,6 +244,7 @@ src/
 │   │   ├── customers.service.ts      # orquestador híbrido
 │   │   ├── customers.server.ts       # SSR only 
 │   │   ├── customers.client.ts       # browser only 
+│   │   ├── customers.columns.config.ts       # columns config 
 │   │   ├── customers.store.ts        # estado reactivo
 │   │   ├── customers.types.ts        
 │   │   ├── customers.ui.ts           # to handle customers ui
@@ -247,6 +263,16 @@ src/
 │   │   ├── document-templates.store.ts        # estado reactivo
 │   │   ├── document-templates.types.ts        
 │   │   ├── document-templates.ui.ts        # to handle document-templates ui
+│   ├── public-website/
+│   │   ├── sections/
+│   │   │   ├── AboutSection.astro # about
+│   │   │   ├── ContactSection.astro # contact
+│   │   │   ├── FooterSection.astro # footer
+│   │   │   ├── HeroSection.astro # hero
+│   │   │   ├── PlansHeader.astro # plans
+│   │   │   ├── PublicSection.astro # public
+│   │   │   ├── TeamSection.astro # team
+│   │   ├── PublicWebsite.astro
 │   ├── auth/
 │   │   ├── auth.service.ts         # orquestador híbrido
 │   │   ├── logout.client.ts     
@@ -257,27 +283,44 @@ src/
 │
 │
 ├── pages/
+│   ├── [locale]/
+│   |   ├──   legal/
+│   │   │   ├── [slug].astro # legal views
+│   │   └── index.astro     # index
+│   ├── access/
+│   │   ├── error.astro         
+│   │   └── [token].astro  
+│   │   ├── no-business.astro 
+│   ├── cases/
+│   │   └── index.astro  
 │   ├── dashboard/
 │   │   ├── analytics/
 │   │   │   ├── cases.astro # charts summary
-│   │   │   ├── customers.astro # charts summary 
+│   │   │   └── customers.astro # charts summary 
 │   │   ├── cases.astro         
 │   │   ├── case_types.astro         
-│   │   ├── customers.astro
+│   │   └── customers.astro
 │   ├── settings/
 │   ├── blog/
 │   │   ├── [slug]/
 │   │   │   ├── index.astro # blog detail
-│   │   ├── index.astro     # users list blog
-│   └── authentication/
+│   │   └── index.astro     # users list blog
+│   ├── authentication/├── dashboard.astro
+│   ├── login.astro
+│   ├── settings.astro
+│   ├── 404.astro
+│   ├── index.astro 			# public homepage  "/"
+│   └── [...path].astro		# public dynamic routes  ijoba
 │
 ├── services/
 │   ├── api.client.ts   
 │   ├── api.server.ts      # 
 │   ├── api.ts      # fetch ppal
 │   ├── auth.client.ts      #
+│   ├── customerPortal.api.ts      #
 │   ├── index.ts      #
 │   ├── products.ts      #
+│   ├── public.website.service.ts      #get snapshot
 │   └── users.ts      #
 ├── types/
 │   ├── entities.ts      # 

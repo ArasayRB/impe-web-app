@@ -56,7 +56,17 @@
 		"error":"Error procesando el registro.",
     "exported":"Exportado satisfactoriamente!",
     "imported":"Importado satisfactoriamente!",
-    "selected":" seleccionado(s)"
+    "selected":" seleccionado(s)",
+		"loading":"Cargando...",
+		"access_unavailable":"Acceso no disponible",
+		"user_not_associated_to_business":"Tu cuenta de usuario no esta asociado aun con un negocio.",
+		"not_access_to_platform":"Por el momento no tienes acceso a la plataforma.",
+		"contact_administrator_for_access":"Por favor, contacta con tu administrado para que le asigne un negocio a su cuenta.",
+		"back_to_sign":"Regresar a login",
+		"unable_access":"No esta habilitado para acceder al portal",
+		"invalid_or_expired_link":"Link de acceso inválido o expirado.",
+		"request_new_link":"Por favor, solicite un nuevo link.",
+		"try_again":"Intentar de nuevo"
 	},
 	"colors":{
 		"gray":"Gris",

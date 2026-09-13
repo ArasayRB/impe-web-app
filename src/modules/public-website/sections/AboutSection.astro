@@ -1,0 +1,137 @@
+---
+interface Props {
+  section: {
+    key?: string;
+    type?: string;
+    sort_order?: number;
+    content?: {
+      title?: string;
+      description?: string;
+      image?: string | null;
+    };
+  };
+}
+
+const {
+  section
+} = Astro.props;
+
+const content =
+  section.content ?? {};
+---
+
+<section
+  id={section.key}
+  class="relative overflow-hidden bg-gray-50 dark:bg-gray-900"
+>
+  <!-- Background decoration -->
+
+  <div
+    class="absolute -right-40 top-1/2 -z-0 h-96 w-96 -translate-y-1/2 rounded-full bg-gradient-to-br from-indigo-500/10 to-cyan-400/10 blur-3xl"
+    aria-hidden="true"
+  ></div>
+
+
+  <div
+    class="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8"
+  >
+
+    <div
+      class="grid items-center gap-16 lg:grid-cols-2 lg:gap-24"
+    >
+
+      <!-- Image -->
+
+      {
+        content.image && (
+          <div class="relative">
+
+            <!-- Image glow -->
+
+            <div
+              class="absolute -inset-4 -z-10 rounded-[2rem] bg-gradient-to-br from-indigo-500/20 via-cyan-400/10 to-purple-500/20 blur-2xl"
+              aria-hidden="true"
+            ></div>
+
+
+            <!-- Image -->
+
+            <div
+              class="relative overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl shadow-gray-900/10 dark:border-gray-800 dark:bg-gray-950"
+            >
+              <img
+                src={content.image}
+                alt={content.title || ''}
+                class="aspect-[3/3] w-full object-cover transition-transform duration-700 hover:scale-105"
+                loading="lazy"
+              />
+            </div>
+
+
+            <!-- Decorative card -->
+
+            <div
+              class="absolute -bottom-6 -right-6 hidden w-48 rounded-2xl border border-gray-200 bg-white/95 p-5 shadow-xl backdrop-blur sm:block dark:border-gray-800 dark:bg-gray-900/95"
+            >
+              <div
+                class="mb-3 h-2 w-12 rounded-full bg-gray-950 dark:bg-white"
+              ></div>
+
+              <p
+                class="text-sm font-semibold text-gray-950 dark:text-white"
+              >
+                {content.title}
+              </p>
+            </div>
+
+          </div>
+        )
+      }
+
+
+      <!-- Content -->
+
+      <div class="max-w-xl">
+
+        <div
+						class="mb-6 flex items-center gap-3"
+						aria-hidden="true"
+					>
+						<span class="h-px w-10 bg-gray-950 dark:bg-white"></span>
+
+						<span class="h-1.5 w-1.5 rounded-full bg-gray-950 dark:bg-white"></span>
+
+						<span class="h-px w-10 bg-gray-950 dark:bg-white"></span>
+					</div>
+
+
+        {
+          content.title && (
+            <h2
+              class="mt-6 text-4xl font-bold tracking-tight text-gray-950 sm:text-5xl dark:text-white"
+            >
+              {content.title}
+            </h2>
+          )
+        }
+
+
+        {
+          content.description && (
+            <p
+              class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300"
+            >
+              {content.description}
+            </p>
+          )
+        }
+
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

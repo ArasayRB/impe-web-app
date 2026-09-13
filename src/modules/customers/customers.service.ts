@@ -60,6 +60,34 @@ export async function listCustomers(
   }
 }
 
+export async function toggleCustomerPortal(
+	id: number | string,
+	enable: boolean,
+	request?: Request,
+	site?: Site
+) {
+	const resolvedSite = import.meta.env.SSR
+		? ensureSite(site)
+		: getSite();
+
+	if (import.meta.env.SSR) {
+		const { toggleCustomerPortalServer } =
+			await import('./customers.server');
+
+		return toggleCustomerPortalServer(
+			id,
+			enable,
+			request!,
+			resolvedSite
+		);
+	}
+
+	const { toggleCustomerPortalClient } =
+		await import('./customers.client');
+
+	return toggleCustomerPortalClient(id, enable);
+}
+
 export async function bulkDeleteCustomers(
 	ids: number[],
   request?: Request,

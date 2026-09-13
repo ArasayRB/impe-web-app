@@ -1,0 +1,130 @@
+---
+import type {
+  PublicWebsiteSnapshot
+} from '@/services/public.website.service';
+import HeroSection from './sections/HeroSection.astro';
+import AboutSection from './sections/AboutSection.astro';
+import PublicHeader from './sections/PublicHeader.astro';
+import ContactSection from './sections/ContactSection.astro';
+import TeamSection from './sections/TeamSection.astro';
+import PlansSection from './sections/PlansSection.astro';
+import FooterSection from './sections/FooterSection.astro';
+
+interface Props {
+  snapshot: PublicWebsiteSnapshot;
+  locale: string;
+}
+
+const {
+  snapshot,
+  locale,
+} = Astro.props;
+
+
+const navigation = snapshot.navigation?.[locale] ?? []; 
+const sections = snapshot.sections?.[locale] ?? []; 
+const ctas = snapshot.cta?.[locale] ?? []; 
+const contact = snapshot.contact?.[locale] ?? []; 
+const contactSubmission = snapshot.contact?.submission;
+const contactSecurity = snapshot.contact?.security;
+const team = snapshot.team?.[locale] ?? [];
+const plans = snapshot.plans ?? [];
+const socials = snapshot.social ?? [];
+const legal = snapshot.legal?.[locale] ?? {};
+
+navigation.sort(
+  (a, b) =>
+    (a.sort_order ?? 0) -
+    (b.sort_order ?? 0)
+);
+
+sections.sort(
+  (a, b) =>
+    (a.sort_order ?? 0) -
+    (b.sort_order ?? 0)
+);
+
+ctas.sort(
+  (a, b) =>
+    (a.sort_order ?? 0) -
+    (b.sort_order ?? 0)
+);
+
+contact.sort(
+  (a, b) =>
+    (a.sort_order ?? 0) -
+    (b.sort_order ?? 0)
+);
+
+team.sort(
+  (a, b) =>
+    (a.sort_order ?? 0) -
+    (b.sort_order ?? 0)
+);
+---
+
+<div class="public-website">
+
+  <!-- Navigation -->  
+
+	<PublicHeader
+		navigation={navigation}
+		logo={snapshot.branding?.logo}
+		title={snapshot.branding?.title}
+		cta={ctas[0]}
+    locale={locale}
+	/>
+
+  <!-- Sections -->
+  <main>
+    {
+			sections.map((section) => (
+				<>
+					{
+						section.type === 'hero' && (
+							<HeroSection section={section} />
+						)
+					}
+
+					{
+						section.type === 'about' && (
+							<AboutSection section={section} />
+						)
+					}
+
+					{
+					 section.type === 'team' && team.length > 0 && (
+						 <TeamSection 
+							title={section.content?.title} 
+							description={section.content?.description} 
+							members={team} 
+						 /> 
+
+					 ) 
+					}
+				</>
+			))
+		}
+
+		<PlansSection
+			plans={plans}
+  		locale={locale}
+		/>
+		
+		<ContactSection
+		section={{
+			key: 'contact'
+		}}
+		fields={contact}
+		submission={contactSubmission}
+		security={contactSecurity}
+	/>
+  </main>
+	<!-- Footer --> 
+	<FooterSection 
+		socials={socials} 
+		legal={legal} 
+		locale={locale} 
+	/>
+
+</div>

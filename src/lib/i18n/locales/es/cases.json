@@ -20,7 +20,8 @@
 	"buttons":{
 		"add": "Agregar",
 		"edit": "Editar",
-		"create_customer": "Crear cliente"
+		"create_customer": "Crear cliente",
+		"workflow": "Flujo"
 	},
 	"title":{
 		"add": "Agregar nuevo caso",
@@ -35,6 +36,19 @@
 		"case_email": "Correo(Caso)",
 		"status": "Estado",
 		"actions": "Acciones"
+	},
+	"workflow": {
+		"title": "Flujo de trabajo",
+		"current_process": "Proceso actual",
+		"started": "Iniciado",
+		"finished": "Finalizado",
+		"forced": "Forzado",
+		"force_details": "Detalles del forzado",
+		"from": "Desde",
+		"to": "Hasta",
+		"from_status": "Desde (Estado)",
+		"to_status": "Hasta (Estado)",
+		"forced_by": "Forzado por"
 	},
 	"analytics":{
 		"new":"Caso Nuevo",
@@ -83,7 +97,8 @@
 	"tabs": {
 			"general": "General",
 			"people": "Personas",
-			"documents": "Documentos"
+			"documents": "Documentos",
+			"data": "Datos"
 	},
 	"documents": {
 			"description": "Sube los documentos del caso y/o genéralos a partir de una plantilla disponible",
@@ -105,6 +120,9 @@
 			"generate_from_template":"Generar desde una plantilla",
 			"no_documents_yet":"No hay dcomentos",
 			"save_first":"Crea el caso primero."
+	},
+	"data":{
+		"save_first":"Crea el caso primero."
 	},
 	"messages":{
 		"workflow_warning":"Alerta de flujo",

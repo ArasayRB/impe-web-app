@@ -20,22 +20,46 @@ export function createCrudSwitch<T>(
 
         mount(container, value, row) {
 
-            renderSwitch(container,{
+            const checked = !!value;
 
-                checked:!!value,
+            const mountSwitch = (
+                currentValue: boolean
+            ) => {
 
-                disabled:props.disabled,
+                renderSwitch(container, {
 
-                onChange(v){
+                    checked: currentValue,
 
-                    props.onChange?.(
-                        v,
-                        row
-                    );
+                    disabled: props.disabled,
 
-                }
+                    onChange: async (nextValue) => {
 
-            });
+                        try {
+
+                            await props.onChange?.(
+                                nextValue,
+                                row
+                            );
+
+                        } catch (error) {
+
+                            /*
+                             * Restore previous state
+                             * when the action fails.
+                             */
+                            mountSwitch(
+                                currentValue
+                            );
+
+                        }
+
+                    }
+
+                });
+
+            };
+
+            mountSwitch(checked);
 
         }
 

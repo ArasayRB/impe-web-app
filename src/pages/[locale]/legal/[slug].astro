@@ -1,0 +1,313 @@
+---
+import LayoutWebsite from '@/app/LayoutWebsite.astro';
+import {
+  getPublicWebsiteSnapshot
+} from '@/services/public.website.service';
+
+import {
+  isPublicWebsiteLocale
+} from '@/lib/publicWebsiteLocale';
+
+interface LegalDocument {
+  version?: string;
+  title?: string;
+  content?: string;
+  published_at?: string | null;
+}
+
+interface LegalDocuments {
+  acceptable_use_policy?: LegalDocument;
+  cookie_policy?: LegalDocument;
+  data_processing_agreement?: LegalDocument;
+  license?: LegalDocument;
+  privacy_policy?: LegalDocument;
+  terms_of_service?: LegalDocument;
+}
+
+interface WebsiteEmail {
+  type: string;
+  email: string;
+  label?: string | null;
+  active?: boolean;
+  sort_order?: number;
+}
+
+const isPublicWebsite =
+  Astro.locals.isPublicWebsite === true;
+
+const snapshot =
+  isPublicWebsite
+    ? await getPublicWebsiteSnapshot(Astro.request)
+    : null;
+
+if (!isPublicWebsite || !snapshot) {
+  Astro.response.status = 404;
+}
+
+const localeParam =
+  Astro.params.locale;
+
+if (
+  !localeParam ||
+  !isPublicWebsiteLocale(localeParam)
+) {
+  Astro.response.status = 404;
+}
+
+const locale =
+  localeParam;
+
+const legal =
+  (snapshot?.legal?.[locale] ?? {}) as LegalDocuments;
+
+const emails =
+(snapshot?.emails ?? []) as WebsiteEmail[];
+
+const slug =
+  Astro.params.slug;
+
+const legalDocuments: Record<
+  string,
+  LegalDocument | undefined
+> = {
+  'privacy-policy':
+    legal.privacy_policy,
+
+  'terms-of-service':
+    legal.terms_of_service,
+
+  'cookie-policy':
+    legal.cookie_policy,
+
+  'acceptable-use-policy':
+    legal.acceptable_use_policy,
+
+  'data-processing-agreement':
+    legal.data_processing_agreement,
+
+  'license':
+    legal.license,
+};
+
+const document =
+  slug
+    ? legalDocuments[slug]
+    : undefined;
+
+if (!document) {
+  Astro.response.status = 404;
+}
+
+const title =
+  document?.title ?? 'Legal';
+
+const version =
+  document?.version;
+
+const publishedAt =
+  document?.published_at;
+
+let formattedPublishedAt = '';
+
+if (publishedAt) {
+  const datePart =
+    publishedAt.slice(0, 10);
+
+  const [year, month, day] =
+    datePart.split('-').map(Number);
+
+  const date =
+    new Date(
+      year,
+      month - 1,
+      day
+    );
+
+  if (!Number.isNaN(date.getTime())) {
+    formattedPublishedAt =
+      new Intl.DateTimeFormat(
+        locale === 'es'
+          ? 'es-MX'
+          : 'en-US',
+        {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+        }
+      ).format(date);
+  }
+}
+
+const getEmail = (
+  type: string
+): string => {
+  return (
+    emails.find(
+      (email) =>
+        email.type === type &&
+        email.active !== false
+    )?.email ?? ''
+  );
+};
+
+const contactEmail =
+  getEmail('contact');
+
+const privacyEmail =
+  getEmail('privacy');
+
+const legalEmail =
+  getEmail('legal');
+
+const content =
+  document?.content
+    ?.replace(
+      /\[FECHA DE PUBLICACIÓN\]/gi,
+      formattedPublishedAt
+    )
+    ?.replace(
+      /\[PUBLICATION DATE\]/gi,
+      formattedPublishedAt
+    )
+    ?.replace(
+      /\[CORREO DE CONTACTO\]/gi,
+      contactEmail
+    )
+    ?.replace(
+      /\[CONTACT EMAIL\]/gi,
+      contactEmail
+    )
+    ?.replace(
+      /\[CORREO DE PRIVACIDAD\]/gi,
+      privacyEmail
+    )
+    ?.replace(
+      /\[PRIVACY EMAIL\]/gi,
+      privacyEmail
+    )
+    ?.replace(
+      /\[CORREO LEGAL\]/gi,
+      legalEmail
+    )
+    ?.replace(
+      /\[LEGAL EMAIL\]/gi,
+      legalEmail
+    ) ?? '';
+---
+
+{
+  isPublicWebsite && snapshot && document ? (
+    <LayoutWebsite snapshot={snapshot} locale={locale}>
+
+      <main class="bg-white dark:bg-gray-950">
+
+        <article
+          class="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8"
+        >
+
+          <!-- Back -->
+
+          <div class="mb-8">
+            <button
+              type="button"
+              onclick="history.back()"
+              class="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100 hover:text-gray-950 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="h-4 w-4"
+                aria-hidden="true"
+              >
+                <path d="M19 12H5" />
+                <path d="M12 19l-7-7 7-7" />
+              </svg>
+
+              {locale === 'es' ? 'Regresar' : 'Back'}
+            </button>
+          </div>
+
+          <!-- Header -->
+
+          <header class="mb-10">
+
+            <div
+              class="mb-6 flex items-center justify-center gap-3"
+              aria-hidden="true"
+            >
+              <span
+                class="h-px w-10 bg-gray-950 dark:bg-white"
+              ></span>
+
+              <span
+                class="h-1.5 w-1.5 rounded-full bg-gray-950 dark:bg-white"
+              ></span>
+
+              <span
+                class="h-px w-10 bg-gray-950 dark:bg-white"
+              ></span>
+            </div>
+
+            <h1
+              class="text-center text-3xl font-bold tracking-tight text-gray-950 dark:text-white sm:text-4xl"
+            >
+              {title}
+            </h1>
+
+            {
+              (version || formattedPublishedAt) && (
+                <div
+                  class="mt-4 flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400"
+                >
+
+                  {
+                    version && (
+                      <span>
+                        {locale === 'es'
+                          ? `Versión ${version}`
+                          : `Version ${version}`}
+                      </span>
+                    )
+                  }
+
+                  {
+                    formattedPublishedAt && (
+                      <span>
+                        {locale === 'es'
+                          ? `Publicado el ${formattedPublishedAt}`
+                          : `Published on ${formattedPublishedAt}`}
+                      </span>
+                    )
+                  }
+
+                </div>
+              )
+            }
+
+          </header>
+
+          <!-- Legal content -->
+
+          <div
+            class="prose prose-gray max-w-none dark:prose-invert"
+            set:html={content}
+          />
+
+        </article>
+
+      </main>
+
+    </LayoutWebsite>
+  ) : (
+    <main class="mx-auto max-w-4xl px-4 py-16">
+      <h1 class="text-3xl font-bold">
+        Page not found
+      </h1>
+    </main>
+  )
+}

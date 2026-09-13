@@ -56,7 +56,17 @@
 		"error":"Error processing register.",
     "exported":"Exported successfully!",
     "imported":"Imported successfully!",
-    "selected":" selected"
+    "selected":" selected",
+		"loading":"Loading...",
+		"access_unavailable":"Access unavailable",
+		"user_not_associated_to_business":"Your user account is not associated with a business.",
+		"not_access_to_platform":"You do not have access to the platform yet.",
+		"contact_administrator_for_access":"Please contact your administrator to have a business assigned to your account.",
+		"back_to_sign":"Back to sign in",
+		"unable_access":"Unable to access the portal",
+		"invalid_or_expired_link":"The access link is invalid or has expired.",
+		"request_new_link":"Please request a new access link.",
+		"try_again":"Try again"
 	},
 	"colors":{
 		"gray":"Gray",

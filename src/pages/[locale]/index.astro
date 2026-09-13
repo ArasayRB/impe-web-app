@@ -1,0 +1,63 @@
+---
+import LayoutSidebar from '../../app/LayoutSidebar.astro';
+import LandingReadme from '../../modules/LandingReadme.astro';
+import PublicWebsite from '../../modules/public-website/PublicWebsite.astro';
+import LayoutWebsite from '../../app/LayoutWebsite.astro';
+
+import {
+  getPublicWebsiteSnapshot
+} from '../../services/public.website.service';
+
+import {
+  isPublicWebsiteLocale
+} from '../../lib/publicWebsiteLocale';
+
+const localeParam =
+  Astro.params.locale;
+
+if (
+  !localeParam ||
+  !isPublicWebsiteLocale(localeParam)
+) {
+  Astro.response.status = 404;
+}
+
+const isPublicWebsite =
+  Astro.locals.isPublicWebsite === true;
+
+const snapshot =
+  isPublicWebsite
+    ? await getPublicWebsiteSnapshot(
+        Astro.request
+      )
+    : null;
+		console.log('[PUBLIC LOCALE DEBUG]', {
+  localeParam,
+  isPublicWebsite,
+  snapshotExists: !!snapshot,
+});
+
+if (isPublicWebsite && !snapshot) {
+  Astro.response.status = 404;
+}
+---
+
+{
+  isPublicWebsite && snapshot ? (
+    <LayoutWebsite
+      snapshot={snapshot}
+      locale={localeParam}
+    >
+      <main>
+        <PublicWebsite
+          snapshot={snapshot}
+          locale={localeParam}
+        />
+      </main>
+    </LayoutWebsite>
+  ) : (
+    <LayoutSidebar>
+      <LandingReadme />
+    </LayoutSidebar>
+  )
+}

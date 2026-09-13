@@ -1,0 +1,717 @@
+---
+type ContactField = {
+  key?: string;
+  type?:
+    | 'text'
+    | 'email'
+    | 'tel'
+    | 'textarea'
+    | 'select'
+    | 'checkbox';
+  label?: string;
+  placeholder?: string | null;
+  help_text?: string | null;
+  options?: Array<{
+    key?: string;
+    label?: string;
+  }> | null;
+  required?: boolean;
+  sort_order?: number;
+};
+
+interface ContactSubmission {
+  type?: string;
+  endpoint?: string;
+}
+
+interface ContactSecurity {
+  type?: string;
+  provider?: string;
+  version?: string;
+  mode?: string;
+  action?: string;
+  site_key?: string;
+}
+
+interface Props {
+  section?: {
+    key?: string;
+  };
+  fields?: ContactField[];
+  submission?: ContactSubmission;
+  security?: ContactSecurity;
+}
+
+const {
+  section,
+  fields = [],
+  submission,
+  security,
+} = Astro.props;
+
+const sortedFields =
+  [...fields].sort(
+    (a, b) =>
+      (a.sort_order ?? 0) -
+      (b.sort_order ?? 0)
+  );
+
+const recaptchaSiteKey =
+  security?.site_key || '';
+
+const recaptchaAction =
+  security?.action || 'contact';
+
+const contactEndpoint =
+  submission?.endpoint || '';
+
+const recaptchaEnabled =
+  security?.type === 'recaptcha' &&
+  security?.provider === 'google' &&
+  security?.version === 'enterprise' &&
+  security?.mode === 'score' &&
+  !!recaptchaSiteKey;
+---
+
+<section
+  id={section?.key || 'contact'}
+  class="relative overflow-hidden bg-white dark:bg-gray-950"
+>
+  <div
+    class="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8"
+  >
+
+    <div
+      class="grid gap-16 lg:grid-cols-[0.8fr_1.2fr] lg:gap-24"
+    >
+
+      <!-- Intro -->
+
+      <div class="max-w-xl">
+
+        <div
+          class="mb-6 flex items-center gap-3"
+          aria-hidden="true"
+        >
+          <span class="h-px w-10 bg-gray-950 dark:bg-white"></span>
+
+          <span class="h-1.5 w-1.5 rounded-full bg-gray-950 dark:bg-white"></span>
+
+          <span class="h-px w-10 bg-gray-950 dark:bg-white"></span>
+        </div>
+
+        <h2
+          class="text-4xl font-bold tracking-tight text-gray-950 sm:text-5xl dark:text-white"
+        >
+          Contact
+        </h2>
+
+        <p
+          class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300"
+        >
+          Estamos aquí para ayudarte. Completa el formulario y nos pondremos en contacto contigo.
+        </p>
+
+      </div>
+
+      <!-- Form -->
+
+      <div
+        class="rounded-3xl border border-gray-200 bg-gray-50 p-6 shadow-xl shadow-gray-900/5 sm:p-8 dark:border-gray-800 dark:bg-gray-900"
+      >
+
+        <form
+          id="public-contact-form"
+          class="space-y-6"
+          data-endpoint={contactEndpoint}
+          data-recaptcha-enabled={recaptchaEnabled ? 'true' : 'false'}
+          data-recaptcha-site-key={recaptchaSiteKey}
+          data-recaptcha-action={recaptchaAction}
+        >
+
+          {
+            sortedFields.map((field) => {
+              const id =
+                `contact-${field.key}`;
+
+              const commonClass =
+                'block w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-950 shadow-sm outline-none transition focus:border-gray-950 focus:ring-2 focus:ring-gray-950/10 dark:border-gray-700 dark:bg-gray-950 dark:text-white dark:focus:border-white';
+
+              return (
+                <div>
+
+                  {
+                    field.type !== 'checkbox' && (
+                      <label
+                        for={id}
+                        class="mb-2 block text-sm font-semibold text-gray-900 dark:text-white"
+                      >
+                        {field.label}
+
+                        {
+                          field.required && (
+                            <span
+                              class="ml-1 text-gray-500"
+                              aria-hidden="true"
+                            >
+                              *
+                            </span>
+                          )
+                        }
+                      </label>
+                    )
+                  }
+
+                  {
+                    field.type === 'textarea' && (
+                      <textarea
+                        id={id}
+                        name={field.key}
+                        placeholder={field.placeholder || ''}
+                        required={field.required}
+                        rows="5"
+                        class={commonClass}
+                      ></textarea>
+                    )
+                  }
+
+                  {
+                    field.type === 'select' && (
+                      <select
+                        id={id}
+                        name={field.key}
+                        required={field.required}
+                        class={commonClass}
+                      >
+                        {
+                          field.placeholder && (
+                            <option value="">
+                              {field.placeholder}
+                            </option>
+                          )
+                        }
+
+                        {
+                          field.options?.map((option) => (
+                            <option
+                              value={option.key}
+                            >
+                              {option.label}
+                            </option>
+                          ))
+                        }
+                      </select>
+                    )
+                  }
+
+                  {
+                    field.type === 'checkbox' && (
+                      <label
+                        for={id}
+                        class="flex items-start gap-3"
+                      >
+                        <input
+                          id={id}
+                          type="checkbox"
+                          name={field.key}
+                          required={field.required}
+                          class="mt-1 h-4 w-4 rounded border-gray-300 text-gray-950 focus:ring-gray-950 dark:border-gray-700 dark:bg-gray-950"
+                        />
+
+                        <span class="text-sm leading-6 text-gray-600 dark:text-gray-300">
+                          {field.label}
+                        </span>
+                      </label>
+                    )
+                  }
+
+                  {
+                    field.type !== 'textarea' &&
+                    field.type !== 'select' &&
+                    field.type !== 'checkbox' && (
+                      <input
+                        id={id}
+                        type={field.type || 'text'}
+                        name={field.key}
+                        placeholder={field.placeholder || ''}
+                        required={field.required}
+                        class={commonClass}
+                      />
+                    )
+                  }
+
+                  {
+                    field.help_text && (
+                      <p
+                        class="mt-2 text-xs text-gray-500 dark:text-gray-400"
+                      >
+                        {field.help_text}
+                      </p>
+                    )
+                  }
+
+                </div>
+              );
+            })
+          }
+
+          <div
+            id="public-contact-form-message"
+            class="hidden rounded-xl px-4 py-3 text-sm"
+            role="status"
+            aria-live="polite"
+          ></div>
+
+          <div class="pt-2">
+
+            <button
+              id="public-contact-submit"
+              type="submit"
+              class="inline-flex w-full items-center justify-center rounded-full bg-gray-950 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-gray-950/20 transition-all hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200"
+            >
+              Enviar mensaje
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+  import {
+    submitPublicContact,
+  } from '@/services/public.website.service';
+
+  interface RecaptchaEnterprise {
+    ready: (
+      callback: () => void
+    ) => void;
+
+    execute: (
+      siteKey: string,
+      options: {
+        action: string;
+      }
+    ) => Promise<string>;
+  }
+
+  interface RecaptchaGlobal {
+    enterprise: RecaptchaEnterprise;
+  }
+
+  declare global {
+    interface Window {
+      grecaptcha?: RecaptchaGlobal;
+    }
+  }
+
+  console.log(
+    '[PUBLIC CONTACT] Script loaded'
+  );
+
+	let selectedPlan: string | null = null;
+
+	document
+  .querySelectorAll<HTMLElement>(
+    '[data-plan-context]'
+  )
+  .forEach((element) => {
+
+    element.addEventListener(
+      'click',
+      () => {
+
+        try {
+
+          const context =
+            JSON.parse(
+              element.dataset.planContext || '{}'
+            );
+
+          selectedPlan =
+            typeof context.plan === 'string'
+              ? context.plan
+              : null;
+
+          console.log(
+            '[PUBLIC CONTACT] Plan selected:',
+            selectedPlan
+          );
+
+        } catch (error) {
+
+          console.error(
+            '[PUBLIC CONTACT] Invalid plan context',
+            error
+          );
+
+          selectedPlan = null;
+        }
+      }
+    );
+  });
+
+  const form =
+    document.querySelector<HTMLFormElement>(
+      '#public-contact-form'
+    );
+
+  const submitButton =
+    document.querySelector<HTMLButtonElement>(
+      '#public-contact-submit'
+    );
+
+  const message =
+    document.querySelector<HTMLElement>(
+      '#public-contact-form-message'
+    );
+
+  console.log(
+    '[PUBLIC CONTACT] Form found:',
+    form
+  );
+
+  if (
+    form &&
+    submitButton &&
+    message
+  ) {
+
+    const recaptchaEnabled =
+      form.dataset.recaptchaEnabled ===
+      'true';
+
+    const recaptchaSiteKey =
+      form.dataset.recaptchaSiteKey || '';
+
+    const recaptchaAction =
+      form.dataset.recaptchaAction ||
+      'contact';
+
+    const endpoint =
+      form.dataset.endpoint || '';
+
+    console.log(
+      '[PUBLIC CONTACT] Config:',
+      {
+        recaptchaEnabled,
+        recaptchaSiteKey,
+        recaptchaAction,
+        endpoint,
+      }
+    );
+
+    let recaptchaPromise:
+      Promise<void> | null = null;
+
+    const loadRecaptcha =
+  (): Promise<void> => {
+
+    if (!recaptchaEnabled) {
+      return Promise.resolve();
+    }
+
+    if (
+      window.grecaptcha?.enterprise
+    ) {
+      return new Promise(
+        (resolve) => {
+          window.grecaptcha!.enterprise.ready(
+            () => resolve()
+          );
+        }
+      );
+    }
+
+    if (recaptchaPromise) {
+      return recaptchaPromise;
+    }
+
+    recaptchaPromise =
+      new Promise(
+        (resolve, reject) => {
+
+          const waitForEnterprise =
+            () => {
+
+              if (
+                !window.grecaptcha?.enterprise
+              ) {
+                reject(
+                  new Error(
+                    'Google reCAPTCHA Enterprise API is not available'
+                  )
+                );
+
+                return;
+              }
+
+              window.grecaptcha.enterprise.ready(
+                () => resolve()
+              );
+            };
+
+          const existingScript =
+            document.querySelector<HTMLScriptElement>(
+              'script[data-recaptcha-enterprise]'
+            );
+
+          if (existingScript) {
+
+            existingScript.addEventListener(
+              'load',
+              waitForEnterprise,
+              {
+                once: true,
+              }
+            );
+
+            existingScript.addEventListener(
+              'error',
+              () =>
+                reject(
+                  new Error(
+                    'Unable to load Google reCAPTCHA Enterprise'
+                  )
+                ),
+              {
+                once: true,
+              }
+            );
+
+            return;
+          }
+
+          const script =
+						document.createElement(
+							'script'
+						);
+
+					script.src =
+						`https://www.google.com/recaptcha/enterprise.js?render=${encodeURIComponent(
+							recaptchaSiteKey
+						)}`;
+
+					script.async = true;
+					script.defer = true;
+
+					script.dataset.recaptchaEnterprise =
+						'true';
+
+					script.onload =
+						waitForEnterprise;
+
+					script.onerror =
+						() =>
+							reject(
+								new Error(
+									'Unable to load Google reCAPTCHA Enterprise'
+								)
+							);
+
+					document.head.appendChild(
+						script
+					);
+        }
+      );
+
+    return recaptchaPromise;
+  };
+
+    const setMessage =
+      (
+        text: string,
+        type: 'success' | 'error'
+      ) => {
+
+        message.textContent = text;
+
+        message.classList.remove(
+          'hidden',
+          'bg-green-100',
+          'text-green-800',
+          'bg-red-100',
+          'text-red-800'
+        );
+
+        if (type === 'success') {
+          message.classList.add(
+            'bg-green-100',
+            'text-green-800'
+          );
+        } else {
+          message.classList.add(
+            'bg-red-100',
+            'text-red-800'
+          );
+        }
+      };
+
+    form.addEventListener(
+      'submit',
+      async (event) => {
+
+        console.log(
+          '[PUBLIC CONTACT] SUBMIT EVENT'
+        );
+
+        event.preventDefault();
+
+        console.log(
+          '[PUBLIC CONTACT] Default prevented'
+        );
+
+        message.classList.add(
+          'hidden'
+        );
+
+        submitButton.disabled = true;
+        submitButton.textContent =
+          'Enviando...';
+
+        try {
+
+          const formData =
+            new FormData(form);
+
+          const payload:
+            Record<string, unknown> = {};
+
+          formData.forEach(
+            (value, key) => {
+              payload[key] = value;
+            }
+          );
+
+					if (selectedPlan) {
+						payload.plan = selectedPlan;
+					}
+
+          console.log(
+            '[PUBLIC CONTACT] Form payload:',
+            payload
+          );
+
+          if (recaptchaEnabled) {
+
+            console.log(
+              '[PUBLIC CONTACT] Loading reCAPTCHA Enterprise'
+            );
+
+            await loadRecaptcha();
+
+            if (
+              !window.grecaptcha?.enterprise
+            ) {
+              throw new Error(
+                'Google reCAPTCHA Enterprise is not available'
+              );
+            }
+
+            console.log(
+              '[PUBLIC CONTACT] Executing reCAPTCHA',
+              {
+                siteKey:
+                  recaptchaSiteKey,
+                action:
+                  recaptchaAction,
+              }
+            );
+
+            const token =
+              await window.grecaptcha.enterprise.execute(
+                recaptchaSiteKey,
+                {
+                  action:
+                    recaptchaAction,
+                }
+              );
+
+            if (!token) {
+              throw new Error(
+                'Unable to generate reCAPTCHA token'
+              );
+            }
+
+            console.log(
+              '[PUBLIC CONTACT] reCAPTCHA token generated'
+            );
+
+            payload.recaptcha_token =
+              token;
+          }
+
+          if (!endpoint) {
+            throw new Error(
+              'Contact endpoint is not configured'
+            );
+          }
+
+          console.log(
+            '[PUBLIC CONTACT] Sending request',
+            {
+              endpoint,
+              payload,
+            }
+          );
+
+					const host = window.location.host;
+
+          const result =
+            await submitPublicContact(
+							host,
+              endpoint,
+              payload
+            );
+
+          console.log(
+            '[PUBLIC CONTACT] API response',
+            result
+          );
+
+          if (!result.success) {
+            throw new Error(
+              result.message ||
+              'Unable to send your message'
+            );
+          }
+
+          form.reset();
+
+          setMessage(
+            result.message ||
+              'Your message has been sent successfully.',
+            'success'
+          );
+
+        } catch (error) {
+
+          console.error(
+            '[PUBLIC CONTACT] Submission failed',
+            error
+          );
+
+          setMessage(
+            error instanceof Error
+              ? error.message
+              : 'Unable to send your message. Please try again.',
+            'error'
+          );
+
+        } finally {
+
+          submitButton.disabled = false;
+          submitButton.textContent =
+            'Enviar mensaje';
+
+        }
+      }
+    );
+  }
+</script>

@@ -10,6 +10,18 @@ export async function listCustomersClient(
   return apiClientFetch(`/v1/customers?${query}`,{},true,signal);
 }
 
+
+// Toggle Customer Portal Access
+export async function toggleCustomerPortalClient(
+  id: number | string,
+	enable: boolean
+) {
+  return apiClientFetch(`/v1/customer/${id}/access/toggle`, {
+    method: 'POST',
+		body: JSON.stringify({ enable }),
+  });
+}
+
 export async function bulkCustomersClient(
 	customers: any[]
 ) {

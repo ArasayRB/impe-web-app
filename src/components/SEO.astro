@@ -1,37 +1,187 @@
 ---
-const { title,
-    description,
-    image,
-    url,
-    published,
-    type = 'website', // website | article
-    site = 'Mi SaaS',
-    author, } = Astro.props;
-const baseUrl = site?.domain
-  ? `https://${site.domain}`
-  : import.meta.env.PUBLIC_SITE_URL;
-const canonical = url ?? baseUrl;
----
-<head>
-  <title>{title ? `${title} | ${site?.name}` : site?.name}</title>
-  <meta name="description" content={description || 'Blog personal en Astro'} />
-  <link rel="canonical" href={canonical} />
+const {
+  title,
+  description,
+  image,
+  url,
+  published,
+  type = 'website',
+  company = '',
+  author,
 
-  <!-- OpenGraph -->
-  <meta property="og:type" content={type} />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
-  {image && <meta property="og:image" content={image} />}
-  <meta property="og:url" content={canonical} />
-  <meta property="og:site_name" content={site} />
+  robots = 'index, follow',
+
+  ogTitle,
+  ogDescription,
+  ogType = type,
+  ogImage,
+
+  twitterCard = 'summary_large_image',
+  twitterTitle,
+  twitterDescription,
+  twitterImage,
+
+  siteName,
+
+	alternates = [], 
+	structuredData = null,
+} = Astro.props;
+
+const baseUrl =
+  import.meta.env.PUBLIC_SITE_URL;
+
+const canonical =
+  url ?? baseUrl;
+
+const resolvedOgTitle =
+  ogTitle || title;
+
+const resolvedOgDescription =
+  ogDescription || description;
+
+const resolvedOgImage =
+  ogImage || image;
+
+const resolvedTwitterTitle =
+  twitterTitle || title;
+
+const resolvedTwitterDescription =
+  twitterDescription || description;
+
+const resolvedTwitterImage =
+  twitterImage || image;
+
+const resolvedSiteName =
+  siteName || company || 'Mi SaaS';
+---
+
+<head>
+  <meta charset="UTF-8" />
+
+  <title>
+    {title
+      ? `${title} | ${company}`
+      : company}
+  </title>
+
+  <meta
+    name="description"
+    content={
+      description ||
+      'Blog personal en Astro'
+    }
+  />
+
+  <meta
+    name="robots"
+    content={robots}
+  />
+
+    <link
+    rel="canonical"
+    href={canonical}
+  />
+
+  {
+    alternates.map((alternate) => (
+      <link
+        rel="alternate"
+        hreflang={alternate.locale}
+        href={alternate.url}
+      />
+    ))
+  }
+
+  {
+    structuredData && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(structuredData)}
+      />
+    )
+  }
+
+  <!-- Open Graph -->
+
+  <meta
+    property="og:type"
+    content={ogType}
+  />
+
+  <meta
+    property="og:title"
+    content={resolvedOgTitle}
+  />
+
+  <meta
+    property="og:description"
+    content={resolvedOgDescription}
+  />
+
+  {
+    resolvedOgImage && (
+      <meta
+        property="og:image"
+        content={resolvedOgImage}
+      />
+    )
+  }
+
+  <meta
+    property="og:url"
+    content={canonical}
+  />
+
+  <meta
+    property="og:site_name"
+    content={resolvedSiteName}
+  />
+
   <!-- Article -->
-  {type === 'article' && published && (
-    <meta property="article:published_time" content={published} />
-  )}
-  {type === 'article' && author && (
-    <meta property="article:author" content={author} />
-  )}
+
+  {
+    ogType === 'article' &&
+    published && (
+      <meta
+        property="article:published_time"
+        content={published}
+      />
+    )
+  }
+
+  {
+    ogType === 'article' &&
+    author && (
+      <meta
+        property="article:author"
+        content={author}
+      />
+    )
+  }
 
   <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
+
+  <meta
+    name="twitter:card"
+    content={twitterCard}
+  />
+
+  <meta
+    name="twitter:title"
+    content={resolvedTwitterTitle}
+  />
+
+  <meta
+    name="twitter:description"
+    content={resolvedTwitterDescription}
+  />
+
+  {
+    resolvedTwitterImage && (
+      <meta
+        name="twitter:image"
+        content={resolvedTwitterImage}
+      />
+    )
+  }
 </head>

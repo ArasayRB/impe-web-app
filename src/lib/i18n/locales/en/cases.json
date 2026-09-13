@@ -20,7 +20,8 @@
 	"buttons":{
 		"add": "Add",
 		"edit": "Update",
-		"create_customer": "Create customer"
+		"create_customer": "Create customer",
+		"workflow": "Workflow"
 	},
 	"title":{
 		"add": "Add new case",
@@ -35,6 +36,19 @@
 		"case_email": "Email(Case)",
 		"status": "Status",
 		"actions": "Actions"
+	},
+	"workflow": {
+		"title": "Workflow",
+		"current_process": "Current process",
+		"started": "Started",
+		"finished": "Finished",
+		"forced": "Forced",
+		"force_details": "Force details",
+		"from": "From",
+		"to": "To",		
+		"from_status": "From (Status)",
+		"to_status": "To (Status)",
+		"forced_by": "Forced by"
 	},
 	"analytics":{
 		"new":"New Case",
@@ -83,7 +97,8 @@
 	"tabs": {
 			"general": "General",
 			"people": "People",
-			"documents": "Documents"
+			"documents": "Documents",
+			"data": "Data"
 	},
 	"documents": {
 			"description": "Upload case documents and/or generate it from an available template",
@@ -105,6 +120,9 @@
 			"generate_from_template":"Generate from template",
 			"no_documents_yet":"No dcoments",
 			"save_first":"Save case first."
+	},
+	"data":{
+		"save_first":"Save case first."
 	},
 	"messages":{
 		"workflow_warning":"Workflow alert",

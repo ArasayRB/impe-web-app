@@ -1,8 +1,22 @@
 ---
+
 import { asset, url } from '../lib/data.js';
 
 import ColorModeSwitcher from '../components/ColorModeSwitcher.astro';
 import Profile from '../components/Profile.astro';
+import Logo from '../components/Logo.astro';
+import { getServerTranslator } from '@/lib/i18n/server';
+import { lang } from '@/lib/i18n/config';
+import { resolveLocale } from '@/lib/i18n/resolveLocale';
+import { SITE_TITLE } from './constants.js';
+import {resolveSite} from '@/lib/resolveSite';
+
+const site = resolveSite(Astro);
+
+const { showAuth = true } = Astro.props;
+
+const locale = resolveLocale(Astro);
+const t = await getServerTranslator(locale, lang);
 ---
 
 <nav
@@ -11,96 +25,127 @@ import Profile from '../components/Profile.astro';
 	<div class="container py-3 mx-auto">
 		<div class="flex items-center justify-between">
 			<div class="flex items-center justify-start">
-				<a href={url()} class="flex mr-4">
-					<img
-						src={asset('images/logo.svg')}
-						class="h-8 mr-3"
-						alt="Flowbite Logo"
+				<a href="/" class="flex ml-2 md:mr-24 items-center">
+					<Logo
+						site={Astro.locals.site}
+						widthn="150"
+						heightn="40"
 					/>
+
 					<span
-						class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
-						>Flowbite</span
+						class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white"
 					>
+						{site?.title ?? SITE_TITLE}
+					</span>
 				</a>
-				<div class="hidden sm:flex sm:ml-6">
-					<ul class="flex space-x-8">
-						<li class="p-2.5">
-							<a
-								href={url()}
-								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
-								aria-current="page">Home</a
-							>
-						</li>
-						<li class="p-2.5">
-							<a
-								href="#"
-								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
-								aria-current="page">Team</a
-							>
-						</li>
-						<li class="p-2.5">
-							<a
-								href="#"
-								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
-								aria-current="page">Pricing</a
-							>
-						</li>
-						<li class="p-2.5">
-							<a
-								href="#"
-								class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500 p-2.5"
-								aria-current="page">Contact</a
-							>
-						</li>
-						<li>
-							<ColorModeSwitcher />
-						</li>
-					</ul>
-				</div>
+
+			<div class="hidden sm:flex sm:ml-6">
+				<ul class="flex space-x-8">
+					<li class="p-2.5">
+						<a
+							href={url()}
+							class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
+							aria-current="page"
+						>
+							{t('navbar.menu.home')}
+						</a>
+					</li>
+
+					<li class="p-2.5">
+						<a
+							href="#"
+							class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
+							aria-current="page"
+						>
+							{t('navbar.menu.team')}
+						</a>
+					</li>
+
+					<li class="p-2.5">
+						<a
+							href="#"
+							class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
+							aria-current="page"
+						>
+							{t('navbar.menu.pricing')}
+						</a>
+					</li>
+
+					<li class="p-2.5">
+						<a
+							href="#"
+							class="text-sm font-medium text-gray-700 hover:text-primary-700 dark:text-gray-400 dark:hover:text-primary-500"
+							aria-current="page"
+						>
+							{t('navbar.menu.contact')}
+						</a>
+					</li>
+
+					<li>
+						<ColorModeSwitcher />
+					</li>
+				</ul>
 			</div>
-			<div id="auth-slot"></div>
 		</div>
+
+		{
+			showAuth && (
+				<div id="auth-slot"></div>
+			)
+		}
 	</div>
-	<!-- Mobile menu -->
-	<div class="hidden sm:hidden" id="mobile-menu">
-		<ul class="pt-2">
-			<li>
-				<a
-					href="#"
-					class="block py-2 pl-3 pr-4 text-base font-normal text-gray-900 bg-gray-100 dark:bg-gray-700 dark:text-white"
-					>Dashboard</a
-				>
-			</li>
-			<li>
-				<a
-					href="#"
-					class="block px-3 py-2 text-base font-normal text-gray-600 border-b border-gray-100 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white"
-					>Team</a
-				>
-			</li>
-			<li>
-				<a
-					href="#"
-					class="block px-3 py-2 text-base font-normal text-gray-600 border-b border-gray-100 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white"
-					>Projects</a
-				>
-			</li>
-			<li>
-				<a
-					href="#"
-					class="block px-3 py-2 text-base font-normal text-gray-600 border-b border-gray-100 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white"
-					>Calendar
-				</a>
-			</li>
-		</ul>
-	</div>
+</div>
+
+<!-- Mobile menu -->
+<div class="hidden sm:hidden" id="mobile-menu">
+	<ul class="pt-2">
+		<li>
+			<a
+				href={url()}
+				class="block py-2 pl-3 pr-4 text-base font-normal text-gray-900 bg-gray-100 dark:bg-gray-700 dark:text-white"
+			>
+				Home
+			</a>
+		</li>
+
+		<li>
+			<a
+				href="#"
+				class="block px-3 py-2 text-base font-normal text-gray-600 border-b border-gray-100 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white"
+			>
+				{t('navbar.menu.team')}
+			</a>
+		</li>
+
+		<li>
+			<a
+				href="#"
+				class="block px-3 py-2 text-base font-normal text-gray-600 border-b border-gray-100 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white"
+			>
+				{t('navbar.menu.pricing')}
+			</a>
+		</li>
+
+		<li>
+			<a
+				href="#"
+				class="block px-3 py-2 text-base font-normal text-gray-600 border-b border-gray-100 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-900 dark:border-gray-700 dark:hover:bg-gray-700 dark:text-gray-400 dark:hover:text-white"
+			>
+				{t('navbar.menu.contact')}
+			</a>
+		</li>
+	</ul>
+</div>
+
+
 </nav>
+
 <script type="module">
-  import { mountAuth  } from '/src/components/AuthSwitch.client.ts';
+	import { mountAuth } from '/src/components/AuthSwitch.client.ts';
 
-  const el = document.getElementById('auth-slot');
-  if (el) mountAuth (el);
+	const el = document.getElementById('auth-slot');
+
+	if (el) {
+		mountAuth(el);
+	}
 </script>
-
-
-

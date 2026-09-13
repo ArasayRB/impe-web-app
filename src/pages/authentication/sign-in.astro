@@ -12,7 +12,7 @@ import { isBrowser } from '@/lib/env';
 	<script type="module">
 		import { getSession, clearSession } from '/src/lib/session';
 		import { initDevice } from '/src/lib/device.store.ts';
-		import { login } from '/src/modules/auth/auth.client.ts';
+		import { login, redirectToNoBusiness } from '/src/modules/auth/auth.client.ts';
 		import { handleLoginError } from '/src/lib/error.handle.client.ts';
 		import { initI18n } from '/src/lib/i18n/i18n';
 		import { setLocale } from '/src/lib/i18n/store';
@@ -60,15 +60,19 @@ import { isBrowser } from '@/lib/env';
 
 					const data = await login(email, password);
 					
+					if (!data) {
+							return;
+					}
+
 					if (data.requires_2fa) {
 						location.href = '/authentication/2fa';
 						return;
 					}
 					// REAL VALIDATION
-					if (!data?.accessToken) {
+					if (!data?.access_token) {
 						throw new Error('Invalid authentication response');
 					}
-
+					
 					location.href = '/';
 				} catch (e) {
 					handleLoginError(e,errorEl);
