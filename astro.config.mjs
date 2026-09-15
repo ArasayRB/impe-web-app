@@ -8,11 +8,9 @@ import node from '@astrojs/node';
 const DEV_PORT = 2121;
 
 export default defineConfig({
-  site: process.env.CI
-    ? 'https://themesberg.github.io'
-    : `http://localhost:${DEV_PORT}`,
+  site: process.env.PUBLIC_SITE_URL || `http://localhost:${DEV_PORT}`,
 
-  base: process.env.CI ? '/flowbite-astro-admin-dashboard' : undefined,
+	base: undefined,
 
   output: 'server',
 
