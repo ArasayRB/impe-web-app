@@ -20,8 +20,8 @@ import SideBar from './SideBar.astro';
 			<FooterSidebar />
 		</div>
 	</div>
-  <script type="module">
-    import { useAuth } from '/src/hooks/useAuth.ts';
+  <script>
+    import { useAuth } from '@/hooks/useAuth.ts';
 
     const { isAuthenticated } = useAuth();
 

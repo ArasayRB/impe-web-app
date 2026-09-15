@@ -189,13 +189,13 @@ const t = await getServerTranslator(locale, lang);
 
 </analytics-dashboard>
 
-<script type="module">
+<script>
 
   import {
     mountCasesAnalytics
   }
   from
-  '/src/modules/cases/cases.analytics.ui.ts';
+  '@/modules/cases/cases.analytics.ui.ts';
 
   const el =
     document.getElementById(

@@ -9,8 +9,8 @@ import { isBrowser } from '@/lib/env';
 		<p id="signUpError" class="hidden text-sm text-red-500"></p>
 		<FormSignUp />
 	</div>
-	<script type="module">
-		import { signup } from '/src/modules/auth/auth.service.ts';
+	<script>
+		import { signup } from '@/modules/auth/auth.service.ts';
 
 		const form = document.getElementById('registerForm');
 		const errorEl = document.getElementById('signUpError');

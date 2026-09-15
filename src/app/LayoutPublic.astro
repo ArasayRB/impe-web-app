@@ -25,8 +25,8 @@ const { site } = Astro.locals;
 			<FooterStacked site={site}/>
 		</div>
 	</div>
-	<script type="module">
-		import { initSite } from '/src/lib/site.store';
+	<script>
+		import { initSite } from '@/lib/site.store';
 
 		const site = JSON.parse(
 			document.documentElement.dataset.site

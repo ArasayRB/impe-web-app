@@ -177,13 +177,13 @@ const t = await getServerTranslator(locale, lang);
 
 </analytics-dashboard>
 
-<script type="module">
+<script>
 
   import {
     mountCustomersAnalytics
   }
   from
-  '/src/modules/customers/customers.analytics.ui.ts';
+  '@/modules/customers/customers.analytics.ui.ts';
 
   const el =
     document.getElementById(

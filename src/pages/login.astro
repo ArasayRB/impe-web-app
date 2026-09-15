@@ -5,8 +5,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <BaseLayout title="Login">
   <!-- UI igual que antes -->
 
-  <script type="module">
-    import { login } from '/src/services/auth.service.ts';
+  <script>
+    import { login } from '@/services/auth.service.ts';
 
     const form = document.getElementById('loginForm');
     const errorEl = document.getElementById('error');

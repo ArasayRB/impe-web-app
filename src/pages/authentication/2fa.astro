@@ -19,10 +19,10 @@ const t = await getServerTranslator(locale, lang);
 		<FormSignIn />
 	</div>
 	
-	<script type="module">
-		import { verifyTwoFactor, get2FAMethod } from '/src/modules/auth/auth.client.ts';
-		import { initDevice } from '/src/lib/device.store.ts';
-		import { handleError } from '/src/lib/error.handle.client.ts';
+	<script>
+		import { verifyTwoFactor, get2FAMethod } from '@/modules/auth/auth.client.ts';
+		import { initDevice } from '@/lib/device.store.ts';
+		import { handleError } from '@/lib/error.handle.client.ts';
 
 
 		const form = document.getElementById('2faForm');
