@@ -9,7 +9,7 @@ node_modules/
 
 # logs
 logs/
-logs/api-errors.log
+logs/api-errors.log*
 package-lock.json
 npm-debug.log*
 yarn-debug.log*
