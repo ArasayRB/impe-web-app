@@ -9,7 +9,7 @@ import { isBrowser } from '@/lib/env';
 		<FormSignIn />
 	</div>
 	
-	<script type="module">
+	<script>
 		import { getSession, clearSession } from '@/lib/session'; 
 		import { initDevice } from '@/lib/device.store.ts'; 
 		import { login, redirectToNoBusiness } from '@/modules/auth/auth.client.ts'; 
