@@ -1,5 +1,5 @@
 import { modalController } from '@/lib/modal.controller';
-import { t, waitForI18n } from '@/lib/i18n/i18n';
+import { t, ensureI18nReady} from '@/lib/i18n/i18n';
 import { exportCsv } from '@/services/export.csv';
 import { confirmAction } from '@/lib/confirmAction';
 import { importFile } from '@/services/import.service';
@@ -69,7 +69,7 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 	onWorkflow,
 } = config;
 
-  await waitForI18n();
+  await ensureI18nReady();
 
   //For module actions allowed
 	const enabledActions = {

@@ -73,3 +73,12 @@ export function t(key: string): string {
       ) || key
   );
 }
+
+export async function ensureI18nReady() {
+  if (readyPromise) {
+    await readyPromise;
+    return;
+  }
+
+  await initI18n(lang);
+}
