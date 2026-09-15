@@ -53,7 +53,9 @@ console.log('Astro',Astro.props, Astro.locals)
 		/>
 		<meta name="copyright" content="MIT" />
 		
-		<script type="module" src="/src/main.client.ts"></script>
+		<script>
+			import '@/main.client.ts';
+		</script>
 
 		<script is:inline>
 			if (
