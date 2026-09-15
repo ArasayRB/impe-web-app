@@ -10,7 +10,46 @@ import {
 const isPublicWebsite =
   Astro.locals.isPublicWebsite === true;
 
-	if (isPublicWebsite) {
+if (isPublicWebsite) {
+  const rawAuth =
+    Astro.cookies.get('auth')?.value;
+
+  let isAuthenticated = false;
+
+  if (rawAuth) {
+    try {
+      const session = JSON.parse(
+        decodeURIComponent(rawAuth)
+      );
+
+      if (
+        session?.refreshToken &&
+        session?.accessTokenExpiresAt &&
+        session?.refreshTokenExpiresAt
+      ) {
+        const now = Date.now();
+
+        const refreshExpiresAt =
+          new Date(
+            session.refreshTokenExpiresAt
+          ).getTime();
+
+        if (now <= refreshExpiresAt) {
+          isAuthenticated = true;
+        }
+      }
+    } catch {
+      // Cookie inválida → tratar como no autenticado
+    }
+  }
+
+  if (isAuthenticated) {
+    return Astro.redirect(
+      '/dashboard/cases',
+      302
+    );
+  }
+
   return Astro.redirect(
     '/es',
     302
