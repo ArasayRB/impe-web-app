@@ -21,7 +21,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         const data = await login(email, password);
 
         localStorage.setItem('auth_token', data.token);
-        location.href = '/';
+        location.href = '/dashboard/cases';
       } catch (e) {
         errorEl.textContent = e.message;
         errorEl.classList.remove('hidden');

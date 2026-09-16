@@ -4,6 +4,7 @@
 import { asset } from '../lib/data.js';
 
 import Profile from '../components/Profile.astro';
+import { devMode } from '@/lib/dev.store';
 import ColorModeSwitcher from '../components/ColorModeSwitcher.astro';
 import GitHubButton from '../components/GitHubButton.astro';
 import SearchInput from '../components/SearchInput.astro';
@@ -14,6 +15,8 @@ import {resolveSite} from '@/lib/resolveSite';
 
 const site = resolveSite(Astro);
 const locale = site?.locale || 'en';
+
+const isDev = devMode.get();
 
 const t = await getServerTranslator(locale, [
   'auth',

@@ -13,16 +13,28 @@ const {
   heightn = "40", 
   class: className 
 } = Astro.props;
+
+const isLocal =
+  import.meta.env.DEV === true;
+
+const showSiteLogo =
+  !isLocal && !!site?.logo;
 ---
 
 <div class:list={["logo-container group", className]}>
-  {site?.logo ? (
-    <img src={site.logo} alt="Logo" style={`width: ${widthn}px; height: ${heightn}px;`}
-      class="object-contain dark:invert"  />
-  ) : (
-    <div class="svg-wrapper" 
+  {showSiteLogo ? (
+    <img
+      src={site.logo}
+      alt="Logo"
       style={`width: ${widthn}px; height: ${heightn}px;`}
-      set:html={ijobaRaw}  />
+      class="object-contain dark:invert"
+    />
+  ) : (
+    <div
+      class="svg-wrapper"
+      style={`width: ${widthn}px; height: ${heightn}px;`}
+      set:html={ijobaRaw}
+    />
   )}
 </div>
 
