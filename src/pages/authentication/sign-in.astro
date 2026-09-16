@@ -73,7 +73,7 @@ import { isBrowser } from '@/lib/env';
 						throw new Error('Invalid authentication response');
 					}
 					
-					location.href = '/';
+					location.href = '/dashboard/cases';
 				} catch (e) {
 					handleLoginError(e,errorEl);
 				} finally {
