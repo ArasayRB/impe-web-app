@@ -66,8 +66,7 @@ export const sidebar = {
                     "title":"Cases",
                     "title_tr_key":"sidebar.dashboard.cases",
                     "svg":``,
-                    "submenus":null,
-                    "dev":true 
+                    "submenus":null
                 },
                 {
                     "link":url('dashboard/analytics/customers'),
