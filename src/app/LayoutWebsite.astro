@@ -45,11 +45,15 @@ const image =
 const currentPath =
   Astro.url.pathname;
 
+const siteUrl =
+  import.meta.env.SITE_URL ||
+  Astro.url.origin;
+
 const url =
   currentPath === `/${locale}` &&
   seo.canonical
     ? seo.canonical
-    : `${Astro.url.origin}${currentPath}`;
+    : `${siteUrl}${currentPath}`;
 
 const robots =
   seo.robots ||
