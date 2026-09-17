@@ -1,4 +1,8 @@
 ---
+import { getServerTranslator } from '@/lib/i18n/server';
+import { lang } from '@/lib/i18n/config';
+
+
 interface PlanServiceTranslation {
 locale: string;
 name?: string;
@@ -48,6 +52,9 @@ const {
 plans,
 locale
 } = Astro.props;
+
+
+const t = await getServerTranslator(locale, lang);
 ---
 
 <section id="plans" class="py-16 sm:py-20">
@@ -66,11 +73,11 @@ locale
   </div>
 
   <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
-    Planes
+    {t('navbar.menu.plans')}
   </h2>
 
   <p class="mt-4 text-lg text-gray-600">
-    Elige el plan que mejor se adapte a las necesidades de tu negocio.
+    {t('common.messages.plans_public_description')}
   </p>
 </div>
 

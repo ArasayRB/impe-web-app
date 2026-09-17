@@ -1,4 +1,8 @@
 ---
+import { getServerTranslator } from '@/lib/i18n/server';
+import { lang } from '@/lib/i18n/config';
+
+
 type ContactField = {
   key?: string;
   type?:
@@ -47,7 +51,11 @@ const {
   fields = [],
   submission,
   security,
+	locale,
 } = Astro.props;
+
+
+const t = await getServerTranslator(locale, lang);
 
 const sortedFields =
   [...fields].sort(
@@ -90,7 +98,7 @@ const recaptchaEnabled =
       <div class="max-w-xl">
 
         <div
-          class="mb-6 flex items-center gap-3"
+          class="mb-6 flex items-center justify-centergap-3"
           aria-hidden="true"
         >
           <span class="h-px w-10 bg-gray-950 dark:bg-white"></span>
@@ -103,13 +111,13 @@ const recaptchaEnabled =
         <h2
           class="text-4xl font-bold tracking-tight text-gray-950 sm:text-5xl dark:text-white"
         >
-          Contact
+          {t('navbar.menu.contact')}
         </h2>
 
         <p
           class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300"
         >
-          Estamos aquí para ayudarte. Completa el formulario y nos pondremos en contacto contigo.
+          {t('common.messages.contact_public_description')}
         </p>
 
       </div>

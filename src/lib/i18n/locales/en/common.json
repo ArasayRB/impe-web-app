@@ -66,7 +66,9 @@
 		"unable_access":"Unable to access the portal",
 		"invalid_or_expired_link":"The access link is invalid or has expired.",
 		"request_new_link":"Please request a new access link.",
-		"try_again":"Try again"
+		"try_again":"Try again",
+		"contact_public_description":"We are here to help you. Fill out the form, and we will get in touch with you.",
+		"plans_public_description":"Choose the plan that best suits your business needs."
 	},
 	"colors":{
 		"gray":"Gray",
