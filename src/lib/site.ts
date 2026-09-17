@@ -5,6 +5,9 @@ export interface Site {
   locale: string;
   title?: string;
   logo?: string;
+
+  domain?: string;
+  subdomain?: string | null;
 }
 
 /**

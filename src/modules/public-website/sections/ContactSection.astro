@@ -44,6 +44,7 @@ interface Props {
   fields?: ContactField[];
   submission?: ContactSubmission;
   security?: ContactSecurity;
+  publicHost?: string;
 }
 
 const {
@@ -52,6 +53,7 @@ const {
   submission,
   security,
 	locale,
+  publicHost,
 } = Astro.props;
 
 
@@ -135,6 +137,7 @@ const recaptchaEnabled =
           data-recaptcha-enabled={recaptchaEnabled ? 'true' : 'false'}
           data-recaptcha-site-key={recaptchaSiteKey}
           data-recaptcha-action={recaptchaAction}
+					data-public-host={publicHost || ''}
         >
 
           {
@@ -405,6 +408,9 @@ const recaptchaEnabled =
     const endpoint =
       form.dataset.endpoint || '';
 
+		const publicHost =
+  		form.dataset.publicHost || '';
+
     console.log(
       '[PUBLIC CONTACT] Config:',
       {
@@ -412,6 +418,7 @@ const recaptchaEnabled =
         recaptchaSiteKey,
         recaptchaAction,
         endpoint,
+    		publicHost,
       }
     );
 
@@ -669,7 +676,9 @@ const recaptchaEnabled =
             }
           );
 
-					const host = window.location.host;
+					const host = 
+						publicHost ||
+						window.location.host;
 
           const result =
             await submitPublicContact(

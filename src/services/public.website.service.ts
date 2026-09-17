@@ -1,4 +1,5 @@
 // src/services/public.website.service.ts
+import type { Site } from '@/lib/site';
 
 export interface PublicWebsiteSnapshot {
   site: Record<string, any>;
@@ -33,7 +34,8 @@ export interface PublicContactResponse {
 }
 
 export async function getPublicWebsiteSnapshot(
-  request: Request
+  request: Request,
+  site?: Site | null
 ): Promise<PublicWebsiteSnapshot | null> {
   const apiUrl =
     import.meta.env.PUBLIC_API_URL;
@@ -46,8 +48,14 @@ export async function getPublicWebsiteSnapshot(
     return null;
   }
 
-  const host =
+  let host =
     request.headers.get('host') || '';
+
+		if (site?.domain) {
+			host = site.subdomain
+				? `${site.subdomain}.${site.domain}`
+				: site.domain;
+		}
 
   try {
     const response = await fetch(

@@ -286,6 +286,7 @@ src/
 │   ├── [locale]/
 │   |   ├──   legal/
 │   │   │   ├── [slug].astro # legal views
+│   │   ├── contact.astro     # contact dashboard view
 │   │   └── index.astro     # index
 │   ├── access/
 │   │   ├── error.astro         

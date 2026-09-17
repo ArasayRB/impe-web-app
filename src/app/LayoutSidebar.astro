@@ -3,6 +3,24 @@ import FooterSidebar from './FooterSidebar.astro';
 import LayoutCommon from './LayoutCommon.astro';
 import NavBarSidebar from './NavBarSidebar.astro';
 import SideBar from './SideBar.astro';
+
+import { resolveSite } from '@/lib/resolveSite';
+import { getPublicWebsiteSnapshot } from '@/services/public.website.service';
+
+const site = resolveSite(Astro);
+
+const snapshot = await getPublicWebsiteSnapshot(
+  Astro.request,
+  site
+);
+
+const locale = site?.locale ?? 'en';
+
+const legal =
+  snapshot?.legal?.[locale] ?? {};
+
+const social =
+snapshot?.social ?? [];
 ---
 
 <LayoutCommon>
@@ -17,9 +35,14 @@ import SideBar from './SideBar.astro';
 		>
 			<slot />
 
-			<FooterSidebar />
+			<FooterSidebar
+				social={social}
+				legal={legal}
+				locale={locale}
+			/>
 		</div>
 	</div>
+
   <script>
     import { useAuth } from '@/hooks/useAuth.ts';
 
@@ -29,6 +52,7 @@ import SideBar from './SideBar.astro';
       window.location.href = '/authentication/sign-in';
     }
   </script>
+
 	<!-- Logout -->
 	<script>
 		import '@/modules/auth/logout.client.ts';
