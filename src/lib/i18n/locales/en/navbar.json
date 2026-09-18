@@ -9,5 +9,11 @@
 	"buttons":{
 		"login":"Login",
 		"register":"Register"
+	},
+	"profile":{
+		"title":"Profile",
+		"profile":"Profile",
+		"settings":"Settings",
+		"billing":"Billing"
 	}
 }

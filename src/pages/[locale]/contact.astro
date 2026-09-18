@@ -1,0 +1,88 @@
+---
+import LayoutWebsite from '@/app/LayoutWebsite.astro';
+
+import ContactSection from '@/modules/public-website/sections/ContactSection.astro';
+
+import {
+	getPublicWebsiteSnapshot
+} from '@/services/public.website.service';
+
+import {
+	isPublicWebsiteLocale
+} from '@/lib/publicWebsiteLocale';
+
+import { resolveSite } from '@/lib/resolveSite';
+
+const isPublicWebsite =
+	Astro.locals.isPublicWebsite === true;
+
+const site =
+	isPublicWebsite
+		? null
+		: resolveSite(Astro);
+
+const publicHost =
+  site?.domain
+    ? (
+        site.subdomain
+          ? `${site.subdomain}.${site.domain}`
+          : site.domain
+      )
+    : undefined;
+
+const snapshot =
+	await getPublicWebsiteSnapshot(
+		Astro.request,
+		site
+	);
+
+const locale =
+	Astro.params.locale;
+
+if (
+	!locale ||
+	!isPublicWebsiteLocale(locale) ||
+	!snapshot
+) {
+	Astro.response.status = 404;
+}
+
+const contact =
+	snapshot?.contact?.[locale] ?? [];
+
+const submission =
+	snapshot?.contact?.submission;
+
+const security =
+	snapshot?.contact?.security;
+
+const social =
+	snapshot?.social ?? [];
+---
+
+{
+	snapshot && locale ? (
+		<LayoutWebsite
+			snapshot={snapshot}
+			locale={locale}
+		>
+			<ContactSection
+				section={{
+					key: 'contact'
+				}}
+				fields={contact}
+				submission={submission}
+				security={security}
+				locale={locale}
+				social={social}
+ 				publicHost={publicHost}
+			/>
+		</LayoutWebsite>
+	) : (
+		<main class="mx-auto max-w-4xl px-4 py-16">
+			<h1 class="text-3xl font-bold">
+				Page not found
+			</h1>
+		</main>
+	)
+}

@@ -1,40 +1,122 @@
 ---
 import CopyrightNotice from '../components/CopyrightNotice.astro';
+
+interface Props {
+	legal?: Record<string, any>;
+	social?: any[];
+	locale: string;
+}
+
+const {
+	legal = {},
+	social = [],
+	locale,
+} = Astro.props;
+
+const socialLinks =
+	Array.isArray(social)
+		? [...social].sort(
+			(a, b) =>
+				(a?.sort_order ?? 0) -
+				(b?.sort_order ?? 0)
+		)
+		: [];
+
+const legalLinks = [
+  {
+    key: 'privacy_policy',
+    label: legal?.privacy_policy?.title ?? 'Privacy Policy',
+    url: `/${locale}/legal/privacy-policy`,
+    document: legal?.privacy_policy,
+  },
+  {
+    key: 'terms_of_service',
+    label: legal?.terms_of_service?.title ?? 'Terms of Service',
+    url: `/${locale}/legal/terms-of-service`,
+    document: legal?.terms_of_service,
+  },
+  {
+    key: 'cookie_policy',
+    label: legal?.cookie_policy?.title ?? 'Cookie Policy',
+    url: `/${locale}/legal/cookie-policy`,
+    document: legal?.cookie_policy,
+  },
+  {
+    key: 'license',
+    label: legal?.license?.title ?? 'License',
+    url: `/${locale}/legal/license`,
+    document: legal?.license,
+  },
+];
 ---
 
 <footer
-	class="md:flex md:items-center md:justify-between px-4 2xl:px-0 py-6 md:py-10"
+	class="px-4 2xl:px-0 py-6 md:py-10"
 >
-	<CopyrightNotice />
+	<div
+		class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between"
+	>
+		<CopyrightNotice />		
 
-	<ul class="flex flex-wrap items-center justify-center">
-		<li>
-			<a
-				href="#"
-				class="mr-4 text-sm font-normal text-gray-500 hover:underline md:mr-6 dark:text-gray-400"
-				>Terms</a
-			>
-		</li>
-		<li>
-			<a
-				href="#"
-				class="mr-4 text-sm font-normal text-gray-500 hover:underline md:mr-6 dark:text-gray-400"
-				>Licensing</a
-			>
-		</li>
-		<li>
-			<a
-				href="#"
-				class="mr-4 text-sm font-normal text-gray-500 hover:underline md:mr-6 dark:text-gray-400"
-				>Cookie Policy</a
-			>
-		</li>
-		<li>
-			<a
-				href="#"
-				class="text-sm font-normal text-gray-500 hover:underline dark:text-gray-400"
-				>Contact</a
-			>
-		</li>
-	</ul>
+		{
+			socialLinks.length > 0 && (
+				<div class="mt-6 flex justify-center md:justify-end">
+					<ul class="flex items-center gap-4">
+						{
+							socialLinks.map((item) => (
+								<li>
+									<a
+										href={item.url}
+										target={item.target ?? '_blank'}
+										rel={
+											item.target === '_blank'
+												? 'noopener noreferrer'
+												: undefined
+										}
+										aria-label={item.label || item.platform || ''}
+										class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+									>
+										{
+											item.icon && (
+												<span
+													class="inline-flex h-5 w-5 items-center justify-center"
+													set:html={item.icon}
+												/>
+											)
+										}
+									</a>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			)
+		}
+
+		<ul class="flex flex-wrap items-center justify-center">
+			{
+				legalLinks.length > 0 && (
+							legalLinks.map((item) => (
+								<li>
+									<a
+										href={item.url}
+										class="mr-4 text-sm font-normal text-gray-500 hover:underline md:mr-6 dark:text-gray-400"
+									>
+										{item.label}
+									</a>
+								</li>
+							))
+				)
+			}
+
+			<li>
+				<a
+					href={`/${locale}#contact`}
+					class="text-sm font-normal text-gray-500 hover:underline dark:text-gray-400"
+				>
+					Contact
+				</a>
+			</li>
+		</ul>
+	</div>
 </footer>

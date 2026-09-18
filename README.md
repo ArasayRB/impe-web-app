@@ -168,11 +168,13 @@ src/
 │   ├── modal.controller.ts      # 
 │   ├── modal.events.ts      # 
 │   ├── modal.registry.ts      # 
+│   ├── navbar.menu.ts      # which menu show
 │   ├── publicWebsiteLocale.ts      # Para landing lan
 │   ├── resolveCrudFields.ts      # 
 │   ├── resolveDevice.ts      #
 │   ├── resolveSite.ts      # contexto privado existente cookie / sesión / dashboard
 │   ├── session.ts      #
+│   ├── sidebar.menu.ts      #which menu show
 │   ├── site.store.ts      #
 │   ├── site.ts      #
 │   ├── toast.ts      #

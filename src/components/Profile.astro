@@ -1,57 +1,18 @@
 ---
-import { url } from '@/lib/data.js';
-import { sidebar } from '@/lib/sidebar.menu'; // Your config file
-import { devMode } from '@/lib/dev.store';
-import {resolveSite} from '@/lib/resolveSite';
 import { getServerTranslator } from '@/lib/i18n/server';
 import { resolveLocale } from '@/lib/i18n/resolveLocale';
 import { lang } from '@/lib/i18n/config';
 
-const site = resolveSite(Astro);
 const locale = resolveLocale(Astro);
 
 const t = await getServerTranslator(locale, lang);
 
-const isDev = devMode.get();
-
-const shouldShow = (item) => {
-  // 1. If have not prop dev, ALLWAYS SHOWS
-  if (item.dev === undefined || item.dev === null) {
-    return true;
-  }
-
-  // 2. If we are here, is because item.dev exists (is true or false)
-  if (isDev) {
-    // In DEV: we show dev: true
-    return item.dev === true;
-  } else {
-    // In PROD: we shows dev: false
-    return item.dev === false;
-  }
-};
-
-const menuSettings = sidebar.main
-  .filter(item=>item.link===url('settings'));
-
-const shouldShowSettings = shouldShow(menuSettings);
-
-const menuDashboard = sidebar.main
-  .filter(item=>item.link===url('dashboard'));
-
-const shouldShowDashboard = shouldShow(menuDashboard);
-
-const menuEarning = sidebar.profile
-  .filter(item=>item.link===url('earnings'));
-
-const shouldShowEarning = shouldShow(menuEarning);
-
-const menuLogout = sidebar.profile
-  .filter(item=>item.link===url('logout'));
-
-const shouldShowLogout = shouldShow(menuLogout);
-
-const { user } = Astro.props;
+const {
+    user,
+    items = [],
+} = Astro.props;
 ---
+
 <div class="flex items-center ml-3">
     <div>
         <button
@@ -69,15 +30,20 @@ const { user } = Astro.props;
             />
         </button>
     </div>
+
     <!-- Dropdown menu -->
     <div
         class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600"
         id="dropdown-2"
     >
         <div class="px-4 py-3" role="none">
-            <p class="text-sm text-gray-900 dark:text-white" role="none">
+            <p
+                class="text-sm text-gray-900 dark:text-white"
+                role="none"
+            >
                 {user?.name}
             </p>
+
             <p
                 class="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
                 role="none"
@@ -85,45 +51,23 @@ const { user } = Astro.props;
                 {user?.email}
             </p>
         </div>
+
         <ul class="py-1" role="none">
-            {shouldShowDashboard && (<li>
-                <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                    data-i18n="sidebar.title.dashboard">
-                        {t('sidebar.title.dashboard')}
-                </a>
-            </li>)}
-            {shouldShowSettings && (<li>
-                <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                    data-i18n="sidebar.title.settings">
-                        {t('sidebar.title.settings')}
-                </a>
-            </li>)}
-            
-            {shouldShowEarning && (<li>
-                <a
-                    href="#"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                    data-i18n="sidebar.title.earnings">
-                        {t('sidebar.title.earnings')}
-                </a>
-            </li>)}
-            {shouldShowLogout && (<li>
-                <a
-                    href="#"
-                    data-action="logout"
-                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-                    role="menuitem"
-                    data-i18n="sidebar.title.logout">
-                        {t('sidebar.title.logout')}
-                </a>
-            </li>)}
+            {items.map((item) => (
+                <li>
+                    <a
+                        href={item.link || '#'}
+                        data-action={item.action}
+                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
+                        role="menuitem"
+                        data-i18n={item.title_tr_key}
+                    >
+                        {item.title_tr_key
+                            ? t(item.title_tr_key)
+                            : item.title}
+                    </a>
+                </li>
+            ))}
         </ul>
     </div>
 </div>

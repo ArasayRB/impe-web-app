@@ -1,6 +1,19 @@
+---
+// case-search.astro
+import {resolveSite} from '@/lib/resolveSite';
+import { getServerTranslator } from '@/lib/i18n/server';
+import { lang } from '@/lib/i18n/config';
+import { resolveLocale } from '@/lib/i18n/resolveLocale';
+
+const site = resolveSite(Astro);
+const locale = resolveLocale(Astro);
+
+const t = await getServerTranslator(locale, lang);
+
+---
 <p class="my-10 text-sm text-center text-gray-500">
-	&copy; 2019 - {new Date().getFullYear()} —
-	<a href="https://flowbite.com/" class="hover:underline" target="_blank"
-		>Flowbite.com</a
-	>. All rights reserved.
+	&copy; 2026 - {new Date().getFullYear()} —
+	<a href="https://ijoba-saas.com/es" class="hover:underline" target="_blank"
+		>Ijoba-Saas.com</a
+	>. {t('common.messages.all_rights_reserved')}
 </p>

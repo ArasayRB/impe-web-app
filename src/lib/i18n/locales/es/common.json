@@ -68,7 +68,8 @@
 		"request_new_link":"Por favor, solicite un nuevo link.",
 		"try_again":"Intentar de nuevo",
 		"contact_public_description":"Estamos aquí para ayudarte. Completa el formulario y nos pondremos en contacto contigo.",
-		"plans_public_description":"Elige el plan que mejor se adapte a las necesidades de tu negocio."
+		"plans_public_description":"Elige el plan que mejor se adapte a las necesidades de tu negocio.",
+		"all_rights_reserved":"Todos los derechos reservados."
 	},
 	"colors":{
 		"gray":"Gris",

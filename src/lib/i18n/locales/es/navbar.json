@@ -9,5 +9,11 @@
 	"buttons":{
 		"login":"Entrar",
 		"register":"Registrar"
+	},
+	"profile":{
+		"title":"Perfil",
+		"profile":"Perfil",
+		"settings":"Configuraciones",
+		"billing":"Facturación"
 	}
 }

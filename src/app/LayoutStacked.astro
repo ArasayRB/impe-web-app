@@ -2,10 +2,38 @@
 import FooterStacked from './FooterStacked.astro';
 import LayoutCommon from './LayoutCommon.astro';
 import NavBarStacked from './NavBarStacked.astro';
+
+import { resolveSite } from '@/lib/resolveSite';
+import {
+	getPublicWebsiteSnapshot,
+} from '@/services/public.website.service';
+
+import { resolveLocale } from '@/lib/i18n/resolveLocale';
+
+const site =
+	resolveSite(Astro);
+
+const locale =
+	resolveLocale(Astro);
+
+const snapshot =
+	await getPublicWebsiteSnapshot(
+		Astro.request,
+		site
+	);
+
+const legal =
+	snapshot?.legal?.[locale] ?? {};
+
+const social =
+	snapshot?.social ?? [];
 ---
 
 <LayoutCommon>
-	<NavBarStacked />
+	<NavBarStacked
+		snapshot={snapshot}
+		locale={locale}
+	/>
 
 	<div class="flex pt-16 overflow-hidden bg-gray-50 dark:bg-gray-900">
 		<div
@@ -16,7 +44,11 @@ import NavBarStacked from './NavBarStacked.astro';
 				<slot />
 			</div>
 
-			<FooterStacked />
+			<FooterStacked
+				legal={legal}
+				social={social}
+				locale={locale}
+			/>
 		</div>
 	</div>
 </LayoutCommon>
