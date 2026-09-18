@@ -7,10 +7,14 @@ import node from '@astrojs/node';
 
 const DEV_PORT = 2121;
 
-export default defineConfig({
-  site: process.env.PUBLIC_SITE_URL || `http://localhost:${DEV_PORT}`,
+const site =
+  process.env.PUBLIC_SITE_URL ||
+  `http://localhost:${DEV_PORT}`;
 
-	base: undefined,
+export default defineConfig({
+  site,
+
+  base: undefined,
 
   output: 'server',
 
@@ -19,12 +23,20 @@ export default defineConfig({
   }),
 
   server: {
-  	host: true,
+    host: true,
     port: DEV_PORT,
   },
 
   integrations: [
-    sitemap(),
+    sitemap({
+      filter: (page) => {
+        return (
+          page === `${site}/es` ||
+          page === `${site}/en`
+        );
+      },
+    }),
+
     tailwind(),
     mdx(),
   ],
