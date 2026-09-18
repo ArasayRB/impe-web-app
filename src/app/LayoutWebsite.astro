@@ -17,6 +17,11 @@ const {
 const site =
   snapshot.site ?? {};
 
+const siteOrigin =
+  site.subdomain
+    ? `https://${site.subdomain}.${site.domain}`
+    : `https://${site.domain}`;
+
 const company =
   snapshot.company ?? {};
 	
@@ -45,9 +50,7 @@ const image =
 const currentPath =
   Astro.url.pathname;
 
-const siteUrl =
-  import.meta.env.SITE_URL ||
-  Astro.url.origin;
+const siteUrl = siteOrigin;
 
 const url =
   currentPath === `/${locale}` &&
@@ -104,15 +107,15 @@ const alternatePath =
 const alternates = [
   {
     locale: 'es',
-    url: `${Astro.url.origin}/es${alternatePath}`,
+    url: `${siteUrl}/es${alternatePath}`,
   },
   {
     locale: 'en',
-    url: `${Astro.url.origin}/en${alternatePath}`,
+    url: `${siteUrl}/en${alternatePath}`,
   },
   {
     locale: 'x-default',
-    url: `${Astro.url.origin}/es${alternatePath}`,
+    url: `${siteUrl}/es${alternatePath}`,
   },
 ];
 
@@ -125,7 +128,7 @@ const structuredData = {
       branding.title ||
       'Ijoba',
     url:
-      `${Astro.url.origin}/${locale}`,
+      `${siteUrl}/${locale}`,
     logo:
       branding.logo ||
       null,
@@ -143,7 +146,7 @@ const structuredData = {
       company.name ||
       'Ijoba',
     url:
-      `${Astro.url.origin}/${locale}`,
+      `${siteUrl}/${locale}`,
     inLanguage:
       locale,
   },
