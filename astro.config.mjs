@@ -31,10 +31,15 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         return (
-          page === `${site}/es` ||
-          page === `${site}/en`
+          page === `${site}/en` ||
+          page === `${site}/es`
         );
       },
+
+      customPages: [
+        `${site}/en`,
+        `${site}/es`,
+      ],
     }),
 
     tailwind(),
