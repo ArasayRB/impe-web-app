@@ -209,6 +209,7 @@ export async function mountCaseTypes(el: HTMLElement) {
 		translations:'casetypes',
 
 		actions: {
+			add: true,
 			edit: true,
 			delete: true,
 			import: false,
@@ -216,6 +217,15 @@ export async function mountCaseTypes(el: HTMLElement) {
 			bulk_delete:false,
 			settings:false
 		},
+
+		permissions: {
+			create: 'case_types.create',
+			update: 'case_types.update',
+			delete: 'case_types.delete',
+			//info: 'analytics.view',
+			//assign: 'document-templates.assign',//workflow
+		},
+
 		export: {
 			filename: 'casetypes',
 

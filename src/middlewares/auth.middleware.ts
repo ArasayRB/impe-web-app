@@ -13,6 +13,15 @@ const AUTH_ROUTES = [
   '/blog',
 ];
 
+const ROUTE_PERMISSIONS: Record<string, string> = {
+  '/dashboard/cases': 'cases.view',
+  '/dashboard/case_types': 'case_types.view',
+	'/dashboard/customers': 'customers.view',
+	'/dashboard/analytics/cases': 'analytics.view',
+	'/dashboard/analytics/customers': 'analytics.view',
+	'/dashboard/document-templates': 'document_templates.view',
+};
+
 export const authMiddleware: MiddlewareHandler = async (
   context,
   next
@@ -169,6 +178,7 @@ export const authMiddleware: MiddlewareHandler = async (
         clearSession();
         setSession(data);
         setCookie(data);
+				session = data;
       }
     } catch {
       context.cookies.delete('auth');
@@ -181,6 +191,27 @@ export const authMiddleware: MiddlewareHandler = async (
       );
     }
   }
+
+	/**
+	 * AUTHORIZATION
+	 */
+	const requiredPermission =
+		ROUTE_PERMISSIONS[pathname];
+
+	if (requiredPermission) {
+		const permissions =
+			session?.user?.permissions ?? [];
+
+		if (!permissions.includes(requiredPermission)) {
+			return Response.redirect(
+				new URL(
+					'/access/not-authorized',
+					context.url
+				)
+			);
+		}
+	}
+
 
   return next();
 };

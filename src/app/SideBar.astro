@@ -60,35 +60,28 @@ const shouldShow = (item) => {
   }
 };
 
+const filterSubmenus = (item) => {
+  if (!item.submenus) {
+    return item;
+  }
+
+  return {
+    ...item,
+    submenus: item.submenus.filter(shouldShow),
+  };
+};
+
 // Filter main menu having prop 'dev'
 const menuItems = sidebar.main
   .filter(shouldShow)
-  .map(item => ({
-    ...item,
-    // If after filter not found submenus or is null
-    submenus: item.submenus 
-      ? item.submenus.filter(shouldShow) 
-      : null
-  }));
+  .map(filterSubmenus);
 
 
 const menuInfosItems = sidebar.infos.filter(shouldShow)
-  .map(item => ({
-    ...item,
-    // If after filter not found submenus or is null
-    submenus: item.submenus 
-      ? item.submenus.filter(shouldShow) 
-      : null
-  }));
+  .map(filterSubmenus);
 
 const menuBottomItems = sidebar.bottom.filter(shouldShow)
-  .map(item => ({
-    ...item,
-    // If after filter not found submenus or is null
-    submenus: item.submenus 
-      ? item.submenus.filter(shouldShow) 
-      : null
-  }));
+  .map(filterSubmenus);
 ---
 
 <!-- TODO: Dynamic dropdowns -->
@@ -156,7 +149,7 @@ const menuBottomItems = sidebar.bottom.filter(shouldShow)
   						const isSimpleLink = !item.submenus || item.submenus.length === 0;
 						
 						return (
-							<li>
+							<li data-permission={item.permission}>
 								{isSimpleLink  ? (
 								// CASE 1: Simple Link  (Welcome)
 								<a href={item.link} 
@@ -193,7 +186,7 @@ const menuBottomItems = sidebar.bottom.filter(shouldShow)
 									{item.submenus.map((sub) => {
 										const isSubActive = isLinkActive(sub.link);
 										return (
-											<li>
+											<li data-permission={sub.permission}>
 											<a
 												href={sub.link}
 												class={`flex items-center p-2 text-base transition duration-75 rounded-lg pl-11 group
@@ -230,7 +223,7 @@ const menuBottomItems = sidebar.bottom.filter(shouldShow)
   						const isSimpleLink = !item.submenus || item.submenus.length === 0;
 						
 						return (
-							<li>
+							<li data-permission={item.permission}>
 								{isSimpleLink ? (
 								// CASO 1: Link simple (Welcome)
 								<a href={item.link} 
@@ -267,7 +260,7 @@ const menuBottomItems = sidebar.bottom.filter(shouldShow)
 									{item.submenus.map((sub) => {
 										const isSubActive = isLinkActive(sub.link);
 										return (
-											<li>
+											<li data-permission={sub.permission}>
 											<a
 												href={sub.link}
 												class={`flex items-center p-2 text-base transition duration-75 rounded-lg pl-11 group
@@ -335,9 +328,45 @@ const menuBottomItems = sidebar.bottom.filter(shouldShow)
 </div>
 
 <script>
+	import { getUserPermissions } from '@/lib/session';
+
 	const sidebar = document.getElementById('sidebar');
 
 	if (sidebar) {
+		const applyPermissions = () => {
+			const permissions = new Set(getUserPermissions());
+
+			const permissionItems = sidebar.querySelectorAll<HTMLElement>(
+				'[data-permission]',
+			);
+
+			permissionItems.forEach((item) => {
+				const permission = item.dataset.permission;
+
+				if (!permission) return;
+
+				if (!permissions.has(permission)) {
+					item.classList.add('hidden');
+				}
+			});
+
+			// Hide submenu groups that no longer have visible children.
+			sidebar.querySelectorAll<HTMLElement>('li').forEach((item) => {
+				const submenu = item.querySelector(':scope > ul');
+
+				if (!submenu) return;
+
+				const visibleItems = Array.from(
+					submenu.querySelectorAll(':scope > li'),
+				).filter((child) => !child.classList.contains('hidden'));
+
+				if (visibleItems.length === 0) {
+					item.classList.add('hidden');
+				}
+			});
+		};
+
+		applyPermissions();
 		const toggleSidebarMobile = (
 			sidebar: HTMLElement,
 			sidebarBackdrop: HTMLElement,

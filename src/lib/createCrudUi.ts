@@ -5,7 +5,15 @@ import { confirmAction } from '@/lib/confirmAction';
 import { importFile } from '@/services/import.service';
 import { createViewEngine } from '@/lib/createViewEngineUi';
 import type {CrudColumn} from '@/lib/crudColumn';
+import { can } from '@/lib/session';
 
+type CrudPermissions = {
+  create?: string;
+  update?: string;
+  delete?: string;
+  assign?: string;
+  info?: string;
+};
 
 type CrudUIConfig<T> = {
   el: HTMLElement;
@@ -13,6 +21,7 @@ type CrudUIConfig<T> = {
   columns: CrudColumn<T>[];
 	translations?: string;
 	actions?: CrudActions;
+	permissions?: CrudPermissions;
   export?: {
     filename: string;
     columns: {
@@ -41,6 +50,7 @@ type CrudUIConfig<T> = {
 };
 
 type CrudActions = {
+	add?: boolean;
   edit?: boolean;
   delete?: boolean;
   import?: boolean;
@@ -58,6 +68,7 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 	columns, 
 	translations, 
 	actions, 
+  permissions,
   export,
 	onEdit, 
 	onDelete, 
@@ -73,10 +84,32 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 
   //For module actions allowed
 	const enabledActions = {
-		edit: true,
-		delete: true,		
-    workflow: false,
-		...actions,
+		add:
+			(actions?.add ?? true) &&
+			(!permissions?.create || can(permissions.create)),
+
+		edit:
+			(actions?.edit ?? true) &&
+			(!permissions?.update || can(permissions.update)),
+
+		delete:
+			(actions?.delete ?? true) &&
+			(!permissions?.delete || can(permissions.delete)),
+
+		workflow:
+			(actions?.workflow ?? false) &&
+			(!permissions?.assign || can(permissions.assign)),
+
+		info:
+			(actions?.info ?? false) &&
+			(!permissions?.info || can(permissions.info)),
+
+		import: actions?.import ?? false,
+		bulk_delete:
+			(actions?.bulk_delete ?? false) &&
+			(!permissions?.delete || can(permissions.delete)),
+
+		settings: actions?.settings ?? false,
 	};
 
   //For bulk delete purposes
@@ -541,15 +574,17 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
   }
 
   function hasActionsMenu() {
-    return (
-      !!config.onBulkDelete ||
-      !!config.onImport ||
-      !!config.export
-    );
-  }
+		return (
+			(!!config.onBulkDelete && enabledActions.bulk_delete) ||
+			!!config.onImport ||
+			!!config.export
+		);
+	}
 
   async function bulkRemove()
   {
+		if (!enabledActions.bulk_delete) return;
+
     if (!selectedIds.size) return;
 
     confirmAction({
@@ -773,6 +808,12 @@ console.log('target clicked to remove',target);
     .querySelector('[data-info]')
     ?.classList.add('hidden')
   }  
+
+	if (enabledActions.add === false) {
+		el.querySelectorAll('[data-add]').forEach((element) => {
+			(element as HTMLElement).classList.add('hidden');
+		});
+	}
 
 	if(!enabledActions.settings){
     document

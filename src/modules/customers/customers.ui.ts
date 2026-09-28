@@ -240,12 +240,22 @@ export async function mountCustomers(el: HTMLElement) {
 		translations:'customers',
 
 		actions: {
+			add: true,
 			edit: true,
 			delete: true,
 			import: true,
   		info: true,
 			bulk_delete:true
 		},
+
+		permissions: {
+			create: 'customers.create',
+			update: 'customers.update',
+			delete: 'customers.delete',
+			info: 'analytics.view',
+			assign: 'customers.assign',//workflow
+		},
+
 		export: {
 			filename: 'customers',
 

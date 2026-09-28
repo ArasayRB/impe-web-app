@@ -20,6 +20,28 @@ const {
 const site = resolveSite(Astro);
 const locale = propLocale ?? resolveLocale(Astro);
 
+let isAuthenticated = false;
+
+const authCookie = Astro.cookies.get('auth')?.value;
+
+if (authCookie) {
+	try {
+		const session = JSON.parse(
+			decodeURIComponent(authCookie)
+		);
+
+		const refreshExpiresAt = session?.refreshTokenExpiresAt
+			? new Date(session.refreshTokenExpiresAt).getTime()
+			: 0;
+
+		isAuthenticated =
+			!!session?.refreshToken &&
+			refreshExpiresAt > Date.now();
+	} catch {
+		isAuthenticated = false;
+	}
+}
+
 const navigation =
 	Array.isArray(snapshot?.navigation?.[locale])
 		? [...snapshot.navigation[locale]]
@@ -94,7 +116,7 @@ const getNavigationUrl = (
 
 			<div>
 				<a
-					href="/authentication/sign-in"
+					href={isAuthenticated ? '/welcome' : '/authentication/sign-in'}
 					class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
 				>
 					<svg
@@ -104,18 +126,29 @@ const getNavigationUrl = (
 						viewBox="0 0 24 24"
 						xmlns="http://www.w3.org/2000/svg"
 					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-						></path>
+						{
+							isAuthenticated ? (
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M3 12l9-9 9 9M5 10v10h14V10M9 20v-6h6v6"
+								/>
+							) : (
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+								/>
+							)
+						}
 					</svg>
 
 					<span>
-						{locale === 'es'
-							? 'Iniciar sesión'
-							: 'Login'}
+						{isAuthenticated
+							? (locale === 'es' ? 'Inicio' : 'Home')
+							: (locale === 'es' ? 'Iniciar sesión' : 'Login')}
 					</span>
 				</a>
 

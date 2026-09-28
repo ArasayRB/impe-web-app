@@ -321,9 +321,18 @@ console.log('root templates', root);
 		},
 
 		actions: {
+			add: true,
 			edit: true,
 			delete: true,
   		info: false,
+		},
+
+		permissions: {
+			create: 'document_templates.create',
+			update: 'document_templates.update',
+			delete: 'document_templates.delete',
+			//info: 'analytics.view',
+			//assign: 'document-templates.assign',//workflow
 		},
 
   	getFilters: () => currentFilters,

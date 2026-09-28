@@ -294,6 +294,7 @@ src/
 │   │   ├── error.astro         
 │   │   └── [token].astro  
 │   │   ├── no-business.astro 
+│   │   ├── no-authorized.astro 
 │   ├── cases/
 │   │   └── index.astro  
 │   ├── dashboard/

@@ -1335,10 +1335,18 @@ export async function mountCases(el: HTMLElement) {
 		},
 
 		actions: {
+			add: true,
 			edit: true,
 			delete: false,
   		info: true,
 			workflow: true,
+		},
+
+		permissions: {
+			create: 'cases.create',
+			update: 'cases.update',
+			info: 'analytics.view',
+			assign: 'cases.assign',//workflow
 		},
 
   	getFilters: () => currentFilters,
