@@ -77,6 +77,16 @@ if (
 const contact =
   snapshot?.contact?.[locale] ?? [];
 
+const resourceContactFields =
+  contact.filter((field: any) => {
+    return [
+      'name',
+      'email',
+      'company',
+      'privacy_consent',
+    ].includes(field.key);
+  });
+
 const submission =
   snapshot?.contact?.submission;
 
@@ -168,7 +178,7 @@ const social =
           section={{
             key: 'marketing-resource-form'
           }}
-          fields={contact}
+          fields={resourceContactFields}
           submission={submission}
           security={security}
           locale={locale}

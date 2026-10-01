@@ -614,6 +614,12 @@ const recaptchaEnabled =
           );
 
 					if (marketingResourceSlug) {
+						payload.message =
+							'Solicitud de descarga de recurso de marketing';
+
+						payload.contact_reason =
+							'information';
+
 						payload.marketing_resource_slug =
 							marketingResourceSlug;
 					}

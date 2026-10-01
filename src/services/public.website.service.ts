@@ -214,7 +214,7 @@ export async function getPublicMarketingResource(
   try {
     const url =
       new URL(
-        `/v1/public/marketing-resources/${encodeURIComponent(slug)}`,
+        `/api/v1/public/marketing-resources/${encodeURIComponent(slug)}`,
         apiUrl.endsWith('/')
           ? apiUrl
           : `${apiUrl}/`
