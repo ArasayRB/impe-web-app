@@ -142,6 +142,7 @@ const recaptchaEnabled =
           data-recaptcha-site-key={recaptchaSiteKey}
           data-recaptcha-action={recaptchaAction}
 					data-public-host={publicHost || ''}
+					data-submit-label={submitLabel}
 					data-marketing-resource-slug={marketingResourceSlug || ''}
         >
 
@@ -417,6 +418,9 @@ const recaptchaEnabled =
 
 		const publicHost =
   		form.dataset.publicHost || '';
+
+		const submitLabel =
+  		form.dataset.submitLabel || '';
 
 		const marketingResourceSlug =
   		form.dataset.marketingResourceSlug || '';
