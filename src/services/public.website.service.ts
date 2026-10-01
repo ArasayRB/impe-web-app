@@ -30,7 +30,11 @@ export interface PublicContactPayload {
 export interface PublicContactResponse {
   success: boolean;
   message?: string;
-  data?: Record<string, any>;
+  data?: {
+    lead_id?: number;
+    download_url?: string;
+    [key: string]: any;
+  };
 	lead_id?: number;	
   download_url?: string;
 }
