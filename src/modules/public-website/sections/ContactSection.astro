@@ -781,7 +781,10 @@ const recaptchaEnabled =
 
 						submitButton.disabled = false;
 						submitButton.textContent =
-							submitLabel;
+						submitButton;
+									classList.add(
+								'hidden'
+							);
 
 						setMessage(
 							'Tu recurso está listo para descargar.',
@@ -820,6 +823,10 @@ const recaptchaEnabled =
           submitButton.disabled = false;
           submitButton.textContent =
 						submitLabel;
+					submitButton;
+									classList.add(
+								'hidden'
+							);
 
         }
       }
