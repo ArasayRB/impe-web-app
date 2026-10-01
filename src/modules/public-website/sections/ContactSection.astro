@@ -383,6 +383,8 @@ const recaptchaEnabled =
       '#public-contact-submit'
     );
 
+	let downloadUrl = '';
+
   const message =
     document.querySelector<HTMLElement>(
       '#public-contact-form-message'
@@ -723,13 +725,63 @@ const recaptchaEnabled =
 
 					if (
 						marketingResourceSlug &&
-						typeof result.download_url === 'string' &&
-						result.download_url
+						typeof result.data?.download_url === 'string' &&
+						result.data.download_url
 					) {
-						window.location.href =
-							result.download_url;
+						const existingDownload =
+							form.parentElement?.querySelector(
+								'[data-resource-download]'
+							);
 
-						return;
+						existingDownload?.remove();
+
+						const downloadContainer =
+							document.createElement('div');
+
+						downloadContainer.dataset.resourceDownload =
+							'true';
+
+						downloadContainer.className =
+							'mt-6 flex justify-center';
+
+						const downloadLink =
+							document.createElement('a');
+
+						downloadLink.href =
+							result.data.download_url;
+
+						downloadLink.download = '';
+
+						downloadLink.target = '_blank';
+
+						downloadLink.rel =
+							'noopener noreferrer';
+
+						downloadLink.textContent =
+							'Descargar recurso';
+
+						downloadLink.className =
+							'inline-flex items-center justify-center rounded-lg bg-primary-700 px-5 py-3 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800';
+
+						downloadContainer.appendChild(
+							downloadLink
+						);
+
+						form.insertAdjacentElement(
+							'afterend',
+							downloadContainer
+						);
+
+						setMessage(
+							'Tu recurso está listo para descargar.',
+							'success'
+						);
+					} else {
+						setMessage(
+							result.message ||
+								'Your message has been sent successfully.',
+							'success'
+						);
 					}
 
 					setMessage(
