@@ -95,7 +95,8 @@ src/
 │   │   └── types.ts
 │   ├── crud/
 │   │    └── components/
-│   │    │    ├── crateCrudSwitch.ts/
+│   │    │    ├── crateCrudSwitch.ts
+│   │    │    ├── createCrudSelect.ts
 │   │    └── forms/
 │   │    │    ├── AvailableVariables.ts 
 │   │    │    ├── FormTabs.ts   # has the tabs for createCrudForm
@@ -137,6 +138,7 @@ src/
 │   │    │    │   ├── auth.json
 │   │    │    │   ├── casetypes.json
 │   │    │    │   ├── navbar.json
+│   │    │    │   ├── users.json
 │   │    │    │   ├── document-templates.json
 │   │    │    │   └── sidebar.json
 │   │    │    ├── es/
@@ -146,6 +148,7 @@ src/
 │   │    │    │   ├── auth.json
 │   │    │    │   ├── casetypes.json
 │   │    │    │   ├── navbar.json
+│   │    │    │   ├── users.json
 │   │    │    │   ├── document-templates.json
 │   │    │    │   └── sidebar.json
 │   ├── api.error.ts      # errors api handle
@@ -265,6 +268,24 @@ src/
 │   │   ├── document-templates.store.ts        # estado reactivo
 │   │   ├── document-templates.types.ts        
 │   │   ├── document-templates.ui.ts        # to handle document-templates ui
+│   ├── roles/
+│   │   ├── roles-search.astro      # searcher
+│   │   ├── Roles.astro      # crud 
+│   │   ├── roles.service.ts      # orquestador híbrido
+│   │   ├── roles.server.ts       # SSR only 
+│   │   ├── roles.client.ts       # browser only 
+│   │   ├── roles.store.ts        # estado reactivo
+│   │   ├── roles.types.ts        
+│   │   ├── roles.ui.ts        # to handle roles ui
+│   ├── users/
+│   │   ├── users-search.astro      # searcher
+│   │   ├── Users.astro      # crud 
+│   │   ├── users.service.ts      # orquestador híbrido
+│   │   ├── users.server.ts       # SSR only 
+│   │   ├── users.client.ts       # browser only 
+│   │   ├── users.store.ts        # estado reactivo
+│   │   ├── users.types.ts        
+│   │   ├── users.ui.ts        # to handle users ui
 │   ├── public-website/
 │   │   ├── sections/
 │   │   │   ├── AboutSection.astro # about
@@ -288,6 +309,7 @@ src/
 │   ├── [locale]/
 │   |   ├──   legal/
 │   │   │   ├── [slug].astro # legal views
+│   │   ├── bio.astro     # bio dashboard view
 │   │   ├── contact.astro     # contact dashboard view
 │   │   └── index.astro     # index
 │   ├── access/
@@ -302,7 +324,8 @@ src/
 │   │   │   ├── cases.astro # charts summary
 │   │   │   └── customers.astro # charts summary 
 │   │   ├── cases.astro         
-│   │   ├── case_types.astro         
+│   │   ├── case_types.astro                
+│   │   ├── users.astro         
 │   │   └── customers.astro
 │   ├── settings/
 │   ├── blog/

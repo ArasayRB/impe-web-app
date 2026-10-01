@@ -13,6 +13,7 @@ type CrudPermissions = {
   delete?: string;
   assign?: string;
   info?: string;
+	permissions?: string;
 };
 
 type CrudUIConfig<T> = {
@@ -38,6 +39,7 @@ type CrudUIConfig<T> = {
   onRemove?: (row: T) => void;
   onRemoveSuccess?: (row?: T) => void;
   onRemoveError?: (error: any) => void;
+	onPermissions?: (row: T) => void;
   onImport?: (
     rows: Record<string, any>[]
   ) => Promise<void>;
@@ -57,6 +59,7 @@ type CrudActions = {
   bulk_delete?: boolean;
   info?: boolean;
   workflow?: boolean;
+	permissions?: boolean;
 	settings?:boolean;
 };
 
@@ -75,6 +78,7 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 	onRemove, 
   onRemoveSuccess,
   onRemoveError, 
+	onPermissions, 
 	getFilters,
   onInfo,
 	onWorkflow,
@@ -110,6 +114,8 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 			(!permissions?.delete || can(permissions.delete)),
 
 		settings: actions?.settings ?? false,
+
+		permissions: actions?.permissions ?? false,
 	};
 
   //For bulk delete purposes
@@ -308,6 +314,26 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 							</svg>
 							${t(translations+'.buttons.edit')}
 							</button>`:''}
+						${enabledActions.permissions ? `
+							<button
+								data-permissions="${(row as any).id}"
+								class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+							>
+								<svg
+									class="w-4 h-4 mr-2"
+									fill="currentColor"
+									viewBox="0 0 20 20"
+									xmlns="http://www.w3.org/2000/svg"
+								>
+									<path
+										fill-rule="evenodd"
+										d="M10 2a4 4 0 00-4 4v1H5a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2h-1V6a4 4 0 00-4-4zm-2 5V6a2 2 0 114 0v1H8zm2 3a2 2 0 100 4 2 2 0 000-4z"
+										clip-rule="evenodd"
+									/>
+								</svg>
+								${t(translations+'.buttons.permissions')}
+							</button>
+						` : ''}
 						${enabledActions.workflow ? `
 							<button
 									data-workflow="${(row as any).id}"
@@ -781,6 +807,21 @@ console.log('target clicked to remove',target);
 
       onDelete?.(row);
 		}
+
+		
+
+		const permissionBtn = (e.target as HTMLElement).closest('[data-permissions]') as HTMLElement | null;
+
+		if (permissionBtn) {
+			const id = permissionBtn.dataset.permissions;
+
+			if (!id) return;
+
+      const state = module.getState();
+			const row = state.data.find((r: any) => String(r.id) === String(id));
+
+      onDelete?.(row);
+		}
   });
 
   //BULK - IMPORT
@@ -811,6 +852,12 @@ console.log('target clicked to remove',target);
 
 	if (enabledActions.add === false) {
 		el.querySelectorAll('[data-add]').forEach((element) => {
+			(element as HTMLElement).classList.add('hidden');
+		});
+	}
+
+	if (enabledActions.permissions === false) {
+		el.querySelectorAll('[data-permissions]').forEach((element) => {
 			(element as HTMLElement).classList.add('hidden');
 		});
 	}

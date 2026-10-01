@@ -9,3 +9,4 @@ export type Namespace =
   | 'navbar'
   | 'sidebar'
   | 'document-templates'
+  | 'users'

@@ -61,4 +61,5 @@ export const lang = [
 	'navbar',
 	'sidebar',
 	'document-templates',
+	'users',
 ];

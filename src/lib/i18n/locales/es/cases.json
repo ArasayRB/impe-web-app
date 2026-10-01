@@ -15,7 +15,8 @@
   "status": {
     "open": "Abierto",
     "pending": "Pendiente",
-    "closed": "Cerrado"
+    "closed": "Cerrado",
+    "reviewed": "Revisado"
   },
 	"buttons":{
 		"add": "Agregar",

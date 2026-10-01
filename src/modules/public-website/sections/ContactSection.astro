@@ -45,6 +45,8 @@ interface Props {
   submission?: ContactSubmission;
   security?: ContactSecurity;
   publicHost?: string;
+	marketingResourceSlug?: string;	
+  submitLabel?: string;
 }
 
 const {
@@ -54,6 +56,8 @@ const {
   security,
 	locale,
   publicHost,
+	marketingResourceSlug,
+  submitLabel = 'Enviar mensaje',
 } = Astro.props;
 
 
@@ -138,6 +142,7 @@ const recaptchaEnabled =
           data-recaptcha-site-key={recaptchaSiteKey}
           data-recaptcha-action={recaptchaAction}
 					data-public-host={publicHost || ''}
+					data-marketing-resource-slug={marketingResourceSlug || ''}
         >
 
           {
@@ -276,12 +281,12 @@ const recaptchaEnabled =
           <div class="pt-2">
 
             <button
-              id="public-contact-submit"
-              type="submit"
-              class="inline-flex w-full items-center justify-center rounded-full bg-gray-950 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-gray-950/20 transition-all hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200"
-            >
-              Enviar mensaje
-            </button>
+							id="public-contact-submit"
+							type="submit"
+							class="inline-flex w-full items-center justify-center rounded-full bg-gray-950 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-gray-950/20 transition-all hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200"
+						>
+							{submitLabel}
+						</button>
 
           </div>
 
@@ -411,6 +416,9 @@ const recaptchaEnabled =
 		const publicHost =
   		form.dataset.publicHost || '';
 
+		const marketingResourceSlug =
+  		form.dataset.marketingResourceSlug || '';
+
     console.log(
       '[PUBLIC CONTACT] Config:',
       {
@@ -419,6 +427,7 @@ const recaptchaEnabled =
         recaptchaAction,
         endpoint,
     		publicHost,
+    		marketingResourceSlug,
       }
     );
 
@@ -604,6 +613,11 @@ const recaptchaEnabled =
             }
           );
 
+					if (marketingResourceSlug) {
+						payload.marketing_resource_slug =
+							marketingResourceSlug;
+					}
+
 					if (selectedPlan) {
 						payload.plan = selectedPlan;
 					}
@@ -693,19 +707,30 @@ const recaptchaEnabled =
           );
 
           if (!result.success) {
-            throw new Error(
-              result.message ||
-              'Unable to send your message'
-            );
-          }
+						throw new Error(
+							result.message ||
+							'Unable to send your message'
+						);
+					}
 
-          form.reset();
+					form.reset();
 
-          setMessage(
-            result.message ||
-              'Your message has been sent successfully.',
-            'success'
-          );
+					if (
+						marketingResourceSlug &&
+						typeof result.download_url === 'string' &&
+						result.download_url
+					) {
+						window.location.href =
+							result.download_url;
+
+						return;
+					}
+
+					setMessage(
+						result.message ||
+							'Your message has been sent successfully.',
+						'success'
+					);
 
         } catch (error) {
 
@@ -725,7 +750,7 @@ const recaptchaEnabled =
 
           submitButton.disabled = false;
           submitButton.textContent =
-            'Enviar mensaje';
+						submitLabel;
 
         }
       }

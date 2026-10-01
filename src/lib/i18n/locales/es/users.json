@@ -1,0 +1,15 @@
+{
+	"columns":{
+		"name": "Nombre",
+		"email": "Correo",
+		"role": "Rol",
+		"created_at": "Creado",
+		"actions": "Acciones"
+	},
+	"buttons":{
+		"permissions":"Permisos"
+	},
+	"messages":{
+		
+	}
+}

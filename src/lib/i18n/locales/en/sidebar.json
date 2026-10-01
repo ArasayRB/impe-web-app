@@ -21,7 +21,8 @@
 		"cases":"Cases",
 		"customers":"Customers",
 		"casetypes":"Case Types",
-		"document-templates":"Document templates"
+		"document-templates":"Document templates",
+		"users":"Users"
 	},
 	"layouts":{
 		"stacked":"Stacked",

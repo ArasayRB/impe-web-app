@@ -21,7 +21,8 @@
 		"cases":"Casos",
 		"customers":"Clientes",
 		"casetypes":"Tipos de Caso",
-		"document-templates":"Plantillas de documentos"
+		"document-templates":"Plantillas de documentos",
+		"users":"Usuarios"
 	},
 	"layouts":{
 		"stacked":"Apiladas",

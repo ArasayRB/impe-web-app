@@ -31,6 +31,23 @@ export interface PublicContactResponse {
   success: boolean;
   message?: string;
   data?: Record<string, any>;
+	lead_id?: number;	
+  download_url?: string;
+}
+
+export interface PublicMarketingResource {
+  slug: string;
+  title: string;
+  description?: string | null;
+  filename: string;
+  mime?: string | null;
+  published_at?: string | null;
+}
+
+export interface PublicMarketingResourceResponse {
+  success: boolean;
+  data?: PublicMarketingResource;
+  message?: string;
 }
 
 export async function getPublicWebsiteSnapshot(
@@ -178,4 +195,79 @@ export async function submitPublicContact(
   }
 
   return result;
+}
+
+export async function getPublicMarketingResource(
+  slug: string
+): Promise<PublicMarketingResource | null> {
+  const apiUrl =
+    import.meta.env.PUBLIC_API_URL;
+
+  if (!apiUrl) {
+    console.error(
+      '[PUBLIC WEBSITE] PUBLIC_API_URL is not configured'
+    );
+
+    return null;
+  }
+
+  try {
+    const url =
+      new URL(
+        `/v1/public/marketing-resources/${encodeURIComponent(slug)}`,
+        apiUrl.endsWith('/')
+          ? apiUrl
+          : `${apiUrl}/`
+      ).toString();
+
+    const response =
+      await fetch(
+        url,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+          },
+        }
+      );
+
+    if (!response.ok) {
+      console.error(
+        '[PUBLIC WEBSITE] Marketing resource request failed',
+        {
+          status: response.status,
+          slug,
+          url,
+        }
+      );
+
+      return null;
+    }
+
+    const result =
+      (await response.json()) as PublicMarketingResourceResponse;
+
+    if (
+      !result.success ||
+      !result.data
+    ) {
+      console.error(
+        '[PUBLIC WEBSITE] Invalid marketing resource response',
+        result
+      );
+
+      return null;
+    }
+
+    return result.data;
+
+  } catch (error) {
+
+    console.error(
+      '[PUBLIC WEBSITE] Marketing resource request error',
+      error
+    );
+
+    return null;
+  }
 }
