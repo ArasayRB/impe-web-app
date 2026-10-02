@@ -7,6 +7,7 @@ import { getServerTranslator } from '@/lib/i18n/server';
 import { lang } from '@/lib/i18n/config';
 import { resolveLocale } from '@/lib/i18n/resolveLocale';
 import {userColumns} from '@/modules/users/users.columns.config';
+import PermissionsUsersForm from '@/modules/users/forms/permissions.astro';
 
 const { initialData } = Astro.props;
 const { class: clazz } = Astro.props;
@@ -317,6 +318,9 @@ const t = await getServerTranslator(locale, lang);
 			</div>
 		</div>
 	</div>
+
+	<!-- Users Permissions Modal -->
+	<PermissionsUsersForm />
 
 	<NavPagination />
 </entities-crud>

@@ -4,6 +4,8 @@ import type { UsersFilters } from './users.types';
 
 import {
   listUsers,
+  getUserPermissions as getUserPermissionsService,
+	assignUserPermissions as assignUserPermissionsService,
   getUserRole as getUserRoleService,
   assignUserRole as assignUserRoleService,
   updateUserRole as updateUserRoleService
@@ -54,6 +56,11 @@ export const usersModule = createCrudModule({
 
 });
 
+export const getUserPermissions =
+  getUserPermissionsService;
+
+export const assignUserPermissions =
+  assignUserPermissionsService;
 
 export const getUserRole =
   getUserRoleService;

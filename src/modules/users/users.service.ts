@@ -91,6 +91,73 @@ export async function listUsers(
 }
 
 
+// GET PERMISSIONS
+export async function getUserPermissions(
+	userId: number | string,
+	request?: Request,
+	site?: Site
+) {
+
+  const resolvedSite = import.meta.env.SSR
+    ? ensureSite(site)
+    : getSite();
+
+
+  if (import.meta.env.SSR) {
+
+    const { getUserPermissionsServer } =
+      await import('./users.server');
+
+    return getUserPermissionsServer(
+      userId,
+      request!,
+      resolvedSite
+    );
+  }
+
+
+  const { getUserPermissionsClient } =
+    await import('./users.client');
+
+  return getUserPermissionsClient(userId);
+}
+
+
+// ASSIGN PERMISSIONS
+export async function assignUserPermissions(
+	userId: number | string,
+	data: { permissions: string[] },
+	request?: Request,
+	site?: Site
+) {
+
+	const resolvedSite = import.meta.env.SSR
+		? ensureSite(site)
+		: getSite();
+
+  if (import.meta.env.SSR) {
+
+    const { assignUserPermissionsServer } =
+      await import('./users.server');
+
+    return assignUserPermissionsServer(
+      userId,
+      data,
+      request!,
+      resolvedSite
+    );
+  }
+
+
+  const { assignUserPermissionsClient } =
+    await import('./users.client');
+
+  return assignUserPermissionsClient(
+    userId,
+    data
+  );
+}
+
 // GET ROLE
 export async function getUserRole(
   userId: number | string,

@@ -117,3 +117,36 @@ export async function getRole(
 
   return getRoleClient(roleId);
 }
+
+
+
+// GET ROLE PERMISSIONS
+export async function getRolePermissions(
+	roleId: number | string,
+	request?: Request,
+	site?: Site
+) {
+
+  const resolvedSite = import.meta.env.SSR
+    ? ensureSite(site)
+    : getSite();
+
+
+  if (import.meta.env.SSR) {
+
+    const { getRolePermissionsServer } =
+      await import('./roles.server');
+
+    return getRolePermissionsServer(
+      roleId,
+      request!,
+      resolvedSite
+    );
+  }
+
+
+  const { getRolePermissionsClient } =
+    await import('./roles.client');
+
+  return getRolePermissionsClient(roleId);
+}

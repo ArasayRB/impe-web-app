@@ -42,7 +42,16 @@
     "import":"Importar",
     "add":"Agregar",
     "add_new":"Agregar nuevo",
-    "edit":"Actualizar"
+    "edit":"Actualizar",
+		"cancel":"Cancelar",
+		"delete":"Eliminar",
+		"delete_selected":"Eliminar seleccionados",
+		"delete_all":"Eliminar todos",
+		"view":"Ver",
+		"details":"Detalles",
+		"save":"Guardar",
+		"update":"Actualizar",
+		"actions":"Acciones"
   },
 	"messages":{
 		"shure_remove":"Seguro que deseas eliminar este registro?",

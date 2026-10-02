@@ -31,6 +31,42 @@ export async function listUsersServer(
 }
 
 
+// GET USER PERMISSIONS
+export async function getUserPermissionsServer(
+  userId: number | string,
+  request: Request,
+  site: Site
+) {
+
+  return apiFetchServer(
+    `/v1/users/${userId}/permissions`,
+    {},
+    request,
+    site
+  );
+}
+
+
+// SYNC USER PERMISSIONS
+export async function assignUserPermissionsServer(
+	userId: number | string,
+	data: { permissions: string[] },
+	request: Request,
+	site: Site
+) {
+
+	return apiFetchServer(
+		`/v1/users/${userId}/permissions`,
+		{
+			method: 'PUT',
+			body: JSON.stringify(data),
+		},
+		request,
+		site
+	);
+}
+
+
 // GET USER ROLE
 export async function getUserRoleServer(
   userId: number | string,

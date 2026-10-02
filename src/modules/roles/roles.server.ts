@@ -44,3 +44,19 @@ export async function getRoleServer(
     site
   );
 }
+
+// GET ROLE Permissions
+export async function getRolePermissionsServer(
+	roleId: number | string,
+	request: Request,
+	site: Site
+) {
+
+  return apiFetchServer(
+    `/v1/roles/${roleId}/permissions`,
+    {},
+    request,
+    site
+  );
+}
+

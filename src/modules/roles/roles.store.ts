@@ -4,7 +4,8 @@ import type { RolesFilters } from './roles.types';
 
 import {
   listRoles,
-  getRole as getRoleService
+  getRole as getRoleService,
+  getRolePermissions as getRolePermissionsService
 } from './roles.service';
 
 import { createCrudModule } from '@/lib/createCrudModule';
@@ -55,6 +56,9 @@ export const rolesModule = createCrudModule({
 
 export const getRole =
   getRoleService;
+
+export const getRolePermissions =
+  getRolePermissionsService;
 
 
 export const fetchRoles =

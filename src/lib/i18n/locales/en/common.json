@@ -42,7 +42,16 @@
     "import":"Import",
     "add":"Add",
     "add_new":"Add new",
-    "edit":"Update"
+    "edit":"Update",
+		"cancel":"Cancel",
+		"delete":"Delete",
+		"delete_selected":"Delete Selected",
+		"delete_all":"Delete All",
+		"view":"View",
+		"details":"Details",
+		"save":"Save",
+		"update":"Update",
+		"actions":"Actions"
   },
 	"messages":{
 		"shure_remove":"Are you sure you want to delete this register?",

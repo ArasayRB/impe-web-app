@@ -9,6 +9,15 @@
 	"buttons":{
 		"permissions":"Permissions"
 	},
+	"permissions":{
+		"role":"Role",
+		"permissions":"Permissions",
+		"users":"Users",
+		"user":"User",
+		"role_description":"Role Description",
+		"permission_description":"Permission Description",
+		"user_description":"User Description"
+	},
 	"messages":{
 		
 	}

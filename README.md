@@ -268,6 +268,25 @@ src/
 │   │   ├── document-templates.store.ts        # estado reactivo
 │   │   ├── document-templates.types.ts        
 │   │   ├── document-templates.ui.ts        # to handle document-templates ui
+│   ├── permissions/
+│   │   ├── permissions-search.astro      # searcher
+│   │   ├── Permissions.astro      # crud 
+│   │   ├── permissions.service.ts      # orquestador híbrido
+│   │   ├── permissions.server.ts       # SSR only 
+│   │   ├── permissions.client.ts       # browser only 
+│   │   ├── permissions.store.ts        # estado reactivo
+│   │   ├── permissions.types.ts        
+│   │   ├── permissions.ui.ts        # to handle permissions ui
+│   ├── permissions/
+│   │   ├── sections/
+│   │   │   ├── AboutSection.astro #
+│   │   │   ├── ContactSection.astro #
+│   │   │   ├── FooterSection.astro #
+│   │   │   ├── HeroSection.astro #
+│   │   │   ├── PlansSection.astro #
+│   │   │   ├── PublicHeader.astro #
+│   │   │   ├── TeamSection.astro #
+│   │   ├── PublicWebsite.astro        # public website view
 │   ├── roles/
 │   │   ├── roles-search.astro      # searcher
 │   │   ├── Roles.astro      # crud 
@@ -278,6 +297,8 @@ src/
 │   │   ├── roles.types.ts        
 │   │   ├── roles.ui.ts        # to handle roles ui
 │   ├── users/
+│   │   ├── forms/
+│   │   │   ├── permissions.astro # create
 │   │   ├── users-search.astro      # searcher
 │   │   ├── Users.astro      # crud 
 │   │   ├── users.service.ts      # orquestador híbrido

@@ -33,3 +33,14 @@ export async function getRoleClient(
     {}
   );
 }
+
+// GET ROLE Permissions
+export async function getRolePermissionsClient(
+  roleId: number | string
+) {
+
+  return apiClientFetch(
+    `/v1/roles/${roleId}/permissions`,
+    {}
+  );
+}

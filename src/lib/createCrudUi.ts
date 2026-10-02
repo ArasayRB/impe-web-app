@@ -753,7 +753,7 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 
     updateBulkActions();
   }
-console.log('target clicked to remove',target);
+
     if (
       target.closest('[data-bulk-delete]')
       ){console.log('clicked bulk-delete-icon','selected: '+selectedIds.size)
@@ -811,16 +811,16 @@ console.log('target clicked to remove',target);
 		
 
 		const permissionBtn = (e.target as HTMLElement).closest('[data-permissions]') as HTMLElement | null;
-
+console.log('target clicked to assign permissions',permissionBtn,target);
 		if (permissionBtn) {
-			const id = permissionBtn.dataset.permissions;
+			const id = permissionBtn.dataset.permissions;console.log('target clicked to assign permissions by id',id,target);
 
 			if (!id) return;
 
       const state = module.getState();
 			const row = state.data.find((r: any) => String(r.id) === String(id));
 
-      onDelete?.(row);
+      onPermissions?.(row);
 		}
   });
 
