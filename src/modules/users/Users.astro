@@ -8,6 +8,7 @@ import { lang } from '@/lib/i18n/config';
 import { resolveLocale } from '@/lib/i18n/resolveLocale';
 import {userColumns} from '@/modules/users/users.columns.config';
 import PermissionsUsersForm from '@/modules/users/forms/permissions.astro';
+import InviteUsersForm from '@/modules/users/forms/invite.astro';
 
 const { initialData } = Astro.props;
 const { class: clazz } = Astro.props;
@@ -246,7 +247,7 @@ const t = await getServerTranslator(locale, lang);
 							></path>
 						</svg>
 						Refresh
-					</button> -->
+					</button> 
 					<button
 						type="button"
 						data-open-modal="add-users-modal"
@@ -264,6 +265,27 @@ const t = await getServerTranslator(locale, lang);
 								clip-rule="evenodd"></path></svg
 						>
 						<span data-i18n="users.buttons.add">{t('users.buttons.add')}</span>
+					</button>-->
+					<button
+						type="button"
+						data-open-modal="invite-users-modal"
+						data-invite
+						class="inline-flex items-center justify-center w-1/2 px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+					>
+						<svg
+							class="w-5 h-5 mr-2 -ml-1"
+							fill="currentColor"
+							viewBox="0 0 20 20"
+							xmlns="http://www.w3.org/2000/svg"
+							aria-hidden="true"
+						>
+							<path
+								fill-rule="evenodd"
+								d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 8a7 7 0 1114 0H3zm10-4a1 1 0 10-2 0v1H9a1 1 0 100 2h2v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1v-1z"
+								clip-rule="evenodd"
+							/>
+						</svg>
+						<span data-i18n="users.buttons.invite">{t('users.buttons.invite')}</span>
 					</button>
 				</div>
 			</div>
@@ -321,6 +343,9 @@ const t = await getServerTranslator(locale, lang);
 
 	<!-- Users Permissions Modal -->
 	<PermissionsUsersForm />
+	
+	<!-- Users Invite Modal -->
+	<InviteUsersForm />
 
 	<NavPagination />
 </entities-crud>

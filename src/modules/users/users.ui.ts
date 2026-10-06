@@ -3,8 +3,13 @@
 import { 
 	usersModule,
 	getUserPermissions,
-  assignUserPermissions 
+  assignUserPermissions ,
+	inviteUser 
 } from './users.store';
+
+import { resolveTranslation } from '@/lib/i18n/resolveTranslations';
+
+import { mountCrudForm } from '@/lib/createCrudForm';
 
 import { userColumns } from './users.columns.config';
 
@@ -26,8 +31,12 @@ import {
 	stateRoles
 } from '@/modules/roles/roles.store';
 
+import { inviteFields } from './invite.form.config';
+
 
 let currentFilters: Record<string, any> = {};
+
+const fields: Field[] = inviteFields;
 
 async function ensurePermissionsLoaded() {
 
@@ -38,6 +47,33 @@ async function ensurePermissionsLoaded() {
 	}
 
 	await fetchPermissions();
+}
+
+export function openInviteForm() {
+	const container = document
+		.getElementById('invite-users-modal')
+		?.querySelector('[data-form-container]');
+
+	if (!container) return;
+
+	const resolvedFields = resolveTranslation(fields);
+
+	mountCrudForm({
+		el: container,
+		module: usersModule,
+		mode: 'create',
+		fields: resolvedFields,
+		modalId: 'invite-users-modal',
+		translations: 'users',
+	});
+
+	modalController.setHtmlText(
+		'invite-users-modal',
+		'data-modal-title',
+		t('users.buttons.invite')
+	);
+
+	modalController.open('invite-users-modal');
 }
 
 function renderPermissionItem(
@@ -819,6 +855,8 @@ export async function mountUsers(
 			delete: false,
 
 			info: false,
+
+			invite: true,
 			
 		  permissions: true,
 
@@ -838,6 +876,10 @@ export async function mountUsers(
 
 		onPermissions: (row) => {
 			openPermissionsForm(row);
+		},
+
+		onInvite: () => {
+			openInviteForm();
 		},
 
 

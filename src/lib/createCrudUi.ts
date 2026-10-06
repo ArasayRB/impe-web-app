@@ -40,6 +40,7 @@ type CrudUIConfig<T> = {
   onRemoveSuccess?: (row?: T) => void;
   onRemoveError?: (error: any) => void;
 	onPermissions?: (row: T) => void;
+	onInvite?: () => void;
   onImport?: (
     rows: Record<string, any>[]
   ) => Promise<void>;
@@ -58,6 +59,7 @@ type CrudActions = {
   import?: boolean;
   bulk_delete?: boolean;
   info?: boolean;
+  invite?: boolean;
   workflow?: boolean;
 	permissions?: boolean;
 	settings?:boolean;
@@ -79,6 +81,7 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
   onRemoveSuccess,
   onRemoveError, 
 	onPermissions, 
+	onInvite,
 	getFilters,
   onInfo,
 	onWorkflow,
@@ -107,6 +110,10 @@ export async function mountCrud<T>(config: CrudUIConfig<T>) {
 		info:
 			(actions?.info ?? false) &&
 			(!permissions?.info || can(permissions.info)),
+
+		invite:
+			(actions?.invite ?? false) &&
+			(!permissions?.create || can(permissions.create)),
 
 		import: actions?.import ?? false,
 		bulk_delete:
@@ -822,6 +829,12 @@ console.log('target clicked to assign permissions',permissionBtn,target);
 
       onPermissions?.(row);
 		}
+
+		const inviteBtn = (e.target as HTMLElement).closest('[data-invite]') as HTMLElement | null;
+
+		if (inviteBtn) {
+			onInvite?.();
+		}
   });
 
   //BULK - IMPORT
@@ -852,6 +865,12 @@ console.log('target clicked to assign permissions',permissionBtn,target);
 
 	if (enabledActions.add === false) {
 		el.querySelectorAll('[data-add]').forEach((element) => {
+			(element as HTMLElement).classList.add('hidden');
+		});
+	}
+
+	if (enabledActions.invite === false) {
+		el.querySelectorAll('[data-invite]').forEach((element) => {
 			(element as HTMLElement).classList.add('hidden');
 		});
 	}

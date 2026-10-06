@@ -61,17 +61,17 @@ export async function logoutApi() {
   redirectToLogin();
 }
 
-export async function signup(data) {
-  return apiFetch(
-    '/register?invitation_code=155d9f0e-e995-4dd5-899a-2ac6994212c0',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }
-  );
+export async function signup(data, invitationCode) {
+	return apiFetch(
+		`/register?invitation_code=${encodeURIComponent(invitationCode)}`,
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data),
+		}
+	);
 }
 
 export async function verify2FA(tmp_token: string, code: string, endpoint: string) {

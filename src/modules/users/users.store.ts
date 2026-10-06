@@ -8,7 +8,8 @@ import {
 	assignUserPermissions as assignUserPermissionsService,
   getUserRole as getUserRoleService,
   assignUserRole as assignUserRoleService,
-  updateUserRole as updateUserRoleService
+  updateUserRole as updateUserRoleService,
+  inviteUser as inviteUserService
 } from './users.service';
 
 import { createCrudModule } from '@/lib/createCrudModule';
@@ -51,6 +52,11 @@ export const usersModule = createCrudModule({
       filters
     ),
 
+  create: (data) =>
+    inviteUserService(
+      data
+	),
+
   normalizer:
     normalizeUsersResponse,
 
@@ -67,6 +73,9 @@ export const getUserRole =
 
 export const assignUserRole =
   assignUserRoleService;
+
+export const inviteUser =
+  inviteUserService;
 
 export const updateUserRole =
   updateUserRoleService;

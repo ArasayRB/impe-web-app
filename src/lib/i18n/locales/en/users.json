@@ -1,4 +1,13 @@
 {
+	"fields":{
+		"email": "Email",
+		"role": "Role"
+	},
+	"roles":{
+		"admin": "Admin",
+		"employee": "Employee",
+		"owner": "Owner"
+	},
 	"columns":{
 		"name": "Name",
 		"email": "Email",
@@ -7,7 +16,9 @@
 		"actions": "Actions"
 	},
 	"buttons":{
-		"permissions":"Permissions"
+		"permissions":"Permissions",
+		"invite":"Invite",
+		"add":"Add"
 	},
 	"permissions":{
 		"role":"Role",

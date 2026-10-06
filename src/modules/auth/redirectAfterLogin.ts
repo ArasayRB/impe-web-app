@@ -1,3 +1,4 @@
+// src/modules/auth/redirectAfterLogin.ts
 import type { Site } from '@/lib/site';
 
 export function redirectAfterLogin(site: Site) {

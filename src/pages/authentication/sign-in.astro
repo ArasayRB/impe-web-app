@@ -18,6 +18,7 @@ import { isBrowser } from '@/lib/env';
 		import { setLocale } from '@/lib/i18n/store'; 
 		import { lang } from '@/lib/i18n/config'; 
 		import { loadNamespace } from '@/lib/i18n/loader';
+		import { debug } from 'node_modules/astro/dist/core/logger/core';
 
 		const locale =
 		document.cookie.match(/locale=([^;]+)/)?.[1] || 'en';
@@ -69,11 +70,12 @@ import { isBrowser } from '@/lib/env';
 						return;
 					}
 					// REAL VALIDATION
-					if (!data?.access_token) {
+					// REAL VALIDATION
+					if (!data?.accessToken) {
 						throw new Error('Invalid authentication response');
 					}
-					
-					location.href = '/dashboard/cases';
+
+					window.location.href = '/welcome';
 				} catch (e) {
 					handleLoginError(e,errorEl);
 				} finally {

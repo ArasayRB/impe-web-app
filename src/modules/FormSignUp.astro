@@ -1,120 +1,858 @@
 ---
-import { asset, url } from '../lib/data.js';
+import { url } from '@/lib/data.js';
+import { resolveSite } from '@/lib/resolveSite';
+import { getServerTranslator } from '@/lib/i18n/server';
+import Logo from '@/components/Logo.astro';
+import { SITE_TITLE } from '@/app/constants.js';
+import { lang } from '@/lib/i18n/config';
+import { resolveLocale } from '@/lib/i18n/resolveLocale';
+
+const site = resolveSite(Astro);
+const locale = resolveLocale(Astro);
+
+const t = await getServerTranslator(locale, lang);
 ---
 
 <div
 	class="w-full flex flex-col items-center justify-center px-6 pt-8 mx-auto pt:mt-0 dark:bg-gray-900"
 >
 	<a
-		href="#"
+		href={url('')}
 		class="flex items-center justify-center mb-8 text-2xl font-semibold lg:mb-10 dark:text-white"
 	>
-		<img src={asset('images/logo.svg')} alt="FlowBite Logo" class="mr-4 h-11" />
-		<span>Flowbite</span>
+		<Logo
+			site={Astro.locals.site}
+			widthn="140"
+			heightn="90"
+			class="mr-4 h-11"
+		/>
+		<span>{site?.title ?? SITE_TITLE}</span>
 	</a>
+
 	<!-- Card -->
 	<div
 		class="w-full max-w-xl p-6 space-y-8 sm:p-8 bg-white rounded-lg shadow dark:bg-gray-800"
 	>
-		<h2 class="text-2xl font-bold text-gray-900 dark:text-white">
-			Create a Free Account
+		<h2
+			class="text-2xl font-bold text-gray-900 dark:text-white"
+			data-i18n="auth.title.signup"
+		>
+			{t('auth.title.signup')}
 		</h2>
+
+		<!-- Tabs -->
+		<div class="border-b border-gray-200 dark:border-gray-700">
+			<nav
+				class="flex -mb-px"
+				aria-label="Registration steps"
+			>
+				<button
+					type="button"
+					id="personalTab"
+					class="inline-flex items-center justify-center w-1/2 py-4 px-1 text-sm font-medium text-primary-600 border-b-2 border-primary-600"
+					aria-selected="true"
+					data-i18n="auth.tabs.personal"
+				>
+					{t('auth.tabs.personal')}
+				</button>
+
+				<button
+					type="button"
+					id="businessTab"
+					class="inline-flex items-center justify-center w-1/2 py-4 px-1 text-sm font-medium text-gray-400 border-b-2 border-transparent cursor-not-allowed dark:text-gray-500"
+					aria-selected="false"
+					disabled
+					data-i18n="auth.tabs.business"
+				>
+					{t('auth.tabs.business')}
+				</button>
+			</nav>
+		</div>
+
 		<form id="registerForm" class="mt-8 space-y-6" action="#">
-			<div>
-				<label
-					for="name"
-					class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-					>Your name</label
-				>
-				<input
-					type="text"
-					name="name"
-					id="name"
-					class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-					placeholder="Pete Jefferson"
-					required
-				/>
-			</div>
-			<div>
-				<label
-					for="email"
-					class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-					>Your email</label
-				>
-				<input
-					type="email"
-					name="email"
-					id="email"
-					class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-					placeholder="name@company.com"
-					required
-				/>
-			</div>
-			<div>
-				<label
-					for="password"
-					class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-					>Your password</label
-				>
-				<input
-					type="password"
-					name="password"
-					id="password"
-					placeholder="••••••••"
-					class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-					required
-				/>
-			</div>
-			<div>
-				<label
-					for="password_confirmation"
-					class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-					>Confirm password</label
-				>
-				<input
-					type="password"
-					name="password_confirmation"
-					id="password_confirmation"
-					placeholder="••••••••"
-					class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-					required
-				/>
-			</div>
-			<div class="flex items-start">
-				<div class="flex items-center h-5">
+
+			<!-- Personal information -->
+			<section id="personalStep" class="space-y-6">
+
+				<div>
+					<label
+						for="name"
+						class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+						data-i18n="auth.fields.name"
+					>
+						{t('auth.fields.name')}
+					</label>
+
 					<input
-						id="remember"
-						aria-describedby="remember"
-						name="remember"
-						type="checkbox"
-						class="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
+						type="text"
+						name="name"
+						id="name"
+						class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+						placeholder={t('auth.fields.name')}
+						data-i18n-placeholder="auth.fields.name"
 						required
 					/>
 				</div>
-				<div class="ml-3 text-sm">
+
+				<div>
 					<label
-						for="remember"
-						class="font-medium text-gray-900 dark:text-white"
-						>I accept the <a
-							href="#"
-							class="text-primary-700 hover:underline dark:text-primary-500"
-							>Terms and Conditions</a
-						></label
+						for="email"
+						class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+						data-i18n="auth.fields.email"
 					>
+						{t('auth.fields.email')}
+					</label>
+
+					<input
+						type="email"
+						name="email"
+						id="email"
+						class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+						placeholder={t('auth.fields.email')}
+						data-i18n-placeholder="auth.fields.email"
+						readonly
+						required
+					/>
+
+					<p
+						class="mt-2 text-xs text-gray-500 dark:text-gray-400"
+						data-i18n="auth.messages.invited_email"
+					>
+						{t('auth.messages.invited_email')}
+					</p>
 				</div>
-			</div>
-			<button
-				type="submit"
-				class="w-full px-5 py-3 text-base font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 sm:w-auto dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-				>Create account</button
-			>
-			<div class="text-sm font-medium text-gray-500 dark:text-gray-400">
-				Already have an account? <a
-					href={url('authentication/sign-up')}
-					class="text-primary-700 hover:underline dark:text-primary-500"
-					>Login here</a
+
+				<div>
+					<label
+						for="password"
+						class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+						data-i18n="auth.fields.password"
+					>
+						{t('auth.fields.password')}
+					</label>
+
+					<input
+						type="password"
+						name="password"
+						id="password"
+						placeholder={t('auth.fields.password')}
+						class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+						required
+						minlength="6"
+					/>
+				</div>
+
+				<div>
+					<label
+						for="password_confirmation"
+						class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+						data-i18n="auth.fields.confirm_password"
+					>
+						{t('auth.fields.confirm_password')}
+					</label>
+
+					<input
+						type="password"
+						name="password_confirmation"
+						id="password_confirmation"
+						placeholder={t('auth.fields.confirm_password')}
+						class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+						required
+						minlength="6"
+					/>
+				</div>
+
+				<div class="flex items-start">
+					<div class="flex items-center h-5">
+						<input
+							id="terms"
+							aria-describedby="terms"
+							name="terms"
+							type="checkbox"
+							class="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:focus:ring-primary-600 dark:ring-offset-gray-800 dark:bg-gray-700 dark:border-gray-600"
+							required
+						/>
+					</div>
+
+					<div class="ml-3 text-sm">
+						<label
+							for="terms"
+							class="font-medium text-gray-900 dark:text-white"
+						>
+							<span data-i18n="auth.title.accept_terms">
+								{t('auth.title.accept_terms')}
+							</span>
+
+							<a
+								href={url('es/legal/terms-of-service')}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="text-primary-700 hover:underline dark:text-primary-500"
+								data-i18n="auth.links.terms_and_conditions"
+							>
+								{t('auth.links.terms_and_conditions')}
+							</a>
+						</label>
+					</div>
+				</div>
+
+				<button
+					type="button"
+					id="continueBusiness"
+					class="w-full px-5 py-3 text-base font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:opacity-50 disabled:cursor-not-allowed"
+					disabled
+					data-i18n="auth.buttons.continue"
 				>
+					{t('auth.buttons.continue')}
+				</button>
+				<!-- Employee submit button -->
+				<button
+						id="employeeSubmit"
+						type="submit"
+						class="hidden w-1/2 px-5 py-3 text-base font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700"
+						data-i18n="auth.buttons.create_account"
+				>
+						{t('auth.buttons.create_account')}
+				</button>
+			</section>
+
+			<!-- Business information -->
+			<section id="businessStep" class="hidden space-y-6">
+
+				<div>
+					<label
+						for="business_name"
+						class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+						data-i18n="auth.business.name"
+					>
+						{t('auth.business.name')}
+					</label>
+
+					<input
+						type="text"
+						name="business_name"
+						id="business_name"
+    				required
+						class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+						placeholder={t('auth.business.name')}
+						required
+					/>
+				</div>
+
+				<div>
+					<label
+						for="business_email"
+						class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+						data-i18n="auth.business.email"
+					>
+						{t('auth.business.email')}
+					</label>
+
+					<input
+						type="email"
+						name="business_email"
+						id="business_email"
+						class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+						placeholder={t('auth.business.email')}
+					/>
+				</div>
+
+				<div>
+					<label
+						for="business_phone"
+						class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+						data-i18n="auth.business.phone"
+					>
+						{t('auth.business.phone')}
+					</label>
+
+					<input
+						type="tel"
+						name="business_phone"
+						id="business_phone"
+						class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+						placeholder={t('auth.business.phone')}
+					/>
+				</div>
+
+				<div>
+					<label
+						for="business_whatsapp"
+						class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+						data-i18n="auth.business.whatsapp"
+					>
+						{t('auth.business.whatsapp')}
+					</label>
+
+					<input
+						type="tel"
+						name="business_whatsapp"
+						id="business_whatsapp"
+						class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+						placeholder={t('auth.business.whatsapp')}
+					/>
+				</div>
+
+				<div>
+					<label
+						for="business_language"
+						class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+						data-i18n="auth.business.language"
+					>
+						{t('auth.business.language')}
+					</label>
+
+					<select
+						name="business_language"
+    				required
+						id="business_language"
+						class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+						required
+					>
+						<option value="">
+							{t('auth.business.select_language')}
+						</option>
+						<option value="en">English</option>
+						<option value="es">Español</option>
+					</select>
+				</div>
+
+				<div class="relative">
+					<label
+						for="business_address"
+						class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+						data-i18n="auth.business.address"
+					>
+						{t('auth.business.address')}
+					</label>
+
+					<input
+						type="text"
+						name="business_address"
+						id="business_address"
+						autocomplete="off"
+    				required
+						class="form-input w-full bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+						placeholder={t('auth.business.address')}
+					/>
+
+					<p
+						class="mt-2 text-xs text-gray-500 dark:text-gray-400"
+						data-i18n="auth.business.address_hint"
+					>
+						{t('auth.business.address_hint')}
+					</p>
+					<div
+							id="business-address-suggestions"
+							class="absolute z-50 mt-1 hidden w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800"
+					></div>
+				</div>
+
+				<div class="flex gap-3">
+					<button
+						type="button"
+						id="backToPersonal"
+						class="w-1/2 px-5 py-3 text-base font-medium text-center text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 focus:ring-4 focus:ring-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+						data-i18n="auth.buttons.back"
+					>
+						{t('auth.buttons.back')}
+					</button>
+
+					<button
+						type="submit"
+						class="w-1/2 px-5 py-3 text-base font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700"
+						data-i18n="auth.buttons.create_account"
+					>
+						{t('auth.buttons.create_account')}
+					</button>
+				</div>
+			</section>
+
+			<div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+				<span data-i18n="auth.title.already_have_account">
+					{t('auth.title.already_have_account')}
+				</span>
+
+				<a
+					href={url('authentication/sign-in')}
+					class="text-primary-700 hover:underline dark:text-primary-500"
+					data-i18n="auth.links.login_here"
+				>
+					{t('auth.links.login_here')}
+				</a>
 			</div>
 		</form>
 	</div>
 </div>
+
+<script>
+	const form = document.getElementById('registerForm') as HTMLFormElement | null;
+
+	let invitationRole = '';
+
+	const isEmployeeInvitation = () =>
+			invitationRole === 'employee';
+			
+	const personalTab = document.getElementById('personalTab') as HTMLButtonElement | null;
+	const businessTab = document.getElementById('businessTab') as HTMLButtonElement | null;
+
+	const configureEmployeeRegistration = () => {
+			if (!isEmployeeInvitation()) {
+					return;
+			}
+
+			const businessNameInput =
+					document.getElementById(
+							'business_name'
+					) as HTMLInputElement | null;
+
+			const businessLanguageInput =
+					document.getElementById(
+							'business_language'
+					) as HTMLSelectElement | null;
+
+			const businessAddressInput =
+					document.getElementById(
+							'business_address'
+					) as HTMLInputElement | null;
+
+			businessStep?.classList.add('hidden');
+
+			businessTab?.classList.add('hidden');
+			businessTab?.setAttribute('aria-hidden', 'true');
+
+			continueBusiness?.classList.add('hidden');
+
+			backToPersonal?.classList.add('hidden');
+
+			employeeSubmit?.classList.remove('hidden');
+
+			personalStep?.classList.remove('hidden');
+
+			personalTab?.classList.remove('w-1/2');
+			personalTab?.classList.add('w-full');
+
+			personalTab?.setAttribute(
+					'aria-selected',
+					'true'
+			);
+
+			// Business information is not required for employee registration.
+			businessNameInput?.removeAttribute('required');
+			businessLanguageInput?.removeAttribute('required');
+			businessAddressInput?.removeAttribute('required');
+	};
+
+	const personalStep = document.getElementById('personalStep');
+	const businessStep = document.getElementById('businessStep');
+
+	const continueBusiness = document.getElementById(
+		'continueBusiness'
+	) as HTMLButtonElement | null;
+
+	const employeeSubmit = document.getElementById(
+			'employeeSubmit'
+	) as HTMLButtonElement | null;
+
+	const backToPersonal = document.getElementById(
+		'backToPersonal'
+	) as HTMLButtonElement | null;
+
+	const nameInput = document.getElementById('name') as HTMLInputElement | null;
+	const emailInput = document.getElementById('email') as HTMLInputElement | null;
+	const passwordInput = document.getElementById('password') as HTMLInputElement | null;
+	const passwordConfirmationInput = document.getElementById(
+		'password_confirmation'
+	) as HTMLInputElement | null;
+	const termsInput = document.getElementById('terms') as HTMLInputElement | null;
+
+	const businessNameInput = document.getElementById(
+		'business_name'
+	) as HTMLInputElement | null;
+
+	const params = new URLSearchParams(window.location.search);
+	const invitationCode = params.get('invitation_code');
+
+	const businessAddressInput = document.getElementById(
+			'business_address'
+	) as HTMLInputElement | null;
+
+	const businessAddressSuggestions =
+			document.getElementById(
+					'business-address-suggestions'
+			);
+
+	let addressSearchTimeout: ReturnType<typeof setTimeout> | null =
+			null;
+
+	let addressSelected = false;
+
+	if (businessAddressInput) {
+			businessAddressInput.dataset.addressSelected =
+					'false';
+	}
+
+	const hideAddressSuggestions = () => {
+			if (!businessAddressSuggestions) return;
+
+			businessAddressSuggestions.innerHTML = '';
+			businessAddressSuggestions.classList.add('hidden');
+	};
+
+	const showAddressSuggestions = () => {
+			if (!businessAddressSuggestions) return;
+
+			businessAddressSuggestions.classList.remove('hidden');
+	};
+
+	const searchAddresses = async (query: string) => {
+			if (!businessAddressSuggestions) return;
+
+			if (query.trim().length < 3) {
+					hideAddressSuggestions();
+					addressSelected = false;
+					return;
+			}
+
+			try {
+					const url = new URL(
+							'https://nominatim.openstreetmap.org/search'
+					);
+
+					url.searchParams.set('q', query);
+					url.searchParams.set('format', 'jsonv2');
+					url.searchParams.set('addressdetails', '1');
+					url.searchParams.set('limit', '5');
+
+					const response = await fetch(url.toString(), {
+							headers: {
+									Accept: 'application/json',
+							},
+					});
+
+					if (!response.ok) {
+							throw new Error(
+									'Unable to search addresses.'
+							);
+					}
+
+					const results = await response.json();
+
+					if (!Array.isArray(results) || results.length === 0) {
+							hideAddressSuggestions();
+							return;
+					}
+
+					businessAddressSuggestions.innerHTML = '';
+
+					results.forEach((result) => {
+							const button =
+									document.createElement('button');
+
+							button.type = 'button';
+							button.className =
+									'block w-full border-b border-gray-100 px-4 py-3 text-left text-sm text-gray-700 hover:bg-gray-50 last:border-b-0 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700';
+
+							button.textContent = result.display_name;
+
+							button.addEventListener('click', () => {
+									if (businessAddressInput) {
+											businessAddressInput.value =
+													result.display_name;
+									}
+
+									addressSelected = true;
+
+									if (businessAddressInput) {
+											businessAddressInput.dataset.addressSelected =
+													'true';
+									}
+
+									hideAddressSuggestions();
+							});
+
+							businessAddressSuggestions.appendChild(
+									button
+							);
+					});
+
+					showAddressSuggestions();
+			} catch (error) {
+					hideAddressSuggestions();
+
+					console.error(
+							'Address search failed:',
+							error
+					);
+			}
+	};
+
+	if (businessAddressInput) {
+			businessAddressInput.addEventListener(
+					'input',
+					() => {
+							addressSelected = false;
+
+							if (businessAddressInput) {
+									businessAddressInput.dataset.addressSelected =
+											'false';
+							}
+
+							if (addressSearchTimeout) {
+									clearTimeout(
+											addressSearchTimeout
+									);
+							}
+
+							const query =
+									businessAddressInput.value.trim();
+
+							if (query.length < 3) {
+									hideAddressSuggestions();
+									return;
+							}
+
+							addressSearchTimeout = setTimeout(() => {
+									void searchAddresses(query);
+							}, 500);
+					}
+			);
+	}
+
+	document.addEventListener('click', (event) => {
+			if (
+					!businessAddressSuggestions ||
+					!businessAddressInput
+			) {
+					return;
+			}
+
+			const target = event.target as Node;
+
+			if (
+					!businessAddressInput.contains(target) &&
+					!businessAddressSuggestions.contains(target)
+			) {
+					hideAddressSuggestions();
+			}
+	});
+	const showPersonal = () => {
+		personalStep?.classList.remove('hidden');
+		businessStep?.classList.add('hidden');
+
+		personalTab?.classList.add(
+			'text-primary-600',
+			'border-primary-600'
+		);
+		personalTab?.classList.remove(
+			'text-gray-400',
+			'border-transparent'
+		);
+
+		businessTab?.classList.remove(
+			'text-primary-600',
+			'border-primary-600'
+		);
+		businessTab?.classList.add(
+			'text-gray-400',
+			'border-transparent'
+		);
+
+		personalTab?.setAttribute('aria-selected', 'true');
+		businessTab?.setAttribute('aria-selected', 'false');
+	};
+
+	const showBusiness = () => {
+		if (!continueBusiness || continueBusiness.disabled) return;
+
+		personalStep?.classList.add('hidden');
+		businessStep?.classList.remove('hidden');
+
+		if (businessTab) {
+			businessTab.disabled = false;
+		}
+
+		businessTab?.classList.add(
+			'text-primary-600',
+			'border-primary-600'
+		);
+		businessTab?.classList.remove(
+			'text-gray-400',
+			'border-transparent',
+			'cursor-not-allowed'
+		);
+
+		personalTab?.classList.remove(
+			'text-primary-600',
+			'border-primary-600'
+		);
+		personalTab?.classList.add(
+			'text-gray-400',
+			'border-transparent'
+		);
+
+		personalTab?.setAttribute('aria-selected', 'false');
+		businessTab?.setAttribute('aria-selected', 'true');
+
+		businessNameInput?.focus();
+	};
+
+	const updatePersonalStep = () => {
+		if (
+			!nameInput ||
+			!emailInput ||
+			!passwordInput ||
+			!passwordConfirmationInput ||
+			!termsInput ||
+			!continueBusiness
+		) {
+			return;
+		}
+
+		const valid =
+			nameInput.value.trim() !== '' &&
+			emailInput.value.trim() !== '' &&
+			emailInput.validity.valid &&
+			passwordInput.value.length >= 6 &&
+			passwordConfirmationInput.value.length >= 6 &&
+			passwordInput.value === passwordConfirmationInput.value &&
+			termsInput.checked;
+
+		continueBusiness.disabled = !valid;
+
+		if (businessTab) {
+			businessTab.disabled = !valid;
+
+			if (!valid) {
+				businessTab.classList.add(
+					'text-gray-400',
+					'border-transparent',
+					'cursor-not-allowed'
+				);
+
+				businessTab.classList.remove(
+					'text-primary-600',
+					'border-primary-600'
+				);
+			} else {
+				businessTab.classList.remove(
+					'text-gray-400',
+					'border-transparent',
+					'cursor-not-allowed'
+				);
+			}
+		}
+	};
+
+	[
+		nameInput,
+		emailInput,
+		passwordInput,
+		passwordConfirmationInput,
+		termsInput,
+	].forEach((input) => {
+		input?.addEventListener('input', updatePersonalStep);
+		input?.addEventListener('change', updatePersonalStep);
+	});
+
+	continueBusiness?.addEventListener('click', () => {
+			if (
+					!nameInput ||
+					!emailInput ||
+					!passwordInput ||
+					!passwordConfirmationInput ||
+					!termsInput
+			) {
+					return;
+			}
+
+			const valid =
+					nameInput.checkValidity() &&
+					emailInput.checkValidity() &&
+					passwordInput.checkValidity() &&
+					passwordConfirmationInput.checkValidity() &&
+					termsInput.checkValidity() &&
+					passwordInput.value ===
+							passwordConfirmationInput.value;
+
+			if (!valid) {
+					return;
+			}
+
+			showBusiness();
+	});
+
+	businessTab?.addEventListener('click', () => {
+		if (!businessTab.disabled) {
+			showBusiness();
+		}
+	});
+
+	personalTab?.addEventListener('click', () => {
+		showPersonal();
+	});
+
+	backToPersonal?.addEventListener('click', () => {
+		showPersonal();
+	});
+
+	/*
+	 * The invited email is supplied by the invitation.
+	 *
+	 * The actual value is loaded by the sign-up page after validating
+	 * invitation_code. The input remains readonly so the invitee cannot
+	 * change the email associated with the invitation.
+	 */
+	const configureInvitationEmail = () => {
+			if (!emailInput) {
+					return;
+			}
+
+			if (invitationRole === 'employee') {
+					/*
+					* Employee invitations may optionally contain
+					* a predefined email.
+					*
+					* If there is no email, the invitee must provide one.
+					*/
+					if (!emailInput.value.trim()) {
+							emailInput.removeAttribute('readonly');
+					}
+
+					return;
+			}
+
+			/*
+			* Owner/admin invitations with a predefined email
+			* keep the email locked.
+			*/
+			if (invitationCode && emailInput.value.trim()) {
+					emailInput.setAttribute('readonly', 'true');
+					return;
+			}
+
+			if (!invitationCode) {
+					emailInput.removeAttribute('readonly');
+			}
+	};
+
+	window.addEventListener(
+			'registration:invitation-loaded',
+			(event) => {
+					const customEvent =
+							event as CustomEvent<{
+									role?: string;
+									email?: string | null;
+							}>;
+
+					invitationRole =
+							customEvent.detail?.role || '';
+
+					configureEmployeeRegistration();
+					configureInvitationEmail();
+
+					updatePersonalStep();
+			}
+	);
+	updatePersonalStep();
+</script>

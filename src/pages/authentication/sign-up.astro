@@ -1,42 +1,347 @@
 ---
 import LayoutStacked from '../../app/LayoutStacked.astro';
 import FormSignUp from '../../modules/FormSignUp.astro';
-import { isBrowser } from '@/lib/env';
 ---
 
-<LayoutStacked>
-	<div class="min-h-screen align-middle flex pb-[12vh]">
-		<p id="signUpError" class="hidden text-sm text-red-500"></p>
-		<FormSignUp />
-	</div>
-	<script>
-		import { signup } from '@/modules/auth/auth.service.ts';
+<LayoutStacked> <div class="min-h-screen align-middle flex pb-[12vh]"> <FormSignUp /> </div>
 
-		const form = document.getElementById('registerForm');
-		const errorEl = document.getElementById('signUpError');
+<script>
+    import { signup } from '@/modules/auth/auth.service.ts';
+    import { apiFetch } from '@/services/api';
+    import { showError } from '@/lib/toast';
 
-		if (form) {
-			form.addEventListener('submit', async (e) => {
-			e.preventDefault();
+    const form = document.getElementById(
+        'registerForm'
+    ) as HTMLFormElement | null;
 
-			try {
-				const registerForm = {
-					name:form.name.value,
-					email:form.email.value,
-					password:form.password.value,
-					password_confirmation:form.password_confirmation.value
-				};
+    const emailInput = document.getElementById(
+        'email'
+    ) as HTMLInputElement | null;
 
-				const data = await signup(registerForm);
-				localStorage.setItem('auth_token', data.token);
-				location.href = '/dashboard/cases';
-			} catch (e) {
-				if (errorEl) {
-				errorEl.textContent = e.message;
-				errorEl.classList.remove('hidden');
-				}
-			}
-			});
-		}
-	</script>
+    const submitButton = form?.querySelector(
+        'button[type="submit"]'
+    ) as HTMLButtonElement | null;
+
+    const params = new URLSearchParams(
+        window.location.search
+    );
+
+    const invitationCode = params.get(
+        'invitation_code'
+    );
+	 
+		let invitationRole = '';
+
+    const setSubmitting = (submitting: boolean) => {
+        if (!submitButton) return;
+
+        submitButton.disabled = submitting;
+
+        if (submitting) {
+            submitButton.dataset.originalText =
+                submitButton.textContent?.trim() || '';
+
+            submitButton.textContent =
+                'Creating account...';
+        } else {
+            submitButton.textContent =
+                submitButton.dataset.originalText ||
+                'Create account';
+        }
+    };
+
+    const disableForm = () => {
+        if (!form) return;
+
+        const controls = form.querySelectorAll(
+            'input, select, button'
+        );
+
+        controls.forEach((control) => {
+            (
+                control as
+                    | HTMLInputElement
+                    | HTMLSelectElement
+                    | HTMLButtonElement
+            ).disabled = true;
+        });
+    };
+
+    const loadInvitation = async () => {
+        if (!invitationCode) {
+            showError(
+                'This registration link is invalid or incomplete.'
+            );
+
+            disableForm();
+
+            return false;
+        }
+
+        try {
+            const response = await apiFetch(
+                `/v1/invites/${encodeURIComponent(invitationCode)}`,
+                {
+                    method: 'GET',
+                }
+            );
+
+            const invitation = response?.data;
+
+            if (!invitation) {
+                throw new Error(
+                    'Invalid invitation response.'
+                );
+            }
+
+						invitationRole = invitation.role || '';
+						
+						if (form) {
+								form.dataset.invitationRole =
+										invitation.role || '';
+						}
+
+						window.dispatchEvent(
+								new CustomEvent('registration:invitation-loaded', {
+										detail: {
+												role: invitation.role || '',
+												email: invitation.email || null,
+										},
+								})
+						);
+
+            if (invitation.email && emailInput) {
+							emailInput.value =
+									invitation.email;
+
+							emailInput.readOnly = true;
+
+							emailInput.dispatchEvent(
+									new Event('input', {
+											bubbles: true,
+									})
+							);
+					}
+
+            return true;
+        } catch (error) {
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : 'This invitation link is invalid or expired.';
+
+            showError(message);
+
+            disableForm();
+
+            return false;
+        }
+    };
+
+    const initialize = async () => {
+        await loadInvitation();
+    };
+
+    initialize();
+
+    if (form) {
+        form.addEventListener(
+            'submit',
+            async (event) => {
+                event.preventDefault();
+
+                if (!invitationCode) {
+                    showError(
+                        'This registration link is invalid or incomplete.'
+                    );
+
+                    return;
+                }
+
+                const formData =
+                    new FormData(form);
+
+								if (invitationRole === 'owner') {
+									const businessNameInput =
+											document.getElementById(
+													'business_name'
+											) as HTMLInputElement | null;
+
+									const businessLanguageInput =
+											document.getElementById(
+													'business_language'
+											) as HTMLSelectElement | null;
+
+									const businessAddressInput =
+											document.getElementById(
+													'business_address'
+											) as HTMLInputElement | null;
+
+									if (
+											!businessNameInput ||
+											!businessLanguageInput ||
+											!businessAddressInput
+									) {
+											showError(
+													'Unable to validate the business information.'
+											);
+
+											return;
+									}
+
+									if (!businessNameInput.value.trim()) {
+											showError(
+													'Please enter your business name.'
+											);
+
+											businessNameInput.focus();
+
+											return;
+									}
+
+									if (!businessLanguageInput.value) {
+											showError(
+													'Please select your business language.'
+											);
+
+											businessLanguageInput.focus();
+
+											return;
+									}
+
+									if (!businessAddressInput.value.trim()) {
+											showError(
+													'Please select your business address.'
+											);
+
+											businessAddressInput.focus();
+
+											return;
+									}
+
+									if (
+											businessAddressInput.dataset.addressSelected !==
+											'true'
+									) {
+											showError(
+													'Please select an address from the suggestions.'
+											);
+
+											businessAddressInput.focus();
+
+											return;
+									}
+							}
+
+                const registerForm: {
+										name: string;
+										email: string;
+										password: string;
+										password_confirmation: string;
+										business?: {
+												name: string;
+												email: string;
+												phone: string;
+												whatsapp: string;
+												language: string;
+												address: string;
+										};
+								} = {
+										name: String(
+												formData.get('name') || ''
+										),
+
+										email: String(
+												formData.get('email') || ''
+										),
+
+										password: String(
+												formData.get('password') || ''
+										),
+
+										password_confirmation: String(
+												formData.get(
+														'password_confirmation'
+												) || ''
+										),
+								};
+
+								if (invitationRole === 'owner') {
+									registerForm.business = {
+											name: String(
+													formData.get(
+															'business_name'
+													) || ''
+											),
+
+											email: String(
+													formData.get(
+															'business_email'
+													) || ''
+											),
+
+											phone: String(
+													formData.get(
+															'business_phone'
+													) || ''
+											),
+
+											whatsapp: String(
+													formData.get(
+															'business_whatsapp'
+													) || ''
+											),
+
+											language: String(
+													formData.get(
+															'business_language'
+													) || ''
+											),
+
+											address: String(
+													formData.get(
+															'business_address'
+													) || ''
+											),
+									};
+							}
+
+                setSubmitting(true);
+
+                try {
+                    const data =
+                        await signup(
+                            registerForm,
+                            invitationCode
+                        );
+
+                    if (!data?.token) {
+                        window.location.href =
+                            '/authentication/sign-in?registered=1';
+
+                        return;
+                    }
+
+                    localStorage.setItem(
+                        'auth_token',
+                        data.token
+                    );
+
+                    window.location.href =
+                        '/dashboard/cases';
+                } catch (error) {
+                    const message =
+                        error instanceof Error
+                            ? error.message
+                            : 'Unable to create your account.';
+
+                    showError(message);
+                } finally {
+                    setSubmitting(false);
+                }
+            }
+        );
+    }
+</script>
+
 </LayoutStacked>

@@ -51,6 +51,20 @@ export async function assignUserPermissionsClient(
   );
 }
 
+// INVITE USER
+export async function inviteUserClient(
+	data: { email?: string; role: string }
+) {
+
+  return apiClientFetch(
+    `/v1/invites`,
+    {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }
+  );
+}
+
 
 // GET USER ROLE
 export async function getUserRoleClient(

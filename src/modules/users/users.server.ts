@@ -47,6 +47,24 @@ export async function getUserPermissionsServer(
 }
 
 
+// INVITE USER
+export async function inviteUserServer(
+	data: { email?: string; role: string },
+	request: Request,
+	site: Site
+) {
+
+	return apiFetchServer(
+		`/v1/invites`,
+		{
+			method: 'POST',
+			body: JSON.stringify(data),
+		},
+		request,
+		site
+	);
+}
+
 // SYNC USER PERMISSIONS
 export async function assignUserPermissionsServer(
 	userId: number | string,

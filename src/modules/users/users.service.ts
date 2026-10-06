@@ -158,6 +158,37 @@ export async function assignUserPermissions(
   );
 }
 
+// Invite User
+export async function inviteUser(
+	data: { email?: string; role: string },
+	request?: Request,
+	site?: Site
+) {
+
+  const resolvedSite = import.meta.env.SSR
+    ? ensureSite(site)
+    : getSite();
+
+
+  if (import.meta.env.SSR) {
+
+    const { inviteUserServer } =
+      await import('./users.server');
+
+    return inviteUserServer(
+      data,
+      request!,
+      resolvedSite
+    );
+  }
+
+
+  const { inviteUserClient } =
+    await import('./users.client');
+
+  return inviteUserClient(data);
+}
+
 // GET ROLE
 export async function getUserRole(
   userId: number | string,
