@@ -54,6 +54,17 @@ export interface PublicMarketingResourceResponse {
   message?: string;
 }
 
+
+export interface PublicRegistrationInvitationPayload {
+  email: string;
+}
+
+export interface PublicRegistrationInvitationResponse {
+  success?: boolean;
+  message?: string;
+  errors?: Record<string, string[]>;
+}
+
 export async function getPublicWebsiteSnapshot(
   request: Request,
   site?: Site | null
@@ -274,4 +285,55 @@ export async function getPublicMarketingResource(
 
     return null;
   }
+}
+
+
+export async function requestPublicRegistrationInvitation(
+  host: string,
+  payload: PublicRegistrationInvitationPayload
+): Promise<PublicRegistrationInvitationResponse> {
+  const apiUrl = import.meta.env.PUBLIC_API_URL;
+
+  if (!apiUrl) {
+    throw new Error('La URL de la API no está configurada.');
+  }
+
+  const baseUrl = apiUrl.endsWith('/')
+    ? apiUrl
+    : `${apiUrl}/`;
+
+  const url = new URL(
+    'v1/public/registration/invitation',
+    baseUrl
+  ).toString();
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'X-Public-Host': host,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const result = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const validationErrors = result.errors as
+      | Record<string, string[]>
+      | undefined;
+
+    const firstValidationMessage = validationErrors
+      ? Object.values(validationErrors).flat()[0]
+      : undefined;
+
+    throw new Error(
+      firstValidationMessage ||
+      result.message ||
+      'No se pudo enviar la invitación. Inténtalo de nuevo.'
+    );
+  }
+
+  return result as PublicRegistrationInvitationResponse;
 }

@@ -1,0 +1,218 @@
+---
+interface EmailFeature {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  content: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    emphasis: string;
+    image: string;
+    image_alt: string;
+    features: EmailFeature[];
+    closing: string;
+  };
+}
+
+const { content } = Astro.props;
+---
+
+<section class="email-communication" id="comunicacion-email">
+  <div class="email-communication__container">
+    <div class="email-communication__main">
+      <div class="email-communication__copy">
+        <span class="email-communication__eyebrow">{content.eyebrow}</span>
+        <h2>{content.title}</h2>
+        <p class="email-communication__description">
+          {content.description}
+        </p>
+        <p class="email-communication__emphasis">
+          {content.emphasis}
+        </p>
+      </div>
+
+      <div class="email-communication__visual">
+        <img
+          src={content.image}
+          alt={content.image_alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+
+    <div class="email-communication__features">
+      {content.features.map((feature, index) => (
+        <article class="email-communication__feature">
+          <span class="email-communication__feature-number">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <div>
+            <h3>{feature.title}</h3>
+            <p>{feature.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <p class="email-communication__closing">{content.closing}</p>
+  </div>
+</section>
+
+<style>
+  .email-communication {
+    padding: clamp(4rem, 8vw, 7rem) 1.25rem;
+    background: #fff;
+    color: #172b4d;
+  }
+
+  .email-communication__container {
+    width: min(100%, 1160px);
+    margin-inline: auto;
+  }
+
+  .email-communication__main {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+  }
+
+  .email-communication__eyebrow {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #0057b7;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .email-communication__copy h2 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(2rem, 4.2vw, 3.1rem);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+  }
+
+  .email-communication__description {
+    margin: 0 0 1rem;
+    color: #52627a;
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  .email-communication__emphasis {
+    margin: 0;
+    padding-left: 1rem;
+    border-left: 3px solid #00a86b;
+    color: #172b4d;
+    font-weight: 700;
+    line-height: 1.75;
+  }
+
+  .email-communication__visual {
+    overflow: hidden;
+		aspect-ratio: 1376 / 768;
+    border: 1px solid #e1e8f0;
+    border-radius: 1.5rem;
+    background: #f7f9fc;
+    box-shadow: 0 18px 50px rgb(23 43 77 / 8%);
+  }
+
+  .email-communication__visual img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .email-communication__features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-top: clamp(3rem, 6vw, 5rem);
+  }
+
+  .email-communication__feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dce4ee;
+  }
+
+  .email-communication__feature-number {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid rgb(0 87 183 / 25%);
+    border-radius: 0.75rem;
+    background: rgb(0 87 183 / 6%);
+    color: #0057b7;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+
+  .email-communication__feature:nth-child(2)
+    .email-communication__feature-number {
+    border-color: rgb(0 168 107 / 30%);
+    background: rgb(0 168 107 / 7%);
+    color: #00875a;
+  }
+
+  .email-communication__feature:nth-child(3)
+    .email-communication__feature-number {
+    border-color: rgb(255 215 0 / 60%);
+    background: rgb(255 215 0 / 14%);
+    color: #806600;
+  }
+
+  .email-communication__feature h3 {
+    margin: 0 0 0.6rem;
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+
+  .email-communication__feature p {
+    margin: 0;
+    color: #52627a;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .email-communication__closing {
+    max-width: 800px;
+    margin: 3rem auto 0;
+    color: #0057b7;
+    font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+    font-weight: 800;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  @media (max-width: 760px) {
+    .email-communication__main {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .email-communication__features {
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    .email-communication__feature {
+      padding-top: 1.25rem;
+    }
+
+    .email-communication__closing {
+      margin-top: 2.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,172 @@
+---
+interface Step {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  content: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    steps: Step[];
+    emphasis: string;
+  };
+}
+
+const { content } = Astro.props;
+---
+
+<section class="getting-started" id="como-empezar">
+  <div class="getting-started__container">
+    <header class="getting-started__header">
+      <span class="getting-started__eyebrow">{content.eyebrow}</span>
+      <h2>{content.title}</h2>
+      <p>{content.description}</p>
+    </header>
+
+    <div class="getting-started__steps">
+      {content.steps.map((step, index) => (
+        <article class="getting-started__step">
+          <div class="getting-started__step-marker">
+            <span>{String(index + 1).padStart(2, '0')}</span>
+          </div>
+
+          {index < content.steps.length - 1 && (
+            <div class="getting-started__connector" aria-hidden="true"></div>
+          )}
+
+          <h3>{step.title}</h3>
+          <p>{step.description}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="getting-started__emphasis">{content.emphasis}</p>
+  </div>
+</section>
+
+<style>
+  .getting-started {
+    padding: clamp(4rem, 8vw, 7rem) 1.25rem;
+    background: #fff;
+    color: #172b4d;
+  }
+
+  .getting-started__container {
+    width: min(100%, 1080px);
+    margin-inline: auto;
+  }
+
+  .getting-started__header {
+    max-width: 760px;
+    margin: 0 auto 3.5rem;
+    text-align: center;
+  }
+
+  .getting-started__eyebrow {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #0057b7;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .getting-started__header h2 {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+  }
+
+  .getting-started__header p {
+    margin: 0;
+    color: #52627a;
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  .getting-started__steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+
+  .getting-started__step {
+    position: relative;
+    padding: 1.75rem;
+    border: 1px solid #e1e8f0;
+    border-radius: 1.25rem;
+    background: #fff;
+  }
+
+  .getting-started__step-marker {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .getting-started__step-marker span {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 1px solid rgb(0 87 183 / 25%);
+    border-radius: 1rem;
+    background: rgb(0 87 183 / 6%);
+    color: #0057b7;
+    font-size: 1rem;
+    font-weight: 800;
+  }
+
+  .getting-started__step:nth-child(2) .getting-started__step-marker span {
+    border-color: rgb(0 168 107 / 30%);
+    background: rgb(0 168 107 / 7%);
+    color: #00875a;
+  }
+
+  .getting-started__step:nth-child(3) .getting-started__step-marker span {
+    border-color: rgb(255 215 0 / 60%);
+    background: rgb(255 215 0 / 14%);
+    color: #806600;
+  }
+
+  .getting-started__step h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1.15rem;
+    line-height: 1.4;
+  }
+
+  .getting-started__step p {
+    margin: 0;
+    color: #52627a;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .getting-started__emphasis {
+    margin: 2.5rem 0 0;
+    color: #0057b7;
+    font-size: clamp(1.2rem, 2.8vw, 1.7rem);
+    font-weight: 800;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  @media (max-width: 720px) {
+    .getting-started__steps {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .getting-started__step {
+      padding: 1.5rem;
+    }
+
+    .getting-started__step-marker {
+      margin-bottom: 1rem;
+    }
+  }
+</style>

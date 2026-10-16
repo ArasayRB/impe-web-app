@@ -1,0 +1,275 @@
+---
+interface GrowthItem {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  content: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    items: GrowthItem[];
+    emphasis: string;
+    closing: string;
+  };
+}
+
+const { content } = Astro.props;
+---
+
+<section class="growth-section" id="crecimiento">
+  <div class="growth-section__container">
+    <header class="growth-section__header">
+      <span class="growth-section__eyebrow">{content.eyebrow}</span>
+      <h2>{content.title}</h2>
+      <p>{content.description}</p>
+    </header>
+
+    <div class="growth-section__layout">
+      <div class="growth-section__visual" aria-hidden="true">
+        <div class="growth-section__orbit growth-section__orbit--outer"></div>
+        <div class="growth-section__orbit growth-section__orbit--inner"></div>
+
+        <div class="growth-section__core">
+          <svg viewBox="0 0 48 48" fill="none">
+            <path d="M8 37H40M12 32V23H20V32M24 32V15H32V32M28 10L34 4L40 10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <span>IJOBA</span>
+        </div>
+
+        <span class="growth-section__dot growth-section__dot--blue"></span>
+        <span class="growth-section__dot growth-section__dot--green"></span>
+        <span class="growth-section__dot growth-section__dot--gold"></span>
+      </div>
+
+      <div class="growth-section__options">
+        {content.items.map((item, index) => (
+          <article class="growth-section__item">
+            <span class="growth-section__number">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <div class="growth-section__closing">
+      <p class="growth-section__emphasis">{content.emphasis}</p>
+      <p>{content.closing}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .growth-section {
+    padding: clamp(4rem, 8vw, 7rem) 1.25rem;
+    background: #f7f9fc;
+    color: #172b4d;
+  }
+
+  .growth-section__container {
+    width: min(100%, 1120px);
+    margin-inline: auto;
+  }
+
+  .growth-section__header {
+    max-width: 800px;
+    margin: 0 auto 3.5rem;
+    text-align: center;
+  }
+
+  .growth-section__eyebrow {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #0057b7;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+
+  .growth-section__header h2 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+  }
+
+  .growth-section__header p {
+    margin: 0;
+    color: #52627a;
+    font-size: 1.08rem;
+    line-height: 1.8;
+  }
+
+  .growth-section__layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+  }
+
+  .growth-section__visual {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: min(100%, 380px);
+    aspect-ratio: 1;
+    margin-inline: auto;
+  }
+
+  .growth-section__orbit {
+    position: absolute;
+    border: 1px solid rgb(0 87 183 / 18%);
+    border-radius: 50%;
+  }
+
+  .growth-section__orbit--outer {
+    inset: 3%;
+  }
+
+  .growth-section__orbit--inner {
+    inset: 17%;
+    border-color: rgb(0 168 107 / 30%);
+  }
+
+  .growth-section__core {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 42%;
+    aspect-ratio: 1;
+    border: 1px solid #dce6f2;
+    border-radius: 28%;
+    background: #fff;
+    color: #0057b7;
+    box-shadow: 0 18px 45px rgb(23 43 77 / 10%);
+  }
+
+  .growth-section__core svg {
+    width: 42%;
+  }
+
+  .growth-section__core span {
+    font-size: 0.9rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+  }
+
+  .growth-section__dot {
+    position: absolute;
+    z-index: 2;
+    width: 1rem;
+    height: 1rem;
+    border: 4px solid #f7f9fc;
+    border-radius: 50%;
+    box-sizing: content-box;
+  }
+
+  .growth-section__dot--blue {
+    top: 12%;
+    right: 23%;
+    background: #0057b7;
+  }
+
+  .growth-section__dot--green {
+    bottom: 18%;
+    left: 14%;
+    background: #00a86b;
+  }
+
+  .growth-section__dot--gold {
+    right: 9%;
+    bottom: 34%;
+    background: #ffd700;
+  }
+
+  .growth-section__options {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .growth-section__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.1rem 0;
+    border-bottom: 1px solid #dce4ee;
+  }
+
+  .growth-section__item:last-child {
+    border-bottom: 0;
+  }
+
+  .growth-section__number {
+    display: grid;
+    flex: 0 0 2.5rem;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid rgb(0 87 183 / 25%);
+    border-radius: 0.75rem;
+    background: #fff;
+    color: #0057b7;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+
+  .growth-section__item:nth-child(2) .growth-section__number,
+  .growth-section__item:nth-child(5) .growth-section__number {
+    border-color: rgb(0 168 107 / 30%);
+    color: #00875a;
+  }
+
+  .growth-section__item:nth-child(3) .growth-section__number {
+    border-color: rgb(255 215 0 / 60%);
+    color: #806600;
+  }
+
+  .growth-section__item h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.05rem;
+  }
+
+  .growth-section__item p {
+    margin: 0;
+    color: #52627a;
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .growth-section__closing {
+    margin-top: 3.5rem;
+    text-align: center;
+  }
+
+  .growth-section__closing p {
+    margin: 0.5rem 0 0;
+    color: #52627a;
+    line-height: 1.7;
+  }
+
+  .growth-section__closing .growth-section__emphasis {
+    color: #0057b7;
+    font-size: clamp(1.3rem, 3vw, 2rem);
+    font-weight: 800;
+  }
+
+  @media (max-width: 760px) {
+    .growth-section__layout {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .growth-section__visual {
+      width: min(80%, 300px);
+    }
+  }
+</style>

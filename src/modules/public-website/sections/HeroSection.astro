@@ -8,6 +8,8 @@ sort_order?: number;
 content?: {
 title?: string;
 subtitle?: string;
+eyebrow?: string;
+microcopy?: string;
 description?: string;
 image?: string | null;
 actions?: Array<{
@@ -131,16 +133,14 @@ actions[1];
 >
 
   {
-    content.subtitle && (
-      <div class="mb-6">
-        <span
-          class="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300"
-        >
-          {content.subtitle}
-        </span>
-      </div>
-    )
-  }
+		content.eyebrow && (
+			<div class="mb-6">
+				<span class="inline-flex items-center rounded-full border border-[#FFD700]/60 bg-[#FFD700]/15 px-4 py-2 text-xs font-bold tracking-wider text-[#0057B7]">
+					{content.eyebrow}
+				</span>
+			</div>
+		)
+	}
 
 
   {
@@ -172,29 +172,39 @@ actions[1];
       >
 
         {
-          primaryAction?.url && (
-            <a
-              href={primaryAction.url}
-              class="group inline-flex items-center justify-center gap-2 rounded-full bg-gray-950 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-gray-950/20 transition-all duration-200 hover:-translate-y-0.5 hover:bg-gray-800 hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 dark:bg-white dark:text-gray-950 dark:shadow-white/10 dark:hover:bg-gray-200"
-            >
-              {primaryAction.label}
-
-              <svg
-                class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M13 7l5 5m0 0l-5 5m5-5H6"
-                />
-              </svg>
-            </a>
-          )
-        }
+					primaryAction?.url && (
+						primaryAction.type === 'modal' ? (
+							<button
+								type="button"
+								data-registration-trigger
+								class="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#0057B7] px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#00479A] focus:outline-none focus:ring-2 focus:ring-[#0057B7] focus:ring-offset-2"
+							>
+								{primaryAction.label}
+								<svg
+									class="h-4 w-4 transition-transform group-hover:translate-x-1"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									stroke-width="2"
+									aria-hidden="true"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										d="M5 12h14m-7-7 7 7-7 7"
+									/>
+								</svg>
+							</button>
+						) : (
+							<a
+								href={primaryAction.url}
+								class="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-[#0057B7] px-7 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#00479A] focus:outline-none focus:ring-2 focus:ring-[#0057B7] focus:ring-offset-2"
+							>
+								{primaryAction.label}
+							</a>
+						)
+					)
+				}
 
 
         {
@@ -211,6 +221,14 @@ actions[1];
       </div>
     )
   }
+
+	{
+		content.microcopy && (
+			<p class="mt-4 text-sm text-gray-500 dark:text-gray-400">
+				{content.microcopy}
+			</p>
+		)
+	}
 
 </div>
 

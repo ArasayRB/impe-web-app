@@ -1,0 +1,196 @@
+---
+interface TeamItem {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  content: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    image: string;
+    image_alt: string;
+    items: TeamItem[];
+    closing: string;
+  };
+}
+
+const { content } = Astro.props;
+---
+
+<section class="team-collaborators" id="equipo">
+  <div class="team-collaborators__container">
+    <div class="team-collaborators__main">
+      <header class="team-collaborators__header">
+        <span class="team-collaborators__eyebrow">{content.eyebrow}</span>
+        <h2>{content.title}</h2>
+        <p>{content.description}</p>
+      </header>
+
+      <div class="team-collaborators__visual">
+        <img
+          src={content.image}
+          alt={content.image_alt}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+    </div>
+
+    <div class="team-collaborators__grid">
+      {content.items.map((item, index) => (
+        <article class="team-collaborators__card">
+          <span class="team-collaborators__number">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <h3>{item.title}</h3>
+          <p>{item.description}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="team-collaborators__closing">{content.closing}</p>
+  </div>
+</section>
+
+<style>
+  .team-collaborators {
+    padding: clamp(4rem, 8vw, 7rem) 1.25rem;
+    background: #f7f9fc;
+    color: #172b4d;
+  }
+
+  .team-collaborators__container {
+    width: min(100%, 1120px);
+    margin-inline: auto;
+  }
+
+  .team-collaborators__main {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+  }
+
+  .team-collaborators__eyebrow {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #0057b7;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+
+  .team-collaborators__header h2 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(2rem, 4.2vw, 3.1rem);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+  }
+
+  .team-collaborators__header p {
+    margin: 0;
+    color: #52627a;
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  .team-collaborators__visual {
+    overflow: hidden;
+		aspect-ratio: 887 / 768;
+    border: 1px solid #e1e8f0;
+    border-radius: 1.5rem;
+    background: #fff;
+    box-shadow: 0 18px 50px rgb(23 43 77 / 7%);
+  }
+
+  .team-collaborators__visual img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .team-collaborators__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: clamp(3rem, 6vw, 5rem);
+  }
+
+  .team-collaborators__card {
+    padding: 1.5rem;
+    border: 1px solid #e1e8f0;
+    border-radius: 1rem;
+    background: #fff;
+  }
+
+  .team-collaborators__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgb(0 87 183 / 25%);
+    border-radius: 0.75rem;
+    background: rgb(0 87 183 / 6%);
+    color: #0057b7;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+
+  .team-collaborators__card:nth-child(2) .team-collaborators__number {
+    border-color: rgb(0 168 107 / 30%);
+    background: rgb(0 168 107 / 7%);
+    color: #00875a;
+  }
+
+  .team-collaborators__card:nth-child(3) .team-collaborators__number {
+    border-color: rgb(255 215 0 / 60%);
+    background: rgb(255 215 0 / 14%);
+    color: #806600;
+  }
+
+  .team-collaborators__card h3 {
+    margin: 0 0 0.65rem;
+    font-size: 1.05rem;
+    line-height: 1.4;
+  }
+
+  .team-collaborators__card p {
+    margin: 0;
+    color: #52627a;
+    font-size: 0.93rem;
+    line-height: 1.75;
+  }
+
+  .team-collaborators__closing {
+    max-width: 850px;
+    margin: 3rem auto 0;
+    color: #0057b7;
+    font-size: clamp(1.25rem, 3vw, 1.8rem);
+    font-weight: 800;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  @media (max-width: 900px) {
+    .team-collaborators__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 700px) {
+    .team-collaborators__main {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .team-collaborators__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

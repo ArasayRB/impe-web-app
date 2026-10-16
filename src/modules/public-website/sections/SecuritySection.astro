@@ -1,0 +1,188 @@
+---
+interface SecurityItem {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  content: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    items: SecurityItem[];
+    closing: string;
+  };
+}
+
+const { content } = Astro.props;
+---
+
+<section class="security-section" id="seguridad">
+  <div class="security-section__container">
+    <header class="security-section__header">
+      <span class="security-section__eyebrow">{content.eyebrow}</span>
+      <h2>{content.title}</h2>
+      <p>{content.description}</p>
+    </header>
+
+    <div class="security-section__shield" aria-hidden="true">
+      <svg viewBox="0 0 96 96" fill="none">
+        <path
+          d="M48 8L78 20V43C78 63 65 78 48 87C31 78 18 63 18 43V20L48 8Z"
+          stroke="#0057B7"
+          stroke-width="3.5"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M34 47L44 57L64 36"
+          stroke="#00A86B"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <circle cx="74" cy="22" r="7" fill="#FFD700" />
+      </svg>
+    </div>
+
+    <div class="security-section__grid">
+      {content.items.map((item, index) => (
+        <article class="security-section__card">
+          <span class="security-section__number">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <h3>{item.title}</h3>
+          <p>{item.description}</p>
+        </article>
+      ))}
+    </div>
+
+    <p class="security-section__closing">{content.closing}</p>
+  </div>
+</section>
+
+<style>
+  .security-section {
+    padding: clamp(4rem, 8vw, 7rem) 1.25rem;
+    background: #fff;
+    color: #172b4d;
+  }
+
+  .security-section__container {
+    width: min(100%, 1080px);
+    margin-inline: auto;
+  }
+
+  .security-section__header {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .security-section__eyebrow {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: #0057b7;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+
+  .security-section__header h2 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    line-height: 1.12;
+    letter-spacing: -0.035em;
+  }
+
+  .security-section__header p {
+    margin: 0;
+    color: #52627a;
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  .security-section__shield {
+    display: grid;
+    place-items: center;
+    width: 116px;
+    height: 116px;
+    margin: 2.5rem auto 3rem;
+    border: 1px solid #dce6f2;
+    border-radius: 2rem;
+    background: #f7f9fc;
+    box-shadow: 0 12px 35px rgb(23 43 77 / 6%);
+  }
+
+  .security-section__shield svg {
+    width: 78px;
+    height: 78px;
+  }
+
+  .security-section__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .security-section__card {
+    padding: clamp(1.5rem, 3vw, 2rem);
+    border: 1px solid #e1e8f0;
+    border-radius: 1rem;
+    background: #fff;
+  }
+
+  .security-section__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgb(0 87 183 / 25%);
+    border-radius: 0.75rem;
+    background: rgb(0 87 183 / 6%);
+    color: #0057b7;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+
+  .security-section__card:nth-child(2) .security-section__number {
+    border-color: rgb(0 168 107 / 30%);
+    background: rgb(0 168 107 / 7%);
+    color: #00875a;
+  }
+
+  .security-section__card:nth-child(3) .security-section__number {
+    border-color: rgb(255 215 0 / 60%);
+    background: rgb(255 215 0 / 14%);
+    color: #806600;
+  }
+
+  .security-section__card h3 {
+    margin: 0 0 0.65rem;
+    font-size: 1.1rem;
+  }
+
+  .security-section__card p {
+    margin: 0;
+    color: #52627a;
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+
+  .security-section__closing {
+    max-width: 780px;
+    margin: 3rem auto 0;
+    color: #0057b7;
+    font-size: clamp(1.25rem, 3vw, 1.8rem);
+    font-weight: 800;
+    line-height: 1.5;
+    text-align: center;
+  }
+
+  @media (max-width: 600px) {
+    .security-section__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
