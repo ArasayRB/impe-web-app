@@ -1,4 +1,6 @@
+
 ---
+
 interface SecurityItem {
   title: string;
   description: string;
@@ -20,38 +22,34 @@ const { content } = Astro.props;
 <section class="security-section" id="seguridad">
   <div class="security-section__container">
     <header class="security-section__header">
-      <span class="security-section__eyebrow">{content.eyebrow}</span>
+      <p class="security-section__eyebrow">{content.eyebrow}</p>
       <h2>{content.title}</h2>
-      <p>{content.description}</p>
+      <p class="security-section__description">{content.description}</p>
     </header>
 
-    <div class="security-section__shield" aria-hidden="true">
-      <svg viewBox="0 0 96 96" fill="none">
-        <path
-          d="M48 8L78 20V43C78 63 65 78 48 87C31 78 18 63 18 43V20L48 8Z"
-          stroke="#0057B7"
-          stroke-width="3.5"
-          stroke-linejoin="round"
-        />
-        <path
-          d="M34 47L44 57L64 36"
-          stroke="#00A86B"
-          stroke-width="4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-        <circle cx="74" cy="22" r="7" fill="#FFD700" />
-      </svg>
+    <div class="security-section__visual" aria-hidden="true">
+      <div class="security-section__halo"></div>
+      <div class="security-section__shield">
+        <svg viewBox="0 0 100 112">
+          <path d="M50 6 86 20v29c0 25-15 44-36 57C29 93 14 74 14 49V20L50 6Z" />
+          <path d="m32 53 12 12 25-27" />
+        </svg>
+      </div>
+      <span class="security-section__orbit-dot security-section__orbit-dot--blue"></span>
+      <span class="security-section__orbit-dot security-section__orbit-dot--green"></span>
+      <span class="security-section__orbit-dot security-section__orbit-dot--gold"></span>
     </div>
 
-    <div class="security-section__grid">
+    <div class="security-section__items">
       {content.items.map((item, index) => (
-        <article class="security-section__card">
+        <article class="security-section__item">
           <span class="security-section__number">
-            {String(index + 1).padStart(2, '0')}
+            {String(index + 1).padStart(2, "0")}
           </span>
-          <h3>{item.title}</h3>
-          <p>{item.description}</p>
+          <div>
+            <h3>{item.title}</h3>
+            <p>{item.description}</p>
+          </div>
         </article>
       ))}
     </div>
@@ -62,127 +60,146 @@ const { content } = Astro.props;
 
 <style>
   .security-section {
-    padding: clamp(4rem, 8vw, 7rem) 1.25rem;
-    background: #fff;
+    background: #ffffff;
     color: #172b4d;
+    padding: clamp(4rem, 8vw, 7rem) 1.5rem;
   }
 
   .security-section__container {
-    width: min(100%, 1080px);
+    max-width: 1100px;
     margin-inline: auto;
   }
 
   .security-section__header {
-    max-width: 760px;
+    max-width: 780px;
     margin: 0 auto;
     text-align: center;
   }
 
   .security-section__eyebrow {
-    display: inline-block;
-    margin-bottom: 1rem;
     color: #0057b7;
     font-size: 0.8rem;
     font-weight: 800;
     letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
   }
 
-  .security-section__header h2 {
-    margin: 0 0 1.25rem;
-    font-size: clamp(2rem, 4.5vw, 3.2rem);
+  .security-section h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
     line-height: 1.12;
     letter-spacing: -0.035em;
+    margin: 0 0 1.25rem;
   }
 
-  .security-section__header p {
-    margin: 0;
+  .security-section__description {
     color: #52627a;
     font-size: 1.05rem;
     line-height: 1.8;
   }
 
+  .security-section__visual {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 250px;
+    margin: 1.5rem auto 2rem;
+    max-width: 420px;
+    isolation: isolate;
+  }
+
+  .security-section__halo {
+    position: absolute;
+    width: 220px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, #e7f0ff 0%, #f5f8fd 65%, transparent 72%);
+    z-index: -1;
+  }
+
   .security-section__shield {
     display: grid;
     place-items: center;
-    width: 116px;
-    height: 116px;
-    margin: 2.5rem auto 3rem;
-    border: 1px solid #dce6f2;
-    border-radius: 2rem;
-    background: #f7f9fc;
-    box-shadow: 0 12px 35px rgb(23 43 77 / 6%);
+    width: 132px;
+    height: 142px;
+    background: #0057b7;
+    border: 8px solid #ffffff;
+    border-radius: 36px;
+    box-shadow: 0 18px 42px #0057b72b;
+    transform: rotate(-3deg);
   }
 
   .security-section__shield svg {
-    width: 78px;
-    height: 78px;
+    width: 74px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  .security-section__grid {
+  .security-section__orbit-dot {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 3px solid #ffffff;
+  }
+
+  .security-section__orbit-dot--blue { top: 22%; left: 20%; background: #0057b7; }
+  .security-section__orbit-dot--green { right: 18%; bottom: 22%; background: #00a86b; }
+  .security-section__orbit-dot--gold { top: 24%; right: 23%; background: #ffd700; }
+
+  .security-section__items {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.25rem;
   }
 
-  .security-section__card {
-    padding: clamp(1.5rem, 3vw, 2rem);
-    border: 1px solid #e1e8f0;
-    border-radius: 1rem;
-    background: #fff;
+  .security-section__item {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid #e5eaf1;
+    border-radius: 18px;
+    background: #ffffff;
   }
 
   .security-section__number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    margin-bottom: 1.25rem;
-    border: 1px solid rgb(0 87 183 / 25%);
-    border-radius: 0.75rem;
-    background: rgb(0 87 183 / 6%);
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #eaf1fc;
     color: #0057b7;
     font-size: 0.8rem;
     font-weight: 800;
   }
 
-  .security-section__card:nth-child(2) .security-section__number {
-    border-color: rgb(0 168 107 / 30%);
-    background: rgb(0 168 107 / 7%);
-    color: #00875a;
+  .security-section__item h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.05rem;
+    line-height: 1.4;
   }
 
-  .security-section__card:nth-child(3) .security-section__number {
-    border-color: rgb(255 215 0 / 60%);
-    background: rgb(255 215 0 / 14%);
-    color: #806600;
-  }
-
-  .security-section__card h3 {
-    margin: 0 0 0.65rem;
-    font-size: 1.1rem;
-  }
-
-  .security-section__card p {
+  .security-section__item p {
     margin: 0;
     color: #52627a;
-    font-size: 0.95rem;
-    line-height: 1.75;
+    line-height: 1.7;
   }
 
   .security-section__closing {
-    max-width: 780px;
-    margin: 3rem auto 0;
-    color: #0057b7;
-    font-size: clamp(1.25rem, 3vw, 1.8rem);
-    font-weight: 800;
-    line-height: 1.5;
+    max-width: 800px;
+    margin: 2.5rem auto 0;
     text-align: center;
+    font-weight: 700;
+    line-height: 1.7;
   }
 
-  @media (max-width: 600px) {
-    .security-section__grid {
-      grid-template-columns: 1fr;
-    }
+  @media (max-width: 680px) {
+    .security-section__items { grid-template-columns: 1fr; }
+    .security-section__visual { min-height: 220px; }
   }
 </style>

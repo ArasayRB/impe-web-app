@@ -18,7 +18,6 @@ interface Props {
 
 const { section } = Astro.props;
 const content = section.content ?? {};
-
 const painPoints = content.pain_points ?? [];
 ---
 
@@ -34,25 +33,91 @@ const painPoints = content.pain_points ?? [];
   <div class="mx-auto max-w-7xl px-6 py-20 sm:py-28 lg:px-8">
     <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
 
-      <!-- Visual: información dispersa -->
-      {content.image && (
-        <div class="relative">
-          <div class="overflow-hidden rounded-3xl border border-gray-200 bg-white p-3 shadow-xl shadow-gray-900/5 dark:border-gray-700 dark:bg-gray-950 sm:p-5">
-            <img
-              src={content.image}
-              alt="Información de un caso distribuida entre documentos, mensajes, correo y calendario"
-              class="h-auto w-full rounded-2xl object-contain"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        </div>
-      )}
+      <!-- Gráfico conceptual: recursos separados -->
+      <div
+        class="fragment-visual relative mx-auto w-full max-w-xl"
+        aria-hidden="true"
+      >
+        <div class="fragment-orbit fragment-orbit-one"></div>
+        <div class="fragment-orbit fragment-orbit-two"></div>
 
-      <!-- Content -->
+        <svg
+          class="fragment-lines absolute inset-0 h-full w-full"
+          viewBox="0 0 520 420"
+          fill="none"
+        >
+          <path
+            d="M130 104 L260 210 L390 104 M130 316 L260 210 L390 316"
+            stroke="currentColor"
+            stroke-opacity=".23"
+            stroke-width="2"
+            stroke-dasharray="5 7"
+          />
+          <circle cx="260" cy="210" r="72" fill="#0057B7" fill-opacity=".05" stroke="#0057B7" stroke-opacity=".2" stroke-width="1.5" />
+          <circle cx="130" cy="104" r="5" fill="#FFD700" />
+          <circle cx="390" cy="104" r="5" fill="#0057B7" />
+          <circle cx="130" cy="316" r="5" fill="#00A86B" />
+          <circle cx="390" cy="316" r="5" fill="#FFD700" />
+        </svg>
+
+        <!-- Correos -->
+        <div class="fragment-card fragment-card-email">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/>
+            <path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="fragment-card-accent"></span>
+        </div>
+
+        <!-- Archivos -->
+        <div class="fragment-card fragment-card-files">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H10l2 2h5.5A2.5 2.5 0 0 1 20 9.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 16.5v-9Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M4.5 10h15" stroke="currentColor" stroke-width="1.7"/>
+          </svg>
+          <span class="fragment-card-accent"></span>
+        </div>
+
+        <!-- Calendario -->
+        <div class="fragment-card fragment-card-calendar">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="5.5" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.7"/>
+            <path d="M8 3.5v4M16 3.5v4M4 10h16M8 13.5h2M14 13.5h2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+          <span class="fragment-card-accent"></span>
+        </div>
+
+        <!-- Mensajes -->
+        <div class="fragment-card fragment-card-messages">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H7l-3.5 2v-5.2A7.5 7.5 0 1 1 20 11.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+            <path d="M8 10h8M8 13.5h5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+          <span class="fragment-card-accent"></span>
+        </div>
+
+        <!-- Centro abstracto sin etiquetas -->
+        <div class="fragment-center">
+          <svg viewBox="0 0 80 80" fill="none">
+            <circle cx="40" cy="40" r="31" stroke="#0057B7" stroke-opacity=".18" stroke-width="1.5"/>
+            <circle cx="40" cy="40" r="22" stroke="#00A86B" stroke-opacity=".5" stroke-width="1.5"/>
+            <circle cx="40" cy="40" r="12" stroke="#0057B7" stroke-width="2"/>
+            <circle cx="40" cy="40" r="5" fill="#FFD700"/>
+            <path d="M40 4v12M40 64v12M4 40h12M64 40h12" stroke="#0057B7" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <!-- Piezas visuales que sugieren desconexión -->
+        <span class="fragment-floating-dot fragment-dot-one"></span>
+        <span class="fragment-floating-dot fragment-dot-two"></span>
+        <span class="fragment-floating-dot fragment-dot-three"></span>
+        <span class="fragment-floating-dot fragment-dot-four"></span>
+      </div>
+
+      <!-- Contenido traducido desde el seeder -->
       <div class="max-w-2xl">
         {content.eyebrow && (
-          <p class="mb-4 text-sm font-bold uppercase tracking-[0.16em] text-[#0057B7]">
+          <p class="mb-4 text-sm font-bold uppercase tracking-[0.16em] text-[#0057B7] dark:text-[#FFD700]">
             {content.eyebrow}
           </p>
         )}
@@ -92,3 +157,151 @@ const painPoints = content.pain_points ?? [];
     </div>
   </div>
 </section>
+
+<style>
+  .fragment-visual {
+    min-height: 390px;
+    aspect-ratio: 1.24;
+    isolation: isolate;
+  }
+
+  .fragment-orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    border: 1px solid rgb(0 87 183 / 10%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .fragment-orbit-one {
+    width: 70%;
+    aspect-ratio: 1;
+  }
+
+  .fragment-orbit-two {
+    width: 92%;
+    aspect-ratio: 1;
+    border-style: dashed;
+    border-color: rgb(0 168 107 / 16%);
+  }
+
+  .fragment-lines { color: #0057B7; }
+
+  .fragment-card {
+    position: absolute;
+    display: flex;
+    width: 68px;
+    height: 68px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 1px solid rgb(148 163 184 / 25%);
+    border-radius: 19px;
+    background: rgb(255 255 255 / 96%);
+    box-shadow: 0 14px 35px rgb(15 23 42 / 9%);
+    backdrop-filter: blur(12px);
+  }
+
+  .fragment-card svg {
+    width: 27px;
+    height: 27px;
+  }
+
+  :global(.dark) .fragment-card {
+    border-color: rgb(148 163 184 / 22%);
+    background: rgb(17 24 39 / 96%);
+    box-shadow: 0 14px 35px rgb(0 0 0 / 22%);
+  }
+
+  .fragment-card-email { top: 9%; left: 13%; color: #0057B7; }
+  .fragment-card-files { top: 9%; right: 13%; color: #00875a; }
+  .fragment-card-calendar { bottom: 13%; left: 13%; color: #8a6500; }
+  .fragment-card-messages { right: 13%; bottom: 13%; color: #0057B7; }
+
+  .fragment-card-accent {
+    display: block;
+    width: 17px;
+    height: 3px;
+    border-radius: 999px;
+    background: currentColor;
+    opacity: .45;
+  }
+
+  .fragment-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: grid;
+    width: 144px;
+    height: 144px;
+    place-items: center;
+    border: 1px solid rgb(0 87 183 / 15%);
+    border-radius: 50%;
+    background: rgb(255 255 255 / 96%);
+    box-shadow: 0 15px 50px rgb(15 23 42 / 9%);
+    transform: translate(-50%, -50%);
+  }
+
+  .fragment-center svg {
+    width: 82px;
+    height: 82px;
+  }
+
+  :global(.dark) .fragment-center {
+    border-color: rgb(148 163 184 / 20%);
+    background: #111827;
+    box-shadow: 0 15px 50px rgb(0 0 0 / 24%);
+  }
+
+  .fragment-floating-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 5px rgb(0 87 183 / 8%);
+  }
+
+  .fragment-dot-one { top: 30%; left: 34%; background: #FFD700; }
+  .fragment-dot-two { top: 30%; right: 34%; background: #0057B7; }
+  .fragment-dot-three { bottom: 30%; left: 34%; background: #00A86B; }
+  .fragment-dot-four { right: 34%; bottom: 30%; background: #FFD700; }
+
+  @media (max-width: 520px) {
+    .fragment-visual { min-height: 325px; }
+
+    .fragment-card {
+      width: 54px;
+      height: 54px;
+      gap: 5px;
+      border-radius: 15px;
+    }
+
+    .fragment-card svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    .fragment-card-accent {
+      width: 13px;
+      height: 2px;
+    }
+
+    .fragment-card-email { top: 9%; left: 8%; }
+    .fragment-card-files { top: 9%; right: 8%; }
+    .fragment-card-calendar { bottom: 13%; left: 8%; }
+    .fragment-card-messages { right: 8%; bottom: 13%; }
+
+    .fragment-center {
+      width: 120px;
+      height: 120px;
+    }
+
+    .fragment-center svg {
+      width: 70px;
+      height: 70px;
+    }
+  }
+</style>

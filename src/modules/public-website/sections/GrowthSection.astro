@@ -1,4 +1,6 @@
+
 ---
+
 interface GrowthItem {
   title: string;
   description: string;
@@ -21,9 +23,9 @@ const { content } = Astro.props;
 <section class="growth-section" id="crecimiento">
   <div class="growth-section__container">
     <header class="growth-section__header">
-      <span class="growth-section__eyebrow">{content.eyebrow}</span>
+      <p class="growth-section__eyebrow">{content.eyebrow}</p>
       <h2>{content.title}</h2>
-      <p>{content.description}</p>
+      <p class="growth-section__description">{content.description}</p>
     </header>
 
     <div class="growth-section__layout">
@@ -31,23 +33,28 @@ const { content } = Astro.props;
         <div class="growth-section__orbit growth-section__orbit--outer"></div>
         <div class="growth-section__orbit growth-section__orbit--inner"></div>
 
-        <div class="growth-section__core">
-          <svg viewBox="0 0 48 48" fill="none">
-            <path d="M8 37H40M12 32V23H20V32M24 32V15H32V32M28 10L34 4L40 10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-          <span>IJOBA</span>
-        </div>
-
         <span class="growth-section__dot growth-section__dot--blue"></span>
         <span class="growth-section__dot growth-section__dot--green"></span>
         <span class="growth-section__dot growth-section__dot--gold"></span>
+
+        <div class="growth-section__core">
+          <svg viewBox="0 0 120 100" aria-hidden="true">
+            <path class="growth-section__chart-line" d="M12 82H108" />
+            <rect x="20" y="57" width="16" height="25" rx="3" />
+            <rect x="47" y="40" width="16" height="42" rx="3" />
+            <rect x="74" y="20" width="16" height="62" rx="3" />
+            <path class="growth-section__trend" d="m17 49 27-15 23 1 27-22" />
+            <path class="growth-section__trend" d="M80 13h14v14" />
+          </svg>
+          <span class="growth-section__brand">IJOBA</span>
+        </div>
       </div>
 
-      <div class="growth-section__options">
+      <div class="growth-section__items">
         {content.items.map((item, index) => (
           <article class="growth-section__item">
             <span class="growth-section__number">
-              {String(index + 1).padStart(2, '0')}
+              {String(index + 1).padStart(2, "0")}
             </span>
             <div>
               <h3>{item.title}</h3>
@@ -58,57 +65,54 @@ const { content } = Astro.props;
       </div>
     </div>
 
-    <div class="growth-section__closing">
-      <p class="growth-section__emphasis">{content.emphasis}</p>
-      <p>{content.closing}</p>
-    </div>
+    <p class="growth-section__emphasis">{content.emphasis}</p>
+    <p class="growth-section__closing">{content.closing}</p>
   </div>
 </section>
 
 <style>
   .growth-section {
-    padding: clamp(4rem, 8vw, 7rem) 1.25rem;
     background: #f7f9fc;
     color: #172b4d;
+    padding: clamp(4rem, 8vw, 7rem) 1.5rem;
   }
 
   .growth-section__container {
-    width: min(100%, 1120px);
+    max-width: 1180px;
     margin-inline: auto;
   }
 
   .growth-section__header {
-    max-width: 800px;
+    max-width: 780px;
     margin: 0 auto 3.5rem;
     text-align: center;
   }
 
   .growth-section__eyebrow {
-    display: inline-block;
-    margin-bottom: 1rem;
     color: #0057b7;
     font-size: 0.8rem;
     font-weight: 800;
     letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
   }
 
-  .growth-section__header h2 {
-    margin: 0 0 1.25rem;
-    font-size: clamp(2rem, 4.5vw, 3.2rem);
+  .growth-section h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
     line-height: 1.12;
     letter-spacing: -0.035em;
+    margin: 0 0 1.25rem;
   }
 
-  .growth-section__header p {
-    margin: 0;
+  .growth-section__description {
     color: #52627a;
-    font-size: 1.08rem;
     line-height: 1.8;
+    font-size: 1.05rem;
   }
 
   .growth-section__layout {
     display: grid;
-    grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
     align-items: center;
     gap: clamp(2rem, 6vw, 5rem);
   }
@@ -117,159 +121,127 @@ const { content } = Astro.props;
     position: relative;
     display: grid;
     place-items: center;
-    width: min(100%, 380px);
-    aspect-ratio: 1;
-    margin-inline: auto;
+    min-height: 360px;
+    isolation: isolate;
   }
 
   .growth-section__orbit {
     position: absolute;
-    border: 1px solid rgb(0 87 183 / 18%);
+    border: 1px dashed #c4d2e4;
     border-radius: 50%;
   }
 
-  .growth-section__orbit--outer {
-    inset: 3%;
-  }
-
-  .growth-section__orbit--inner {
-    inset: 17%;
-    border-color: rgb(0 168 107 / 30%);
-  }
+  .growth-section__orbit--outer { width: 92%; aspect-ratio: 1; }
+  .growth-section__orbit--inner { width: 68%; aspect-ratio: 1; border-color: #d9e2ee; }
 
   .growth-section__core {
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    width: 42%;
-    aspect-ratio: 1;
-    border: 1px solid #dce6f2;
-    border-radius: 28%;
-    background: #fff;
-    color: #0057b7;
-    box-shadow: 0 18px 45px rgb(23 43 77 / 10%);
+    display: grid;
+    place-items: center;
+    gap: 0.2rem;
+    width: 200px;
+    padding: 1.4rem;
+    border: 1px solid #e1e8f1;
+    border-radius: 28px;
+    background: #ffffff;
+    box-shadow: 0 20px 50px #172b4d12;
   }
 
   .growth-section__core svg {
-    width: 42%;
+    width: 100%;
+    max-width: 140px;
+    fill: #0057b7;
   }
 
-  .growth-section__core span {
-    font-size: 0.9rem;
+  .growth-section__chart-line {
+    fill: none;
+    stroke: #cbd5e1;
+    stroke-width: 2;
+  }
+
+  .growth-section__trend {
+    fill: none;
+    stroke: #00a86b;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .growth-section__brand {
+    color: #0057b7;
+    font-size: 0.85rem;
     font-weight: 900;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.16em;
   }
 
   .growth-section__dot {
     position: absolute;
-    z-index: 2;
-    width: 1rem;
-    height: 1rem;
+    width: 16px;
+    height: 16px;
     border: 4px solid #f7f9fc;
     border-radius: 50%;
-    box-sizing: content-box;
   }
 
-  .growth-section__dot--blue {
-    top: 12%;
-    right: 23%;
-    background: #0057b7;
-  }
+  .growth-section__dot--blue { background: #0057b7; top: 13%; left: 22%; }
+  .growth-section__dot--green { background: #00a86b; bottom: 17%; left: 15%; }
+  .growth-section__dot--gold { background: #ffd700; top: 29%; right: 9%; }
 
-  .growth-section__dot--green {
-    bottom: 18%;
-    left: 14%;
-    background: #00a86b;
-  }
-
-  .growth-section__dot--gold {
-    right: 9%;
-    bottom: 34%;
-    background: #ffd700;
-  }
-
-  .growth-section__options {
+  .growth-section__items {
     display: grid;
-    gap: 0.5rem;
+    gap: 1rem;
   }
 
   .growth-section__item {
-    display: flex;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
     gap: 1rem;
-    padding: 1.1rem 0;
-    border-bottom: 1px solid #dce4ee;
-  }
-
-  .growth-section__item:last-child {
-    border-bottom: 0;
+    padding: 1.35rem;
+    border: 1px solid #e1e8f1;
+    border-radius: 16px;
+    background: #ffffff;
   }
 
   .growth-section__number {
     display: grid;
-    flex: 0 0 2.5rem;
     place-items: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border: 1px solid rgb(0 87 183 / 25%);
-    border-radius: 0.75rem;
-    background: #fff;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #eaf1fc;
     color: #0057b7;
     font-size: 0.8rem;
     font-weight: 800;
   }
 
-  .growth-section__item:nth-child(2) .growth-section__number,
-  .growth-section__item:nth-child(5) .growth-section__number {
-    border-color: rgb(0 168 107 / 30%);
-    color: #00875a;
-  }
-
-  .growth-section__item:nth-child(3) .growth-section__number {
-    border-color: rgb(255 215 0 / 60%);
-    color: #806600;
-  }
-
   .growth-section__item h3 {
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.45rem;
     font-size: 1.05rem;
   }
 
   .growth-section__item p {
     margin: 0;
     color: #52627a;
-    font-size: 0.95rem;
     line-height: 1.7;
+  }
+
+  .growth-section__emphasis {
+    text-align: center;
+    font-weight: 800;
+    font-size: clamp(1.15rem, 2vw, 1.4rem);
+    margin: 3rem auto 0;
+    max-width: 820px;
+    line-height: 1.6;
   }
 
   .growth-section__closing {
-    margin-top: 3.5rem;
     text-align: center;
-  }
-
-  .growth-section__closing p {
-    margin: 0.5rem 0 0;
     color: #52627a;
     line-height: 1.7;
-  }
-
-  .growth-section__closing .growth-section__emphasis {
-    color: #0057b7;
-    font-size: clamp(1.3rem, 3vw, 2rem);
-    font-weight: 800;
+    max-width: 780px;
+    margin: 0.75rem auto 0;
   }
 
   @media (max-width: 760px) {
-    .growth-section__layout {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-
-    .growth-section__visual {
-      width: min(80%, 300px);
-    }
+    .growth-section__layout { grid-template-columns: 1fr; }
+    .growth-section__visual { min-height: 290px; max-width: 400px; width: 100%; margin-inline: auto; }
   }
 </style>

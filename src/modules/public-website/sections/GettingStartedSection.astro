@@ -1,5 +1,7 @@
+
 ---
-interface Step {
+
+interface GettingStartedStep {
   title: string;
   description: string;
 }
@@ -9,7 +11,7 @@ interface Props {
     eyebrow: string;
     title: string;
     description: string;
-    steps: Step[];
+    steps: GettingStartedStep[];
     emphasis: string;
   };
 }
@@ -20,22 +22,22 @@ const { content } = Astro.props;
 <section class="getting-started" id="como-empezar">
   <div class="getting-started__container">
     <header class="getting-started__header">
-      <span class="getting-started__eyebrow">{content.eyebrow}</span>
+      <p class="getting-started__eyebrow">{content.eyebrow}</p>
       <h2>{content.title}</h2>
-      <p>{content.description}</p>
+      <p class="getting-started__description">{content.description}</p>
     </header>
 
     <div class="getting-started__steps">
       {content.steps.map((step, index) => (
         <article class="getting-started__step">
-          <div class="getting-started__step-marker">
-            <span>{String(index + 1).padStart(2, '0')}</span>
+          <div class="getting-started__step-top">
+            <span class="getting-started__number">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            {index < content.steps.length - 1 && (
+              <span class="getting-started__connector" aria-hidden="true"></span>
+            )}
           </div>
-
-          {index < content.steps.length - 1 && (
-            <div class="getting-started__connector" aria-hidden="true"></div>
-          )}
-
           <h3>{step.title}</h3>
           <p>{step.description}</p>
         </article>
@@ -48,41 +50,39 @@ const { content } = Astro.props;
 
 <style>
   .getting-started {
-    padding: clamp(4rem, 8vw, 7rem) 1.25rem;
-    background: #fff;
+    background: #ffffff;
     color: #172b4d;
+    padding: clamp(4rem, 8vw, 7rem) 1.5rem;
   }
 
   .getting-started__container {
-    width: min(100%, 1080px);
+    max-width: 1120px;
     margin-inline: auto;
   }
 
   .getting-started__header {
-    max-width: 760px;
-    margin: 0 auto 3.5rem;
+    max-width: 780px;
     text-align: center;
+    margin: 0 auto 3.5rem;
   }
 
   .getting-started__eyebrow {
-    display: inline-block;
-    margin-bottom: 1rem;
     color: #0057b7;
     font-size: 0.8rem;
     font-weight: 800;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+    margin-bottom: 1rem;
   }
 
-  .getting-started__header h2 {
-    margin: 0 0 1rem;
-    font-size: clamp(2rem, 4.5vw, 3.2rem);
+  .getting-started h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
     line-height: 1.12;
     letter-spacing: -0.035em;
+    margin: 0 0 1.25rem;
   }
 
-  .getting-started__header p {
-    margin: 0;
+  .getting-started__description {
     color: #52627a;
     font-size: 1.05rem;
     line-height: 1.8;
@@ -97,76 +97,75 @@ const { content } = Astro.props;
   .getting-started__step {
     position: relative;
     padding: 1.75rem;
-    border: 1px solid #e1e8f0;
-    border-radius: 1.25rem;
-    background: #fff;
+    border: 1px solid #e2e9f2;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 12px 32px #172b4d08;
   }
 
-  .getting-started__step-marker {
+  .getting-started__step-top {
+    position: relative;
     display: flex;
     align-items: center;
     margin-bottom: 1.5rem;
+    min-height: 48px;
   }
 
-  .getting-started__step-marker span {
+  .getting-started__number {
+    position: relative;
+    z-index: 1;
     display: grid;
     place-items: center;
-    width: 3.25rem;
-    height: 3.25rem;
-    border: 1px solid rgb(0 87 183 / 25%);
-    border-radius: 1rem;
-    background: rgb(0 87 183 / 6%);
-    color: #0057b7;
-    font-size: 1rem;
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    background: #0057b7;
+    color: #ffffff;
+    font-size: 0.9rem;
     font-weight: 800;
+    box-shadow: 0 6px 16px #0057b72b;
   }
 
-  .getting-started__step:nth-child(2) .getting-started__step-marker span {
-    border-color: rgb(0 168 107 / 30%);
-    background: rgb(0 168 107 / 7%);
-    color: #00875a;
-  }
-
-  .getting-started__step:nth-child(3) .getting-started__step-marker span {
-    border-color: rgb(255 215 0 / 60%);
-    background: rgb(255 215 0 / 14%);
-    color: #806600;
+  .getting-started__connector {
+    position: absolute;
+    left: 62px;
+    right: -1.75rem;
+    height: 2px;
+    background: linear-gradient(90deg, #0057b7 0%, #d7e2f1 100%);
   }
 
   .getting-started__step h3 {
-    margin: 0 0 0.75rem;
     font-size: 1.15rem;
     line-height: 1.4;
+    margin: 0 0 0.7rem;
   }
 
   .getting-started__step p {
-    margin: 0;
     color: #52627a;
-    font-size: 0.95rem;
     line-height: 1.75;
+    margin: 0;
   }
 
   .getting-started__emphasis {
-    margin: 2.5rem 0 0;
-    color: #0057b7;
-    font-size: clamp(1.2rem, 2.8vw, 1.7rem);
-    font-weight: 800;
-    line-height: 1.5;
+    max-width: 820px;
+    margin: 2.5rem auto 0;
+    padding: 1.25rem 1.5rem;
+    border-left: 4px solid #ffd700;
+    border-radius: 0 12px 12px 0;
+    background: #f7f9fc;
+    font-weight: 700;
+    line-height: 1.7;
     text-align: center;
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 760px) {
     .getting-started__steps {
       grid-template-columns: 1fr;
       gap: 1rem;
     }
 
-    .getting-started__step {
-      padding: 1.5rem;
-    }
-
-    .getting-started__step-marker {
-      margin-bottom: 1rem;
+    .getting-started__connector {
+      display: none;
     }
   }
 </style>

@@ -1,4 +1,6 @@
+
 ---
+
 interface TeamItem {
   title: string;
   description: string;
@@ -19,30 +21,76 @@ interface Props {
 const { content } = Astro.props;
 ---
 
-<section class="team-collaborators" id="equipo">
+<section class="team-collaborators" id="equipo-colaboracion">
   <div class="team-collaborators__container">
     <div class="team-collaborators__main">
       <header class="team-collaborators__header">
-        <span class="team-collaborators__eyebrow">{content.eyebrow}</span>
+        <p class="team-collaborators__eyebrow">{content.eyebrow}</p>
         <h2>{content.title}</h2>
-        <p>{content.description}</p>
+        <p class="team-collaborators__description">{content.description}</p>
       </header>
 
-      <div class="team-collaborators__visual">
-        <img
-          src={content.image}
-          alt={content.image_alt}
-          loading="lazy"
-          decoding="async"
-        />
+      <div
+        class="team-collaborators__visual"
+        role="img"
+        aria-label={content.image_alt}
+      >
+        <div class="team-collaborators__connections">
+          <span class="team-collaborators__connection team-collaborators__connection--one"></span>
+          <span class="team-collaborators__connection team-collaborators__connection--two"></span>
+          <span class="team-collaborators__connection team-collaborators__connection--three"></span>
+          <span class="team-collaborators__connection team-collaborators__connection--four"></span>
+        </div>
+
+        <div class="team-collaborators__person team-collaborators__person--one">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="16" r="8" />
+            <path d="M9 41c1-9 6-14 15-14s14 5 15 14" />
+          </svg>
+        </div>
+
+        <div class="team-collaborators__person team-collaborators__person--two">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="16" r="8" />
+            <path d="M9 41c1-9 6-14 15-14s14 5 15 14" />
+          </svg>
+        </div>
+
+        <div class="team-collaborators__person team-collaborators__person--three">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="16" r="8" />
+            <path d="M9 41c1-9 6-14 15-14s14 5 15 14" />
+          </svg>
+        </div>
+
+        <div class="team-collaborators__hub">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <circle cx="23" cy="22" r="8" />
+            <circle cx="43" cy="24" r="6" />
+            <path d="M7 49c1-10 6-15 16-15s15 5 16 15" />
+            <path d="M38 37c9-1 15 4 17 12" />
+          </svg>
+          <span class="team-collaborators__hub-check">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m5 12 4 4L19 6" />
+            </svg>
+          </span>
+        </div>
+
+        <div class="team-collaborators__document">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <path d="M12 5h17l8 8v30H12z" />
+            <path d="M29 5v9h8M18 23h13M18 29h13M18 35h8" />
+          </svg>
+        </div>
       </div>
     </div>
 
-    <div class="team-collaborators__grid">
+    <div class="team-collaborators__items">
       {content.items.map((item, index) => (
-        <article class="team-collaborators__card">
+        <article class="team-collaborators__item">
           <span class="team-collaborators__number">
-            {String(index + 1).padStart(2, '0')}
+            {String(index + 1).padStart(2, "0")}
           </span>
           <h3>{item.title}</h3>
           <p>{item.description}</p>
@@ -56,141 +104,218 @@ const { content } = Astro.props;
 
 <style>
   .team-collaborators {
-    padding: clamp(4rem, 8vw, 7rem) 1.25rem;
     background: #f7f9fc;
     color: #172b4d;
+    padding: clamp(4rem, 8vw, 7rem) 1.5rem;
   }
 
   .team-collaborators__container {
-    width: min(100%, 1120px);
+    max-width: 1180px;
     margin-inline: auto;
   }
 
   .team-collaborators__main {
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.9fr);
     align-items: center;
     gap: clamp(2rem, 6vw, 5rem);
   }
 
   .team-collaborators__eyebrow {
-    display: inline-block;
-    margin-bottom: 1rem;
     color: #0057b7;
     font-size: 0.8rem;
     font-weight: 800;
     letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
   }
 
-  .team-collaborators__header h2 {
-    margin: 0 0 1.25rem;
-    font-size: clamp(2rem, 4.2vw, 3.1rem);
+  .team-collaborators h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
     line-height: 1.12;
     letter-spacing: -0.035em;
+    margin: 0 0 1.25rem;
   }
 
-  .team-collaborators__header p {
-    margin: 0;
+  .team-collaborators__description {
     color: #52627a;
     font-size: 1.05rem;
     line-height: 1.8;
   }
 
   .team-collaborators__visual {
-    overflow: hidden;
-		aspect-ratio: 887 / 768;
-    border: 1px solid #e1e8f0;
-    border-radius: 1.5rem;
-    background: #fff;
-    box-shadow: 0 18px 50px rgb(23 43 77 / 7%);
+    position: relative;
+    min-height: 330px;
+    aspect-ratio: 1.15;
+    display: grid;
+    place-items: center;
+    isolation: isolate;
   }
 
-  .team-collaborators__visual img {
-    display: block;
-    width: 100%;
-    height: auto;
+  .team-collaborators__connections {
+    position: absolute;
+    inset: 12%;
+    border: 1px dashed #bfd0e5;
+    border-radius: 50%;
   }
 
-  .team-collaborators__grid {
+  .team-collaborators__connection {
+    position: absolute;
+    height: 1px;
+    width: 31%;
+    background: #b8cbe5;
+    transform-origin: left center;
+  }
+
+  .team-collaborators__connection--one { top: 28%; left: 20%; transform: rotate(35deg); }
+  .team-collaborators__connection--two { top: 30%; right: 18%; transform: rotate(145deg); }
+  .team-collaborators__connection--three { bottom: 25%; left: 20%; transform: rotate(-30deg); }
+  .team-collaborators__connection--four { bottom: 26%; right: 17%; transform: rotate(-150deg); }
+
+  .team-collaborators__person {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    border: 4px solid #ffffff;
+    border-radius: 18px;
+    background: #e6efff;
+    box-shadow: 0 10px 24px #172b4d12;
+  }
+
+  .team-collaborators__person svg {
+    width: 35px;
+    fill: none;
+    stroke: #0057b7;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+
+  .team-collaborators__person--one { top: 3%; left: calc(50% - 29px); }
+  .team-collaborators__person--two { bottom: 7%; left: 8%; background: #e1f5ed; }
+  .team-collaborators__person--two svg { stroke: #00a86b; }
+  .team-collaborators__person--three { bottom: 7%; right: 8%; background: #fff5cc; }
+  .team-collaborators__person--three svg { stroke: #8b6a00; }
+
+  .team-collaborators__hub {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 110px;
+    height: 110px;
+    border: 7px solid #ffffff;
+    border-radius: 30px;
+    background: #0057b7;
+    box-shadow: 0 18px 42px #0057b72b;
+  }
+
+  .team-collaborators__hub > svg {
+    width: 65px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+  }
+
+  .team-collaborators__hub-check {
+    position: absolute;
+    right: -9px;
+    bottom: -6px;
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f7f9fc;
+    border-radius: 50%;
+    background: #00a86b;
+  }
+
+  .team-collaborators__hub-check svg {
+    width: 18px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .team-collaborators__document {
+    position: absolute;
+    top: 38%;
+    right: 3%;
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 56px;
+    border: 1px solid #e1e8f1;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 10px 24px #172b4d12;
+  }
+
+  .team-collaborators__document svg {
+    width: 32px;
+    fill: none;
+    stroke: #0057b7;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .team-collaborators__items {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1rem;
-    margin-top: clamp(3rem, 6vw, 5rem);
+    margin-top: 2.5rem;
   }
 
-  .team-collaborators__card {
-    padding: 1.5rem;
-    border: 1px solid #e1e8f0;
-    border-radius: 1rem;
-    background: #fff;
+  .team-collaborators__item {
+    padding: 1.4rem;
+    border: 1px solid #e1e8f1;
+    border-radius: 16px;
+    background: #ffffff;
   }
 
   .team-collaborators__number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    margin-bottom: 1.25rem;
-    border: 1px solid rgb(0 87 183 / 25%);
-    border-radius: 0.75rem;
-    background: rgb(0 87 183 / 6%);
+    display: inline-block;
     color: #0057b7;
     font-size: 0.8rem;
     font-weight: 800;
+    margin-bottom: 0.85rem;
   }
 
-  .team-collaborators__card:nth-child(2) .team-collaborators__number {
-    border-color: rgb(0 168 107 / 30%);
-    background: rgb(0 168 107 / 7%);
-    color: #00875a;
-  }
-
-  .team-collaborators__card:nth-child(3) .team-collaborators__number {
-    border-color: rgb(255 215 0 / 60%);
-    background: rgb(255 215 0 / 14%);
-    color: #806600;
-  }
-
-  .team-collaborators__card h3 {
-    margin: 0 0 0.65rem;
-    font-size: 1.05rem;
+  .team-collaborators__item h3 {
+    font-size: 1rem;
     line-height: 1.4;
+    margin: 0 0 0.55rem;
   }
 
-  .team-collaborators__card p {
-    margin: 0;
+  .team-collaborators__item p {
     color: #52627a;
-    font-size: 0.93rem;
-    line-height: 1.75;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0;
   }
 
   .team-collaborators__closing {
-    max-width: 850px;
-    margin: 3rem auto 0;
-    color: #0057b7;
-    font-size: clamp(1.25rem, 3vw, 1.8rem);
-    font-weight: 800;
-    line-height: 1.5;
+    max-width: 800px;
     text-align: center;
+    font-weight: 700;
+    line-height: 1.7;
+    margin: 2.5rem auto 0;
   }
 
   @media (max-width: 900px) {
-    .team-collaborators__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    .team-collaborators__items { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
-  @media (max-width: 700px) {
-    .team-collaborators__main {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
+  @media (max-width: 760px) {
+    .team-collaborators__main { grid-template-columns: 1fr; }
+    .team-collaborators__visual { width: 100%; max-width: 420px; min-height: 290px; margin-inline: auto; }
   }
 
   @media (max-width: 480px) {
-    .team-collaborators__grid {
-      grid-template-columns: 1fr;
-    }
+    .team-collaborators__items { grid-template-columns: 1fr; }
   }
 </style>
