@@ -5,7 +5,6 @@ import ContactSection from '@/modules/public-website/sections/ContactSection.ast
 
 import {
   getPublicWebsiteSnapshot,
-  getPublicMarketingResource,
 } from '@/services/public.website.service';
 
 import {
@@ -54,21 +53,10 @@ const locale =
  * The hash is only for the public URL.
  * The API/resource uses the real slug.
  */
-const marketingResourceSlug =
-  'rutina-reconstruye-semana';
-
-
-const marketingResource =
-  await getPublicMarketingResource(
-    marketingResourceSlug
-  );
-
-
 if (
   !locale ||
   !isPublicWebsiteLocale(locale) ||
-  !snapshot ||
-  !marketingResource
+  !snapshot
 ) {
   Astro.response.status = 404;
 }
@@ -100,8 +88,7 @@ const social =
 
 {
   snapshot &&
-  locale &&
-  marketingResource ? (
+  locale ? (
 
     <LayoutWebsite
       snapshot={snapshot}
@@ -149,21 +136,26 @@ const social =
 
 
               <h1
-                class="mt-4 text-4xl font-bold tracking-tight text-gray-950 sm:text-5xl dark:text-white"
-              >
-                {marketingResource.title}
-              </h1>
+									id="marketing-resource-title"
+									class="mt-4 text-4xl font-bold tracking-tight text-gray-950 sm:text-5xl dark:text-white"
+								>
+									Cargando recurso...
+								</h1>
 
 
-              {
-                marketingResource.description && (
-                  <p
-                    class="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300"
-                  >
-                    {marketingResource.description}
-                  </p>
-                )
-              }
+              <p
+								id="marketing-resource-description"
+								class="mt-6 hidden text-lg leading-8 text-gray-600 dark:text-gray-300"
+							></p>
+
+							<p
+								id="marketing-resource-status"
+								class="mx-auto max-w-5xl px-6 pb-6 text-sm text-gray-600 dark:text-gray-300"
+								role="status"
+								aria-live="polite"
+							>
+								Cargando recurso...
+							</p>
 
             </div>
 
@@ -174,20 +166,22 @@ const social =
 
         <!-- Download form -->
 
-        <ContactSection
-          section={{
-            key: 'marketing-resource-form'
-          }}
-          fields={resourceContactFields}
-          submission={submission}
-          security={security}
-          locale={locale}
-          publicHost={publicHost}
-          marketingResourceSlug={
-            marketingResource.slug
-          }
-  				submitLabel="Descargar recurso"
-        />
+        <div
+					id="marketing-resource-form-container"
+					class="hidden"
+				>
+					<ContactSection
+						section={{
+							key: 'marketing-resource-form'
+						}}
+						fields={resourceContactFields}
+						submission={submission}
+						security={security}
+						locale={locale}
+						publicHost={publicHost}
+						submitLabel="Descargar recurso"
+					/>
+				</div>
 
       </main>
 
@@ -207,3 +201,163 @@ const social =
 
   )
 }
+
+
+		<script>
+			import {
+				getPublicMarketingResource,
+			} from '@/services/public.website.service';
+
+			const title =
+				document.querySelector<HTMLElement>(
+					'#marketing-resource-title'
+				);
+
+			const description =
+				document.querySelector<HTMLElement>(
+					'#marketing-resource-description'
+				);
+
+			const status =
+				document.querySelector<HTMLElement>(
+					'#marketing-resource-status'
+				);
+
+			const formContainer =
+				document.querySelector<HTMLElement>(
+					'#marketing-resource-form-container'
+				);
+
+			const form =
+				document.querySelector<HTMLFormElement>(
+					'#public-contact-form'
+				);
+
+			let requestVersion = 0;
+			let currentSlug = '';
+
+			async function resolveMarketingResource() {
+				const version = ++requestVersion;
+
+				let slug = '';
+
+				try {
+					slug = decodeURIComponent(
+						window.location.hash.slice(1)
+					).trim();
+				} catch {
+					slug = '';
+				}
+
+				currentSlug = slug;
+
+				if (
+					!title ||
+					!description ||
+					!status ||
+					!formContainer ||
+					!form
+				) {
+					return;
+				}
+
+				formContainer.classList.add('hidden');
+				status.classList.remove('hidden');
+				status.textContent = 'Cargando recurso...';
+
+				if (!slug) {
+					title.textContent = 'Recurso gratuito';
+					description.textContent = '';
+					description.classList.add('hidden');
+					status.textContent =
+						'No se ha especificado el recurso que deseas descargar.';
+					return;
+				}
+
+				try {
+					const resource =
+						await getPublicMarketingResource(slug);
+
+					// Ignorar respuestas de solicitudes anteriores.
+					if (version !== requestVersion) {
+						return;
+					}
+
+					if (!resource) {
+						throw new Error('Recurso no encontrado.');
+					}
+
+					title.textContent = resource.title;
+
+					description.textContent =
+						resource.description || '';
+
+					description.classList.toggle(
+						'hidden',
+						!resource.description
+					);
+
+					// El slug autorizado procede del recurso devuelto por la API.
+					form.dataset.marketingResourceSlug =
+						resource.slug;
+
+					// Si cambia el recurso, limpiar el estado de la descarga anterior.
+					form.reset();
+
+					form.parentElement
+						?.querySelector('[data-resource-download]')
+						?.remove();
+
+					const submitButton =
+						form.querySelector<HTMLButtonElement>(
+							'#public-contact-submit'
+						);
+
+					if (submitButton) {
+						submitButton.classList.remove('hidden');
+						submitButton.disabled = false;
+						submitButton.textContent =
+							form.dataset.submitLabel || 'Descargar recurso';
+					}
+
+					const message =
+						form.querySelector<HTMLElement>(
+							'#public-contact-form-message'
+						);
+
+					if (message) {
+						message.classList.add('hidden');
+						message.textContent = '';
+					}
+
+					status.classList.add('hidden');
+					formContainer.classList.remove('hidden');
+				} catch (error) {
+					if (version !== requestVersion) {
+						return;
+					}
+
+					console.error(
+						'[PUBLIC MARKETING RESOURCE] Error loading resource',
+						{
+							slug,
+							error,
+						}
+					);
+
+					title.textContent = 'Recurso no disponible';
+					description.textContent = '';
+					description.classList.add('hidden');
+
+					status.textContent =
+						'No se ha encontrado este recurso o no está disponible para descargar.';
+				}
+			}
+
+			window.addEventListener(
+				'hashchange',
+				resolveMarketingResource
+			);
+
+			resolveMarketingResource();
+		</script>

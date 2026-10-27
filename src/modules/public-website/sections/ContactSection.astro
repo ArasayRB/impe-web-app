@@ -422,9 +422,6 @@ const recaptchaEnabled =
 		const submitLabel =
   		form.dataset.submitLabel || '';
 
-		const marketingResourceSlug =
-  		form.dataset.marketingResourceSlug || '';
-
     console.log(
       '[PUBLIC CONTACT] Config:',
       {
@@ -433,7 +430,6 @@ const recaptchaEnabled =
         recaptchaAction,
         endpoint,
     		publicHost,
-    		marketingResourceSlug,
       }
     );
 
@@ -593,6 +589,9 @@ const recaptchaEnabled =
 
         event.preventDefault();
 
+				const marketingResourceSlug =
+  				form.dataset.marketingResourceSlug || '';
+
         console.log(
           '[PUBLIC CONTACT] Default prevented'
         );
@@ -604,6 +603,8 @@ const recaptchaEnabled =
         submitButton.disabled = true;
         submitButton.textContent =
           'Enviando...';
+
+				let downloadReady = false;
 
         try {
 
@@ -779,12 +780,10 @@ const recaptchaEnabled =
 							downloadContainer
 						);
 
+						downloadReady = true;
+
 						submitButton.disabled = false;
-						submitButton.textContent =
-						submitButton.
-									classList.add(
-								'hidden'
-							);
+						submitButton.classList.add('hidden');
 
 						setMessage(
 							'Tu recurso está listo para descargar.',
@@ -819,16 +818,12 @@ const recaptchaEnabled =
           );
 
         } finally {
-
-          submitButton.disabled = false;
-          submitButton.textContent =
-						submitLabel;
-					submitButton.
-									classList.add(
-								'hidden'
-							);
-
-        }
+					if (!downloadReady) {
+						submitButton.disabled = false;
+						submitButton.textContent = submitLabel;
+						submitButton.classList.remove('hidden');
+					}
+				}
       }
     );
   }
